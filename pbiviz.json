@@ -1,0 +1,25 @@
+{
+    "visual": {
+        "name": "zDataTable",
+        "displayName": "zDataTable",
+        "guid": "zDataTable7B0B8C6EA334448C99AD145F738F9806",
+        "visualClassName": "Visual",
+        "version": "1.0.0",
+        "description": "",
+        "supportUrl": "",
+        "gitHubUrl": ""
+    },
+    "apiVersion": "3.5.0",
+    "author": {
+        "name": "Zaf Alam",
+        "email": "syed.alam@live.com.au"
+    },
+    "assets": {
+        "icon": "assets/icon.png"
+    },
+    "externalJS": null,
+    "style": "style/visual.less",
+    "capabilities": "capabilities.json",
+    "dependencies": null,
+    "stringResources": []
+}
