@@ -17,6 +17,7 @@ export const initialState: IVisualMainDisplayState = {
   canAdvanceEdit: false,
   advancedEditing: defaultSettings["advancedEditing"],
   data: processDataView([], []),
+  // visualTables: [],
 };
 
 export class VisualMainDisplay extends React.Component<
@@ -67,6 +68,9 @@ export class VisualMainDisplay extends React.Component<
             advancedEditing={advancedEditing}
             advancedEditingObjectMetadata={objectMetadata?.advancedEditing}
             visualData={data.visualData}
+            advEditorData={this.props.advEditorData}
+            // updateDisplayTables={this.props.updateDisplayTables}
+            // visualTables={this.state.visualTables}
           />
         );
       }
@@ -76,7 +80,7 @@ export class VisualMainDisplay extends React.Component<
           <ContentDisplay
             host={this.props.host}
             visualData={data.visualData}
-            visualTables={advancedEditing.visualTables}
+            visualTables={this.props.advEditorData.visualTables}
           />
         );
       }

@@ -6,7 +6,7 @@ import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 interface IContentDisplayProps {
   host: IVisualHost;
   visualData: IVisualData;
-  visualTables: string;
+  visualTables: IVisualTable[];
 }
 
 interface IVisualTableProps {
@@ -39,12 +39,11 @@ function visualTable(props: IVisualTableProps, index: number) {
 }
 
 export function ContentDisplay(props: IContentDisplayProps) {
-  const visualTables: IVisualTable[] = JSON.parse(props.visualTables)["tables"];
   //   const scrollbars = { autoUpdate: true };
   return (
     // <OverlayScrollbarsComponent>
     <div className="visual-tables">
-      {visualTables.map((table, index) =>
+      {props.visualTables.map((table, index) =>
         visualTable({ visualTable: table, visualData: props.visualData }, index)
       )}
     </div>

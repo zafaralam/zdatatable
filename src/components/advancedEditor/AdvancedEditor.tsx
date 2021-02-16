@@ -10,13 +10,16 @@ import { IVisualData, IVisualTable } from "../../defs/main";
 import { ContentDisplay } from "./../ContentDisplay";
 import NewTable from "./NewTable";
 import EditTable from "./EditTable";
-
+import AdvanceEditorData from "./../../advanceEditor";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
   advancedEditing: AdvancedEditingSettings;
   advancedEditingObjectMetadata?: DataViewObject;
   visualData: IVisualData;
+  advEditorData: AdvanceEditorData;
+  // updateDisplayTables: Function;
+  // visualTables: IVisualTable[];
 }
 
 interface IAdvancedEditorState {
@@ -37,13 +40,14 @@ export default class AdvanceEditor extends React.Component<
     super(props);
     this.state = {
       isDirty: false,
-      visualTables: JSON.parse(props.advancedEditing.visualTables)["tables"],
+      visualTables: props.advEditorData.visualTables,
     };
 
     this.handleAddTableClick = this.handleAddTableClick.bind(this);
     this.handleResetClick = this.handleResetClick.bind(this);
     this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handleEditTableUpdate = this.handleEditTableUpdate.bind(this);
+    this.handleRemoveTable = this.handleRemoveTable.bind(this);
   }
   render() {
     const { host, advancedEditing, visualData } = this.props;
@@ -58,6 +62,7 @@ export default class AdvanceEditor extends React.Component<
                 index={tIdx}
                 table={table}
                 onEditTableUpdate={this.handleEditTableUpdate}
+                onRemoveTable={this.handleRemoveTable}
               />
             );
           })}
@@ -77,7 +82,7 @@ export default class AdvanceEditor extends React.Component<
         <ContentDisplay
           host={host}
           visualData={visualData}
-          visualTables={advancedEditing.visualTables}
+          visualTables={this.props.advEditorData.visualTables}
         />
       </div>
     );
@@ -94,6 +99,20 @@ export default class AdvanceEditor extends React.Component<
     this.setState({
       isDirty: true,
       visualTables: visualTables,
+    });
+  }
+  private handleRemoveTable(index: number) {
+    // console.log(index);
+    const totalVisualTables = this.state.visualTables.length;
+    let visualTables = this.state.visualTables.slice(0, totalVisualTables + 1);
+    // visualTables.splice(index, 1);
+
+    // console.log(this.state.visualTables.slice(0, totalVisualTables + 1));
+    this.setState({
+      isDirty: true,
+      visualTables: visualTables.filter((i, idx) => {
+        return idx !== index;
+      }),
     });
   }
   private handleAddTableClick(
@@ -117,10 +136,13 @@ export default class AdvanceEditor extends React.Component<
     e.preventDefault();
 
     const changes = this.getNewObjectInstance();
+
     this.setState({ visualTables: [] }, () => {
       changes.replace[0].properties["visualTables"] = JSON.stringify({
         tables: [],
+        tableCount: 0,
       });
+      this.props.advEditorData.reset();
       this.props.host.persistProperties(changes);
     });
   }
@@ -129,10 +151,15 @@ export default class AdvanceEditor extends React.Component<
     e.preventDefault();
 
     const changes = this.getNewObjectInstance();
+
     this.setState({ isDirty: false }, () => {
       changes.replace[0].properties["visualTables"] = JSON.stringify({
-        tables: this.state.visualTables,
+        tables: [],
+        tableCount: this.state.visualTables.length,
       });
+      this.props.advEditorData.updateVisualTables(
+        this.state.visualTables.slice(0, this.state.visualTables.length + 1)
+      );
       this.props.host.persistProperties(changes);
     });
   }

@@ -52,7 +52,13 @@ import {
 import IViewport = powerbi.IViewport;
 
 import { parseDataModelColumns, processDataView } from "./utils/dataView";
-import { IDataColumn, IVisualMainDisplayState } from "./defs/main";
+import {
+  IDataColumn,
+  IVisualMainDisplayState,
+  IVisualTable,
+} from "./defs/main";
+
+import AdvanceEditorData from "./advanceEditor";
 export class Visual implements IVisual {
   private target: HTMLElement;
   private host: IVisualHost;
@@ -64,6 +70,8 @@ export class Visual implements IVisual {
   private viewport: IViewport;
 
   private dataColumns: IDataColumn[];
+  // private visualTables: IVisualTable[];
+  private advEditorData: AdvanceEditorData;
 
   //     private textNode: Text;
   //   private updateCount: number;
@@ -77,30 +85,30 @@ export class Visual implements IVisual {
     this.localizationManager = this.host.createLocalizationManager();
     this.events = this.host.eventService;
 
+    this.dataColumns = [];
+    // this.visualTables = [];
+    this.advEditorData = new AdvanceEditorData();
+
     this.reactRoot = React.createElement(VisualMainDisplay, {
       host: this.host,
       localizationManager: this.localizationManager,
+      advEditorData: this.advEditorData,
+      // updateDisplayTables: this.updateVisualTables,
     });
-    this.dataColumns = [];
 
     ReactDom.render(this.reactRoot, this.target);
-
-    // this.updateCount = 0;
-    // if (document) {
-    //   const new_p: HTMLElement = document.createElement("p");
-    //   new_p.appendChild(document.createTextNode("Update count:"));
-    //   const new_em: HTMLElement = document.createElement("em");
-    //   this.textNode = document.createTextNode(this.updateCount.toString());
-    //   new_em.appendChild(this.textNode);
-    //   new_p.appendChild(new_em);
-    //   this.target.appendChild(new_p);
-    // }
   }
+
+  // private updateVisualTables(visualTables: IVisualTable[]) {
+  //   this.visualTables = visualTables;
+  //   // console.log(this.visualTables);
+  // }
 
   public update(options: VisualUpdateOptions) {
     // console.log("Visual update", options);
     // if (options.dataViews && options.dataViews[0]) {
     try {
+      // console.log(this.advEditorData.visualTables);
       this.events.renderingStarted(options);
 
       // const dataView: DataView = options.dataViews[0];
@@ -111,7 +119,7 @@ export class Visual implements IVisual {
       this.viewport = options.viewport;
       const { width, height } = this.viewport;
       // const size = Math.min(width, height);
-
+      // console.log(this.dataColumns);
       this.dataColumns = parseDataModelColumns(
         options && options.dataViews && options.dataViews[0],
         this.dataColumns
@@ -134,6 +142,7 @@ export class Visual implements IVisual {
           options.dataViews,
           JSON.parse(JSON.stringify(this.dataColumns))
         ),
+        // visualTables: this.visualTables,
       };
 
       // console.log(width, height);
