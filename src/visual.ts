@@ -110,7 +110,7 @@ export class Visual implements IVisual {
 
       this.viewport = options.viewport;
       const { width, height } = this.viewport;
-      const size = Math.min(width, height);
+      // const size = Math.min(width, height);
 
       this.dataColumns = parseDataModelColumns(
         options && options.dataViews && options.dataViews[0],
@@ -136,7 +136,9 @@ export class Visual implements IVisual {
         ),
       };
 
-      console.log("State", state);
+      // console.log(width, height);
+
+      // console.log("State", state);
 
       VisualMainDisplay.update(state);
     } catch (error) {

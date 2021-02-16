@@ -5,9 +5,11 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewObject = powerbi.DataViewObject;
 
 import VisualObjectInstancesToPersist = powerbi.VisualObjectInstancesToPersist;
-import { AdvancedEditingSettings } from "../settings";
-import { IVisualData, IVisualTable } from "../defs/main";
-import { ContentDisplay } from "./ContentDisplay";
+import { AdvancedEditingSettings } from "../../settings";
+import { IVisualData, IVisualTable } from "../../defs/main";
+import { ContentDisplay } from "./../ContentDisplay";
+import NewTable from "./NewTable";
+import EditTable from "./EditTable";
 
 interface IAdvanceEditorProps {
   host: IVisualHost;
@@ -39,17 +41,34 @@ export default class AdvanceEditor extends React.Component<
     };
 
     this.handleAddTableClick = this.handleAddTableClick.bind(this);
+    this.handleResetClick = this.handleResetClick.bind(this);
     this.handleSaveClick = this.handleSaveClick.bind(this);
+    this.handleEditTableUpdate = this.handleEditTableUpdate.bind(this);
   }
   render() {
     const { host, advancedEditing, visualData } = this.props;
-    const { isDirty } = this.state;
+    const { isDirty, visualTables } = this.state;
     return (
-      <div className="advanceEditor">
+      <div className="advanced-editor">
         <div className="editor">
-          This is the editor
-          <button onClick={this.handleAddTableClick}>Add Table</button>
+          EDITOR
+          {visualTables.map((table, tIdx) => {
+            return (
+              <EditTable
+                index={tIdx}
+                table={table}
+                onEditTableUpdate={this.handleEditTableUpdate}
+              />
+            );
+          })}
+          <NewTable onAddTable={this.handleAddTableClick} />
           <br />
+          <button
+            disabled={visualTables.length === 0}
+            onClick={this.handleResetClick}
+          >
+            Reset Changes
+          </button>
           <button disabled={!isDirty} onClick={this.handleSaveClick}>
             Save Changes
           </button>
@@ -63,10 +82,25 @@ export default class AdvanceEditor extends React.Component<
       </div>
     );
   }
+
+  private handleEditTableUpdate(table: IVisualTable, index: number) {
+    // console.log(table);
+    let visualTables = this.state.visualTables.slice(
+      0,
+      this.state.visualTables.length + 1
+    );
+    // console.log(visualTables);
+    visualTables[index] = table;
+    this.setState({
+      isDirty: true,
+      visualTables: visualTables,
+    });
+  }
   private handleAddTableClick(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    // e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    newTableName: string
   ) {
-    e.preventDefault();
+    // e.preventDefault();
 
     const visualTables = this.state.visualTables.slice(
       0,
@@ -74,8 +108,20 @@ export default class AdvanceEditor extends React.Component<
     );
 
     this.setState({
-      visualTables: visualTables.concat([{ columns: [] }]),
+      visualTables: visualTables.concat([{ columns: [], name: newTableName }]),
       isDirty: true,
+    });
+  }
+
+  private handleResetClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.preventDefault();
+
+    const changes = this.getNewObjectInstance();
+    this.setState({ visualTables: [] }, () => {
+      changes.replace[0].properties["visualTables"] = JSON.stringify({
+        tables: [],
+      });
+      this.props.host.persistProperties(changes);
     });
   }
 

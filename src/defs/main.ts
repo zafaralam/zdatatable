@@ -25,6 +25,7 @@ export interface IVisualMainDisplayState {
 }
 
 export interface IVisualTable {
+  name?: string;
   columns: IVisualTableColumn[];
 }
 
