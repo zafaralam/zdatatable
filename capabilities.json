@@ -1,22 +1,35 @@
 {
     "dataRoles": [
         {
-            "displayName": "Category Data",
-            "name": "category",
+            "displayName": "Grouping",
+            "name": "grouping",
             "kind": "Grouping"
         },
         {
-            "displayName": "Measure Data",
-            "name": "measure",
-            "kind": "Measure"
+            "displayName": "Content",
+            "name": "content",
+            "kind": "GroupingOrMeasure"
         }
     ],
     "objects": {
-        "dataPoint": {
-            "displayName": "Data colors",
+        "advancedEditing": {
+            "displayName": "Advanced Editing",
+            "description": "Advanced Editing settings contained",
             "properties": {
-                "defaultColor": {
-                    "displayName": "Default color",
+                "visualTables": {
+                    "displayName": "Visual Tables",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        },
+        "circle": {
+            "displayName": "Circle",
+            "properties": {
+                "circleColor": {
+                    "displayName": "Color",
+                    "description": "The fill color of the circle.",
                     "type": {
                         "fill": {
                             "solid": {
@@ -25,34 +38,11 @@
                         }
                     }
                 },
-                "showAllDataPoints": {
-                    "displayName": "Show all",
+                "circleThickness": {
+                    "displayName": "Thickness",
+                    "description": "The circle thickness.",
                     "type": {
-                        "bool": true
-                    }
-                },
-                "fill": {
-                    "displayName": "Fill",
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
-                        }
-                    }
-                },
-                "fillRule": {
-                    "displayName": "Color saturation",
-                    "type": {
-                        "fill": {}
-                    }
-                },
-                 "fontSize": {
-                    "displayName": "Text Size",
-                    "type": {
-                        "formatting": {
-                            "fontSize": true
-                        }
+                        "numeric": true
                     }
                 }
             }
@@ -60,25 +50,27 @@
     },
     "dataViewMappings": [
         {
-            "categorical": {
-                "categories": {
-                    "for": {
-                        "in": "category"
-                    },
+            "table": {
+                "rows": {
+                    "select": [
+                        {
+                            "for": {
+                                "in": "grouping"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "content"
+                            }
+                        }
+                    ],
                     "dataReductionAlgorithm": {
                         "top": {}
                     }
-                },
-                "values": {
-                    "select": [
-                        {
-                            "bind": {
-                                "to": "measure"
-                            }
-                        }
-                    ]
                 }
             }
         }
-    ]
+    ],
+    "advancedEditModeSupport": 2,
+    "suppressDefaultTitle": true
 }
