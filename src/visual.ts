@@ -57,8 +57,9 @@ import {
   IVisualMainDisplayState,
   IVisualTable,
 } from "./defs/main";
+import { SingleTable as SampleData } from "./models/visualTablesSamples";
 
-import AdvanceEditorData from "./advanceEditor";
+import AdvanceEditorData from "./models/advanceEditor";
 export class Visual implements IVisual {
   private target: HTMLElement;
   private host: IVisualHost;
@@ -78,7 +79,7 @@ export class Visual implements IVisual {
 
   constructor(options: VisualConstructorOptions) {
     // * Remove this console log
-    console.log("Visual constructor", options);
+    // console.log("Visual constructor", options);
 
     this.target = options.element;
     this.host = options.host;
@@ -88,6 +89,9 @@ export class Visual implements IVisual {
     this.dataColumns = [];
     // this.visualTables = [];
     this.advEditorData = new AdvanceEditorData();
+    this.advEditorData.updateVisualTables(
+      JSON.parse(JSON.stringify(SampleData))
+    );
 
     this.reactRoot = React.createElement(VisualMainDisplay, {
       host: this.host,

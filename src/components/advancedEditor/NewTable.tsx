@@ -23,7 +23,7 @@ export default class NewTable extends React.Component<
   }
   render() {
     return (
-      <div>
+      <div className="editor__new-table">
         <input
           type="text"
           name="newTableName"

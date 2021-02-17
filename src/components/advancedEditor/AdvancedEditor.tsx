@@ -10,7 +10,7 @@ import { IVisualData, IVisualTable } from "../../defs/main";
 import { ContentDisplay } from "./../ContentDisplay";
 import NewTable from "./NewTable";
 import EditTable from "./EditTable";
-import AdvanceEditorData from "./../../advanceEditor";
+import AdvanceEditorData from "../../models/advanceEditor";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -50,7 +50,10 @@ export default class AdvanceEditor extends React.Component<
     this.handleRemoveTable = this.handleRemoveTable.bind(this);
   }
   render() {
-    const { host, advancedEditing, visualData } = this.props;
+    const {
+      host, // advancedEditing,
+      visualData,
+    } = this.props;
     const { isDirty, visualTables } = this.state;
     return (
       <div className="advanced-editor">
@@ -63,22 +66,31 @@ export default class AdvanceEditor extends React.Component<
                 table={table}
                 onEditTableUpdate={this.handleEditTableUpdate}
                 onRemoveTable={this.handleRemoveTable}
+                dataColumns={visualData.columns}
               />
             );
           })}
-          <NewTable onAddTable={this.handleAddTableClick} />
-          <br />
-          <button
-            disabled={visualTables.length === 0}
-            onClick={this.handleResetClick}
-          >
-            Reset Changes
-          </button>
-          <button disabled={!isDirty} onClick={this.handleSaveClick}>
-            Save Changes
-          </button>
+          <div className="editor__bottom-panel card">
+            <NewTable onAddTable={this.handleAddTableClick} />
+            <div className="editor__actions">
+              <button
+                disabled={visualTables.length === 0}
+                onClick={this.handleResetClick}
+                title="Reset Changes to visual"
+              >
+                Reset Changes
+              </button>
+              <button
+                disabled={!isDirty}
+                onClick={this.handleSaveClick}
+                className="primary-btn"
+              >
+                Save Changes
+              </button>
+            </div>
+          </div>
         </div>
-        <hr />
+        {/* <hr /> */}
         <ContentDisplay
           host={host}
           visualData={visualData}
@@ -127,7 +139,9 @@ export default class AdvanceEditor extends React.Component<
     );
 
     this.setState({
-      visualTables: visualTables.concat([{ columns: [], name: newTableName }]),
+      visualTables: visualTables.concat([
+        { columns: [], name: newTableName, totalTableColumns: 0 },
+      ]),
       isDirty: true,
     });
   }

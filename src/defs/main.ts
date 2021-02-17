@@ -5,7 +5,7 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewObjects = powerbi.DataViewObjects;
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "./enums";
 import { AdvancedEditingSettings } from "../settings";
-import AdvanceEditorData from "./../advanceEditor";
+import AdvanceEditorData from "../models/advanceEditor";
 // Visual Settings Imports here
 
 export interface IVisualMainDisplayProps {
@@ -30,11 +30,12 @@ export interface IVisualMainDisplayState {
 export interface IVisualTable {
   name?: string;
   columns: IVisualTableColumn[];
+  totalTableColumns: number;
 }
 
 export interface IVisualTableColumn {
   label: string;
-  displayOnly: VISUAL_DISPLAY_COLUMN_TYPE;
+  columnType: VISUAL_DISPLAY_COLUMN_TYPE;
   queryName?: string;
   dataColumnIndex?: number;
   columns?: IVisualTableColumn[];

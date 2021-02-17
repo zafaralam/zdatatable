@@ -1,65 +1,171 @@
 // @import (less) "node_modules/overlayscrollbars/css/OverlayScrollbars.min.css";
 
 ::-webkit-scrollbar-track {
-    // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    // background-color: #f5f5f5;
-    background-color: transparent;
-    // border-radius: 2px;
+  // -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  // background-color: #f5f5f5;
+  background-color: transparent;
+  // border-radius: 2px;
 }
 
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 6px;
-    // background-color: #f5f5f5;
-    background-color: transparent;
+  width: 5px;
+  height: 6px;
+  // background-color: #f5f5f5;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(202, 202, 202);
-    border-radius: 3px;
+  background: rgb(202, 202, 202);
+  border-radius: 3px;
 
-    // transition: background 1s ease-in-out;
-    &:hover {
-        cursor: pointer;
-    }
+  // transition: background 1s ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
 
-    // border: 2px solid #555555;
+  // border: 2px solid #555555;
 }
 
-.circleCard {
-    position: relative;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    border-radius: 50%;
-    min-width: 200px;
-    min-height: 200px;
+input[type="text"] {
+  min-height: 2rem;
+  line-height: 1.5rem;
+  font-size: 1.1rem;
+  width: auto;
+  cursor: text;
 }
 
-p {
-    text-align: center;
-    line-height: 30px;
-    font-size: 20px;
-    font-weight: bold;
+button {
+  cursor: pointer;
+  min-height: 2rem;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.05rem;
+  word-spacing: 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: none;
+  background: rgb(208, 209, 211);
+  padding: 10px 8px;
 
-    position: relative;
-    top: -30px;
-    margin: 50% 0 0 0;
+  &:disabled {
+    cursor: not-allowed;
+    background: rgb(216, 216, 218);
+    color: rgb(75, 74, 74);
+  }
+}
+
+.primary-btn {
+  color: white;
+  background: #212e5f;
+
+  &:disabled {
+    background: #181d2c;
+  }
+}
+
+.icon-btn {
+  background: none;
+  display: inline-flex;
+  border: none; //1px solid red;
+  min-height: 2rem;
+  // flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.13);
+  transition: 0.3s;
+  padding: 8px 10px;
+  margin: 6px;
+
+  /* On mouse-over, add a deeper shadow */
+  &:hover {
+    box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.13);
+  }
 }
 
 .advanced-editor {
-    height: 100%;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 50% auto;
-}
+  height: 100%;
+  padding: 0 5px;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 50% auto;
+  cursor: default;
 
-.editor {
+  .editor {
     min-height: 300px;
     overflow-y: auto;
+    .editor__bottom-panel {
+      margin-top: 0.5rem;
+      display: grid;
+      grid-template-rows: 100%;
+      grid-template-columns: 1fr 1fr;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .editor__new-table {
+      button {
+        margin-left: 1rem;
+      }
+    }
+
+    .editor__actions {
+      text-align: right;
+      //   align-self: flex-end;
+      *:not(:first-child) {
+        margin-left: 4rem;
+      }
+    }
+  }
 }
 
+// .editor {
+
+// }
+
 .visual-tables {
-    height: 100%;
-    overflow-y: auto;
-    background: red;
+  height: 100%;
+  overflow-y: auto;
+  background: red;
+  margin-bottom: 8px;
+}
+
+.edit-table {
+  overflow-x: auto;
+  padding: 16px 8px;
+  .edit-table__table-name {
+    margin-bottom: 0.25rem;
+  }
+  .edit-table__columns {
+    // padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    // align-items: center;
+    justify-content: stretch;
+
+    .edit-table__column {
+      //   text-align: center;
+      background: rgb(233, 233, 233);
+      margin: 4px;
+    }
+
+    &.edit-table__columns--table {
+      > .edit-table__column {
+        border: 1px solid black;
+        margin: 0 4px;
+        background: white; // crimson;
+      }
+      //   background: grey;
+      //   margin: 0.5rem;
+    }
+
+    // &.edit-table__columns--column {
+    //   //   flex-wrap: nowrap;
+    // }
+  }
 }

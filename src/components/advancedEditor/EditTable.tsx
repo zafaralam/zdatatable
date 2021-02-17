@@ -1,12 +1,16 @@
 // TODO: style the component
 
 import * as React from "react";
-import { VISUAL_DISPLAY_COLUMN_TYPE } from "../../defs/enums";
-import { IVisualTable, IVisualTableColumn } from "../../defs/main";
-
+import {
+  EDIT_COLUMNS_PARENT_TYPE,
+  VISUAL_DISPLAY_COLUMN_TYPE,
+} from "../../defs/enums";
+import { IVisualTable, IDataColumn, IVisualTableColumn } from "../../defs/main";
+import EditTableColumns from "./EditTableColumns";
 interface IEditTableProps {
   table: IVisualTable;
   index: number;
+  dataColumns: IDataColumn[];
   onEditTableUpdate: Function;
   onRemoveTable: Function;
 }
@@ -26,6 +30,7 @@ export default class EditTable extends React.Component<
     this.handleTableNameChange = this.handleTableNameChange.bind(this);
     this.handleAddColumn = this.handleAddColumn.bind(this);
     this.handleRemoveTable = this.handleRemoveTable.bind(this);
+    this.handleVisualColumnsUpdate = this.handleVisualColumnsUpdate.bind(this);
   }
 
   private handleTableNameChange(value) {
@@ -54,13 +59,21 @@ export default class EditTable extends React.Component<
           .concat([
             {
               label: "",
-              displayOnly: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
+              columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
               queryName: "",
               dataColumnIndex: null,
               columns: [],
             },
           ]),
+        totalTableColumns: 0,
       },
+      this.props.index
+    );
+  }
+
+  private handleVisualColumnsUpdate(columns: IVisualTableColumn[]) {
+    this.props.onEditTableUpdate(
+      { name: this.props.table.name, columns: columns },
       this.props.index
     );
   }
@@ -69,9 +82,9 @@ export default class EditTable extends React.Component<
     // const { name, columns } = this.state;
 
     return (
-      <div className="edit-table" key={`edit-table-${this.props.index}`}>
+      <div className="edit-table card" key={`edit-table-${this.props.index}`}>
         <div className="edit-table__table-name">
-          <label>Table Name:</label>
+          <label>Table Name:{this.props.table.totalTableColumns}</label>
           <input
             type="text"
             value={this.props.table.name}
@@ -86,15 +99,12 @@ export default class EditTable extends React.Component<
             <button onClick={this.handleAddColumn}>Add Column</button>
           </span>
         </div>
-        <div className="edit-table__columns">
-          {this.props.table.columns.map((column, cIdx) => {
-            return (
-              <div className="edit-table__column" key={cIdx}>
-                {`${column.label}-${cIdx}`}
-              </div>
-            );
-          })}
-        </div>
+        <EditTableColumns
+          dataColumns={this.props.dataColumns}
+          visualColumns={this.props.table.columns}
+          parentType={EDIT_COLUMNS_PARENT_TYPE.TABLE}
+          onVisualColumnsUpdate={this.handleVisualColumnsUpdate}
+        />
       </div>
     );
   }

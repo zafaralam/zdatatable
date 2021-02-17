@@ -1,4 +1,4 @@
-import { IVisualTable } from "./defs/main";
+import { IVisualTable } from "../defs/main";
 
 export default class AdvanceEditorData {
   public visualTables: IVisualTable[] = [];
