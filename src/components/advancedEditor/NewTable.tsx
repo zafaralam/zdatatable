@@ -1,5 +1,6 @@
 // TODO: style the component
 
+import { Button, TextField, Grid } from "@material-ui/core";
 import * as React from "react";
 
 interface INewTableProps {
@@ -24,21 +25,32 @@ export default class NewTable extends React.Component<
   render() {
     return (
       <div className="editor__new-table">
-        <input
-          type="text"
-          name="newTableName"
-          id="newTableName"
-          value={this.state.newTableName}
-          onChange={(e) => {
-            this.setState({ newTableName: e.target.value });
-          }}
-        />
-        <button
-          disabled={this.state.newTableName.length === 0}
-          onClick={this.handleAddTable}
-        >
-          Add New Table
-        </button>
+        <Grid container direction="row" alignItems="flex-end" spacing={1}>
+          <Grid item xs={9}>
+            <TextField
+              name="newTableName"
+              label="New Table Name"
+              id="newTableName"
+              value={this.state.newTableName}
+              onChange={(e) => {
+                this.setState({ newTableName: e.target.value });
+              }}
+              size="small"
+              fullWidth
+              variant="standard"
+            />
+          </Grid>
+          <Grid item xs={3}>
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={this.state.newTableName.length === 0}
+              onClick={this.handleAddTable}
+            >
+              Add New Table
+            </Button>
+          </Grid>
+        </Grid>
       </div>
     );
   }

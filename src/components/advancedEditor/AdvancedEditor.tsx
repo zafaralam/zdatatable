@@ -11,6 +11,9 @@ import { ContentDisplay } from "./../ContentDisplay";
 import NewTable from "./NewTable";
 import EditTable from "./EditTable";
 import AdvanceEditorData from "../../models/advanceEditor";
+import Button from "@material-ui/core/Button";
+import AlertDialog from "./AlertDialog";
+import { Paper } from "@material-ui/core";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -25,6 +28,7 @@ interface IAdvanceEditorProps {
 interface IAdvancedEditorState {
   isDirty: boolean;
   visualTables: IVisualTable[];
+  dialog: boolean;
 }
 
 // const initialState = {
@@ -41,6 +45,7 @@ export default class AdvanceEditor extends React.Component<
     this.state = {
       isDirty: false,
       visualTables: props.advEditorData.visualTables,
+      dialog: false,
     };
 
     this.handleAddTableClick = this.handleAddTableClick.bind(this);
@@ -54,9 +59,19 @@ export default class AdvanceEditor extends React.Component<
       host, // advancedEditing,
       visualData,
     } = this.props;
-    const { isDirty, visualTables } = this.state;
+    const { isDirty, visualTables, dialog } = this.state;
     return (
       <div className="advanced-editor">
+        <AlertDialog
+          open={dialog}
+          message={
+            "Are sure you want to reset the visual tables? This action is permanent and you will loose your changes."
+          }
+          handleAgree={this.handleResetClick}
+          handleDisagree={() => {
+            this.setState({ dialog: false });
+          }}
+        />
         <div className="editor">
           EDITOR
           {visualTables.map((table, tIdx) => {
@@ -70,25 +85,33 @@ export default class AdvanceEditor extends React.Component<
               />
             );
           })}
-          <div className="editor__bottom-panel card">
+          {/* <Paper> */}
+          <div className="editor__bottom-panel">
             <NewTable onAddTable={this.handleAddTableClick} />
             <div className="editor__actions">
-              <button
+              <Button
+                variant="contained"
                 disabled={visualTables.length === 0}
-                onClick={this.handleResetClick}
-                title="Reset Changes to visual"
+                onClick={() => {
+                  this.setState({ dialog: true });
+                }}
+                title="Reset changes to visual"
               >
-                Reset Changes
-              </button>
-              <button
+                Reset
+              </Button>
+
+              <Button
+                variant="contained"
+                color="primary"
                 disabled={!isDirty}
                 onClick={this.handleSaveClick}
-                className="primary-btn"
+                title="Save Changes"
               >
                 Save Changes
-              </button>
+              </Button>
             </div>
           </div>
+          {/* </Paper> */}
         </div>
         {/* <hr /> */}
         <ContentDisplay
@@ -146,12 +169,12 @@ export default class AdvanceEditor extends React.Component<
     });
   }
 
-  private handleResetClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.preventDefault();
-
+  // private handleResetClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  //   e.preventDefault();
+  private handleResetClick() {
     const changes = this.getNewObjectInstance();
 
-    this.setState({ visualTables: [] }, () => {
+    this.setState({ visualTables: [], isDirty: false, dialog: false }, () => {
       changes.replace[0].properties["visualTables"] = JSON.stringify({
         tables: [],
         tableCount: 0,

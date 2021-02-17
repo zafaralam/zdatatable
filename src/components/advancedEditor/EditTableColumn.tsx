@@ -5,6 +5,7 @@ import {
 } from "../../defs/enums";
 import { IDataColumn, IVisualTableColumn } from "../../defs/main";
 import EditTableColumns from "./EditTableColumns";
+import { IconButton } from "@material-ui/core";
 
 interface IEditTableColumnProps {
   column: IVisualTableColumn;
@@ -13,7 +14,7 @@ interface IEditTableColumnProps {
   onVisualColumnUpdate: Function;
   onVisualColumnRemoval: Function;
 }
-import { BsFillTrashFill, BsPlusSquare, BsGear } from "react-icons/bs";
+import { BsFillTrashFill, BsPlusSquare, BsPencil } from "react-icons/bs";
 
 export default class EditTableColumn extends React.Component<IEditTableColumnProps> {
   constructor(props) {
@@ -88,25 +89,27 @@ export default class EditTableColumn extends React.Component<IEditTableColumnPro
           }}
         /> */}
         <span>{label.length === 0 ? "Column" : label}</span>
-        <button className="icon-btn">
-          <BsGear />
-        </button>
-        <button
-          className="icon-btn"
+        <IconButton aria-label="edit">
+          <BsPencil />
+        </IconButton>
+
+        <IconButton
+          aria-label="edit"
           title="Remove Column"
           onClick={() => {
             this.props.onVisualColumnRemoval(this.props.index);
           }}
         >
           <BsFillTrashFill />
-        </button>
-        <button
+        </IconButton>
+
+        <IconButton
           title="Add Column"
-          className="icon-btn"
+          aria-label="add column"
           onClick={this.handleAddVisualColumn}
         >
           <BsPlusSquare />
-        </button>
+        </IconButton>
         {columnsAllowed && hasColumns ? (
           <EditTableColumns
             dataColumns={this.props.dataColumns}

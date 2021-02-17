@@ -2,6 +2,20 @@
 
 import * as React from "react";
 import {
+  Button,
+  Grid,
+  Paper,
+  //Card, CardContent,
+  TextField,
+} from "@material-ui/core";
+
+import {
+  BsFillTrashFill,
+  BsLayoutThreeColumns,
+  BsPlusSquare,
+  BsGear,
+} from "react-icons/bs";
+import {
   EDIT_COLUMNS_PARENT_TYPE,
   VISUAL_DISPLAY_COLUMN_TYPE,
 } from "../../defs/enums";
@@ -82,30 +96,51 @@ export default class EditTable extends React.Component<
     // const { name, columns } = this.state;
 
     return (
-      <div className="edit-table card" key={`edit-table-${this.props.index}`}>
-        <div className="edit-table__table-name">
-          <label>Table Name:{this.props.table.totalTableColumns}</label>
-          <input
-            type="text"
-            value={this.props.table.name}
-            onChange={(e) => {
-              this.handleTableNameChange(e.target.value);
-            }}
+      <Paper variant="outlined" style={{ marginBottom: "5px" }}>
+        <div className="edit-table" key={`edit-table-${this.props.index}`}>
+          <div className="edit-table__table-name">
+            <Grid container direction="row" alignItems="flex-end" spacing={1}>
+              <Grid item xs={8}>
+                <TextField
+                  id={`editTableName-${this.props.index}`}
+                  label="Table Name"
+                  value={this.props.table.name}
+                  onChange={(e) => {
+                    this.handleTableNameChange(e.target.value);
+                  }}
+                  size="small"
+                  fullWidth
+                  variant="standard"
+                />
+              </Grid>
+              <Grid container item xs={2} justify="flex-end">
+                <Button
+                  color="primary"
+                  onClick={this.handleAddColumn}
+                  startIcon={<BsLayoutThreeColumns />}
+                >
+                  Add Base Column
+                </Button>
+              </Grid>
+              <Grid container item xs={2} justify="flex-end">
+                <Button
+                  color="secondary"
+                  onClick={this.handleRemoveTable}
+                  startIcon={<BsFillTrashFill />}
+                >
+                  Remove Table
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+          <EditTableColumns
+            dataColumns={this.props.dataColumns}
+            visualColumns={this.props.table.columns}
+            parentType={EDIT_COLUMNS_PARENT_TYPE.TABLE}
+            onVisualColumnsUpdate={this.handleVisualColumnsUpdate}
           />
-          <span>
-            <button onClick={this.handleRemoveTable}>Remove Table</button>
-          </span>
-          <span>
-            <button onClick={this.handleAddColumn}>Add Column</button>
-          </span>
         </div>
-        <EditTableColumns
-          dataColumns={this.props.dataColumns}
-          visualColumns={this.props.table.columns}
-          parentType={EDIT_COLUMNS_PARENT_TYPE.TABLE}
-          onVisualColumnsUpdate={this.handleVisualColumnsUpdate}
-        />
-      </div>
+      </Paper>
     );
   }
 }
