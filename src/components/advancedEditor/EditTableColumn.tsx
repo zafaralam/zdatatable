@@ -5,6 +5,7 @@ import {
 } from "../../defs/enums";
 import { IDataColumn, IVisualTableColumn } from "../../defs/main";
 import EditTableColumns from "./EditTableColumns";
+import ColorPicker from "./ColorPicker";
 import {
   Button,
   IconButton,
@@ -20,6 +21,10 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  // FormControlLabel,
+  InputAdornment,
+  Checkbox,
+  FormControlLabel,
 } from "@material-ui/core";
 
 interface IEditTableColumnProps {
@@ -36,6 +41,7 @@ import {
   BsLayoutThreeColumns,
 } from "react-icons/bs";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { formatPrefix } from "d3";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
@@ -56,6 +62,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     queryName,
     dataColumnIndex,
     columns,
+    level,
   } = props.column;
   const hasColumns = columns && columns.length !== 0,
     columnsAllowed = columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
@@ -79,6 +86,12 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       queryName: "",
       dataColumnIndex: null,
       columns: [],
+      level: level + 1,
+      bgColor: "#fff",
+      applyBgColorToValues: false,
+      textColor: "#000",
+      applyTextColorToValues: false,
+      labelFontSize: 16,
     });
     props.onVisualColumnUpdate(column, props.index);
   };
@@ -120,6 +133,11 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       _column.queryName = "";
       _column.dataColumnIndex = null;
       _column["columns"] = [];
+      _column["bgColor"] = "#fff";
+      _column["applyBgColorToValues"] = false;
+      _column["textColor"] = "#000";
+      _column["applyTextColorToValues"] = false;
+      _column["labelFontSize"] = 16;
     } else {
       // for a non-display only column a user cannot add sub column.
       _column["columns"] = [];
@@ -135,16 +153,24 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       JSON.stringify(props.column)
     );
     _column.queryName = _valueToSet;
-    _column.dataColumnIndex = props.dataColumns.findIndex(
-      (i) => i.queryName === _valueToSet
-    );
+    if (_valueToSet && _valueToSet.length !== 0)
+      _column.dataColumnIndex = props.dataColumns.findIndex(
+        (i) => i.queryName === _valueToSet
+      );
+    else _column.dataColumnIndex = null;
 
     props.onVisualColumnUpdate(_column, props.index);
   };
 
   return (
     <div key={props.index} className="edit-table__column">
-      <span style={{ maxWidth: "180px", display: "inline-block" }}>
+      <span
+        style={{
+          maxWidth: "180px",
+          display: "inline-block",
+          fontSize: "0.85rem",
+        }}
+      >
         {label.length === 0
           ? columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY
             ? "Column"
@@ -183,7 +209,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
               : "Measure Column"
             : label}
         </DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ minHeight: "450px" }}>
           <div>
             <FormControl className={classes.formControl} fullWidth>
               <TextField
@@ -198,6 +224,115 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
               />
             </FormControl>
           </div>
+
+          <div>
+            <FormControl className={classes.formControl}>
+              <Grid container spacing={1} alignItems="center">
+                <Grid item>
+                  <Typography variant="body2">Background Color:</Typography>
+                </Grid>
+                <Grid item>
+                  <ColorPicker
+                    color={
+                      props.column.bgColor != undefined
+                        ? props.column.bgColor
+                        : "#fff"
+                    }
+                    onColorChange={(color) => {
+                      handleColumnPropertyChange("bgColor", color);
+                    }}
+                  />
+                </Grid>
+                {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
+                label.length !== 0 ? (
+                  <Grid item>
+                    <Checkbox
+                      checked={
+                        props.column.applyBgColorToValues === undefined
+                          ? false
+                          : props.column.applyBgColorToValues
+                      }
+                      onChange={(e) => {
+                        handleColumnPropertyChange(
+                          "applyBgColorToValues",
+                          e.target.checked
+                        );
+                      }}
+                      color="primary"
+                    />
+                  </Grid>
+                ) : (
+                  ""
+                )}
+                {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
+                label.length !== 0 ? (
+                  <Grid item>
+                    <Typography variant="body2">
+                      Apply Background Color to Values
+                    </Typography>
+                  </Grid>
+                ) : (
+                  ""
+                )}
+              </Grid>
+            </FormControl>
+          </div>
+          {(columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
+            label.length !== 0) ||
+          columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+            <div>
+              <div>
+                <FormControl className={classes.formControl}>
+                  <Grid container spacing={1} alignItems="center">
+                    <Grid item>
+                      <Typography variant="body2">Text Color:</Typography>
+                    </Grid>
+                    <Grid item>
+                      <ColorPicker
+                        color={
+                          props.column.textColor != undefined
+                            ? props.column.textColor
+                            : "#000"
+                        }
+                        onColorChange={(color) => {
+                          handleColumnPropertyChange("textColor", color);
+                        }}
+                      />
+                    </Grid>
+                  </Grid>
+                </FormControl>
+              </div>
+
+              <div>
+                <FormControl className={classes.formControl} fullWidth>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Label Font Size"
+                    type="number"
+                    value={
+                      props.column.labelFontSize === undefined
+                        ? 16
+                        : props.column.labelFontSize
+                    }
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start">px</InputAdornment>
+                      ),
+                    }}
+                    onChange={(e) => {
+                      handleColumnPropertyChange(
+                        "labelFontSize",
+                        e.target.value
+                      );
+                    }}
+                  />
+                </FormControl>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
           <div>
             <FormControl className={classes.formControl} fullWidth>
               <InputLabel id="col-type-label">Column Type</InputLabel>
@@ -237,6 +372,9 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   onChange={handleMeasureSelectionChange}
                   fullWidth
                 >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
                   {props.dataColumns
                     .filter((i) => i.content === true)
                     .map((dc) => {
@@ -261,15 +399,19 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   Sub columns: {columns && columns.length}
                 </Typography>
               </Grid>
-              <Grid item>
-                <Button
-                  variant="contained"
-                  onClick={handleAddVisualColumn}
-                  startIcon={<BsLayoutThreeColumns />}
-                >
-                  Add Sub Column
-                </Button>
-              </Grid>
+              {level < 3 ? (
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    onClick={handleAddVisualColumn}
+                    startIcon={<BsLayoutThreeColumns />}
+                  >
+                    Add Sub Column
+                  </Button>
+                </Grid>
+              ) : (
+                ""
+              )}
             </Grid>
           )}
         </DialogContent>

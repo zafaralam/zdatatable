@@ -12,6 +12,162 @@
         }
     ],
     "objects": {
+        "tableTitle": {
+            "displayName": "Table Title Formatting",
+            "description": "Formatting options for individual table",
+            "properties": {
+                "backgroundColor": {
+                    "displayName": "Background Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontColor": {
+                    "displayName": "Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "padding": {
+                    "displayName": "Padding (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "mainMeasure": {
+            "displayName": "Main Measure",
+            "description": "Formatting options for the main measure value columns",
+            "properties": {
+                "fontColor": {
+                    "displayName": "Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "secondaryMeasure": {
+            "displayName": "Secondary Measure",
+            "description": "Formatting options for the secondary measure value columns",
+            "properties": {
+                "fontColor": {
+                    "displayName": "Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                }
+            }
+        },
+        "trendLine": {
+            "displayName": "Trend Line Formatting",
+            "description": "Formatting options for the trend line charts",
+            "properties": {
+                "height": {
+                    "displayName": "Height (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "width": {
+                    "displayName": "Width (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "fillColor": {
+                    "displayName": "Fill Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "strokeColor": {
+                    "displayName": "Stroke Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "strokeWidth": {
+                    "displayName": "Stoke Width",
+                    "type": {
+                        "integer": true
+                    }
+                }
+            }
+        },
         "advancedEditing": {
             "displayName": "Advanced Editing",
             "description": "Advanced Editing settings contained",

@@ -129,6 +129,8 @@ export class Visual implements IVisual {
         this.dataColumns
       );
 
+      // console.log(this.settings.tableTitle);
+
       let state: IVisualMainDisplayState = {
         updateOptions: options,
         canAdvanceEdit:
@@ -146,6 +148,10 @@ export class Visual implements IVisual {
           options.dataViews,
           JSON.parse(JSON.stringify(this.dataColumns))
         ),
+        tableTitleSettings: this.settings.tableTitle,
+        mainMeasureSettings: this.settings.mainMeasure,
+        secondaryMeasureSettings: this.settings.secondaryMeasure,
+        trendLineSettings: this.settings.trendLine,
         // visualTables: this.visualTables,
       };
 
@@ -156,7 +162,7 @@ export class Visual implements IVisual {
       VisualMainDisplay.update(state);
     } catch (error) {
       this.events.renderingFailed(options, error);
-      console.log(options, error);
+      console.log(options, error, this.dataColumns);
       // TODO: Perform other actions
       // ? How to log this error to user and also gracefully exit.
     }

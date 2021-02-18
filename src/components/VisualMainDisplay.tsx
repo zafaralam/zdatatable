@@ -17,6 +17,11 @@ export const initialState: IVisualMainDisplayState = {
   canAdvanceEdit: false,
   advancedEditing: defaultSettings["advancedEditing"],
   data: processDataView([], []),
+  tableTitleSettings: defaultSettings["tableTileSettings"],
+
+  mainMeasureSettings: defaultSettings["mainMeasureSettings"],
+  secondaryMeasureSettings: defaultSettings["secondaryMeasureSettings"],
+  trendLineSettings: defaultSettings["trendLineSettings"],
   // visualTables: [],
 };
 
@@ -57,6 +62,10 @@ export class VisualMainDisplay extends React.Component<
       advancedEditing,
       objectMetadata,
       data,
+      tableTitleSettings,
+      mainMeasureSettings,
+      secondaryMeasureSettings,
+      trendLineSettings,
     } = this.state;
 
     switch (true) {
@@ -69,6 +78,11 @@ export class VisualMainDisplay extends React.Component<
             advancedEditingObjectMetadata={objectMetadata?.advancedEditing}
             visualData={data.visualData}
             advEditorData={this.props.advEditorData}
+            tableTitleSettings={tableTitleSettings}
+            mainMeasureSettings={mainMeasureSettings}
+            secondaryMeasureSettings={secondaryMeasureSettings}
+            trendLineSettings={trendLineSettings}
+
             // updateDisplayTables={this.props.updateDisplayTables}
             // visualTables={this.state.visualTables}
           />
@@ -81,6 +95,10 @@ export class VisualMainDisplay extends React.Component<
             host={this.props.host}
             visualData={data.visualData}
             visualTables={this.props.advEditorData.visualTables}
+            tableTitleSettings={tableTitleSettings}
+            mainMeasureSettings={mainMeasureSettings}
+            secondaryMeasureSettings={secondaryMeasureSettings}
+            trendLineSettings={trendLineSettings}
           />
         );
       }

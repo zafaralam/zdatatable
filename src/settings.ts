@@ -37,7 +37,39 @@ import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 export class AdvancedEditingSettings {
   public visualTables: string = '{"tables": []}';
 }
+
+export class TableTitleSettings {
+  public fontColor: string = "#000";
+  public backgroundColor: string = "#fff";
+  public fontFamily: string = "DIN";
+  public fontSize: number = 10;
+  public padding: number = 1;
+}
+
+export class MainMeasureSettings {
+  public fontColor: string = "#000";
+  public fontFamily: string = "DIN";
+  public fontSize: number = 18;
+}
+
+export class SecondaryMeasureSettings {
+  public fontColor: string = "#000";
+  public fontFamily: string = "DIN";
+  public fontSize: number = 10;
+}
+
+export class TrendLineSettings {
+  public height: number = 20;
+  public width: number = 150;
+  public fillColor: string = "#ECECEC";
+  public strokeColor: string = "#363636";
+  public strokeWidth: number = 2;
+}
 export class VisualSettings extends DataViewObjectsParser {
   // public circle: CircleSettings = new CircleSettings();
   public advancedEditing: AdvancedEditingSettings = new AdvancedEditingSettings();
+  public tableTitle: TableTitleSettings = new TableTitleSettings();
+  public mainMeasure: MainMeasureSettings = new MainMeasureSettings();
+  public secondaryMeasure: SecondaryMeasureSettings = new SecondaryMeasureSettings();
+  public trendLine: TrendLineSettings = new TrendLineSettings();
 }

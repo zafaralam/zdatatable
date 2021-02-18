@@ -5,7 +5,13 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewObject = powerbi.DataViewObject;
 
 import VisualObjectInstancesToPersist = powerbi.VisualObjectInstancesToPersist;
-import { AdvancedEditingSettings } from "../../settings";
+import {
+  AdvancedEditingSettings,
+  TableTitleSettings,
+  TrendLineSettings,
+  MainMeasureSettings,
+  SecondaryMeasureSettings,
+} from "../../settings";
 import { IVisualData, IVisualTable } from "../../defs/main";
 import { ContentDisplay } from "./../ContentDisplay";
 import NewTable from "./NewTable";
@@ -21,6 +27,10 @@ interface IAdvanceEditorProps {
   advancedEditingObjectMetadata?: DataViewObject;
   visualData: IVisualData;
   advEditorData: AdvanceEditorData;
+  tableTitleSettings?: TableTitleSettings;
+  mainMeasureSettings?: MainMeasureSettings;
+  secondaryMeasureSettings?: SecondaryMeasureSettings;
+  trendLineSettings?: TrendLineSettings;
   // updateDisplayTables: Function;
   // visualTables: IVisualTable[];
 }
@@ -123,6 +133,10 @@ export default class AdvanceEditor extends React.Component<
           host={host}
           visualData={visualData}
           visualTables={this.props.advEditorData.visualTables}
+          tableTitleSettings={this.props.tableTitleSettings}
+          mainMeasureSettings={this.props.mainMeasureSettings}
+          secondaryMeasureSettings={this.props.secondaryMeasureSettings}
+          trendLineSettings={this.props.trendLineSettings}
         />
       </div>
     );
@@ -178,11 +192,12 @@ export default class AdvanceEditor extends React.Component<
   //   e.preventDefault();
   private handleResetClick() {
     const changes = this.getNewObjectInstance();
-
+    // const today = Date.now().toLocaleString();
     this.setState({ visualTables: [], isDirty: false, dialog: false }, () => {
       changes.replace[0].properties["visualTables"] = JSON.stringify({
         tables: [],
         tableCount: 0,
+        updateDatetime: Date.now().toLocaleString(),
       });
       this.props.advEditorData.reset();
       this.props.host.persistProperties(changes);
@@ -198,6 +213,7 @@ export default class AdvanceEditor extends React.Component<
       changes.replace[0].properties["visualTables"] = JSON.stringify({
         tables: [],
         tableCount: this.state.visualTables.length,
+        updateDatetime: Date.now().toLocaleString(),
       });
       this.props.advEditorData.updateVisualTables(
         this.state.visualTables.slice(0, this.state.visualTables.length + 1)

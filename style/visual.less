@@ -130,7 +130,7 @@ button {
 .visual-tables {
   height: 100%;
   overflow-y: auto;
-  background: red;
+  //   background: rgb(163, 161, 245);
   margin-bottom: 8px;
 }
 
@@ -167,5 +167,31 @@ button {
     // &.edit-table__columns--column {
     //   //   flex-wrap: nowrap;
     // }
+  }
+}
+
+.display-table {
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin-bottom: 16px;
+  //   caption {
+  //     padding: 10px;
+  //   }
+  th,
+  td {
+    border: 1px solid black;
+  }
+
+  th.empty-header-col {
+    border: none;
+  }
+  th {
+    padding: 2px 4px;
+    // font-size: 0.85rem;
+    // font-weight: 600;
+  }
+  td {
+    padding: 2px 4px;
+    border: none;
   }
 }
