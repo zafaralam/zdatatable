@@ -6,7 +6,7 @@ import {
   IVisualMainDisplayState,
 } from "./../defs/main";
 import { processDataView } from "./../utils/dataView";
-import AdvanceEditor from "./AdvancedEditor";
+import AdvanceEditor from "./advancedEditor/AdvancedEditor";
 import { ContentDisplay } from "./ContentDisplay";
 // export interface State {}
 
@@ -17,6 +17,7 @@ export const initialState: IVisualMainDisplayState = {
   canAdvanceEdit: false,
   advancedEditing: defaultSettings["advancedEditing"],
   data: processDataView([], []),
+  // visualTables: [],
 };
 
 export class VisualMainDisplay extends React.Component<
@@ -57,6 +58,7 @@ export class VisualMainDisplay extends React.Component<
       objectMetadata,
       data,
     } = this.state;
+
     switch (true) {
       case isEditMode: {
         return (
@@ -66,6 +68,9 @@ export class VisualMainDisplay extends React.Component<
             advancedEditing={advancedEditing}
             advancedEditingObjectMetadata={objectMetadata?.advancedEditing}
             visualData={data.visualData}
+            advEditorData={this.props.advEditorData}
+            // updateDisplayTables={this.props.updateDisplayTables}
+            // visualTables={this.state.visualTables}
           />
         );
       }
@@ -75,7 +80,7 @@ export class VisualMainDisplay extends React.Component<
           <ContentDisplay
             host={this.props.host}
             visualData={data.visualData}
-            visualTables={advancedEditing.visualTables}
+            visualTables={this.props.advEditorData.visualTables}
           />
         );
       }
@@ -86,6 +91,15 @@ export class VisualMainDisplay extends React.Component<
   }
 
   render() {
-    return <div className="main-container">{this.conditionalRendering()}</div>;
+    const { updateOptions } = this.state;
+    const style: React.CSSProperties = {
+      width: updateOptions && updateOptions.viewport.width,
+      height: updateOptions && updateOptions.viewport.height,
+    };
+    return (
+      <div className="main-container" style={style}>
+        {this.conditionalRendering()}
+      </div>
+    );
   }
 }

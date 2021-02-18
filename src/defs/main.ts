@@ -5,6 +5,7 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewObjects = powerbi.DataViewObjects;
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "./enums";
 import { AdvancedEditingSettings } from "../settings";
+import AdvanceEditorData from "../models/advanceEditor";
 // Visual Settings Imports here
 
 export interface IVisualMainDisplayProps {
@@ -12,6 +13,8 @@ export interface IVisualMainDisplayProps {
   host: IVisualHost;
   // Localization manager instance
   localizationManager: ILocalizationManager;
+  // updateDisplayTables: Function;
+  advEditorData: AdvanceEditorData;
 }
 
 export interface IVisualMainDisplayState {
@@ -21,19 +24,21 @@ export interface IVisualMainDisplayState {
   advancedEditing: AdvancedEditingSettings;
   objectMetadata?: DataViewObjects;
   data: IVisualValueData; // Visual Data (mapped from data view)
-  // visualTables?: IVisualTable[]
+  // visualTables?: IVisualTable[];
 }
 
 export interface IVisualTable {
+  name?: string;
   columns: IVisualTableColumn[];
+  totalTableColumns: number;
 }
 
 export interface IVisualTableColumn {
   label: string;
-  displayOnly: VISUAL_DISPLAY_COLUMN_TYPE;
+  columnType: VISUAL_DISPLAY_COLUMN_TYPE;
   queryName?: string;
   dataColumnIndex?: number;
-  columns: IVisualTableColumn[];
+  columns?: IVisualTableColumn[];
 }
 
 export interface IVisualValueData {
