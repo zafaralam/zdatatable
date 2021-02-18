@@ -124,7 +124,7 @@ export default class EditTable extends React.Component<
               </Grid>
               <Grid container item xs={2} justify="flex-end">
                 <Button
-                  color="secondary"
+                  style={{ color: "#a50d0d" }}
                   onClick={this.handleRemoveTable}
                   startIcon={<BsFillTrashFill />}
                 >

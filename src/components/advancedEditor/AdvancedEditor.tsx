@@ -13,7 +13,7 @@ import EditTable from "./EditTable";
 import AdvanceEditorData from "../../models/advanceEditor";
 import Button from "@material-ui/core/Button";
 import AlertDialog from "./AlertDialog";
-import { Paper } from "@material-ui/core";
+import { Paper, Typography } from "@material-ui/core";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -73,7 +73,12 @@ export default class AdvanceEditor extends React.Component<
           }}
         />
         <div className="editor">
-          EDITOR
+          <Typography variant="h6">Advanced Editor</Typography>
+          <Typography variant="overline" color="secondary">
+            {this.state.isDirty
+              ? "You have unsaved changes. Please save your changes before exiting the advance editor mode."
+              : ""}
+          </Typography>
           {visualTables.map((table, tIdx) => {
             return (
               <EditTable
