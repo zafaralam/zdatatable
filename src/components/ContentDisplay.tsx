@@ -82,7 +82,17 @@ function visualTable(props: IVisualTableProps) {
               >
                 {i === 0 ? (
                   <th rowSpan={tableHeaderMaxDepth}>
+                    {/* <div
+                      className="resize"
+                      onMouseDown={(e) => {
+                        console.log("mouse down:", e);
+                      }}
+                      onMouseMove={(e) => {
+                        console.log("mouse move:", e);
+                      }}
+                    > */}
                     {groupingColumn?.displayName}
+                    {/* </div> */}
                   </th>
                 ) : (
                   ""
@@ -153,8 +163,8 @@ function CellValueDisplay(
 ) {
   const measureStyles: React.CSSProperties = {
     display: "inline-block",
-    width: "100%",
-    textAlign: "center",
+    width: "100%", // * DO NOT REMOVE THIS FORM CELL.
+    // textAlign: "center",
 
     ...(visualTableColumn.columnType ===
     VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
@@ -169,18 +179,18 @@ function CellValueDisplay(
           // color: secondaryMeasureSettings?.fontColor,
         }),
   };
-  // TODO: fix background color
+
+  let tdStyles: React.CSSProperties = {
+    background:
+      visualTableColumn.columnType !==
+        VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
+      visualTableColumn.applyBgColorToValues === false
+        ? "#fff"
+        : visualTableColumn.bgColor,
+  };
+
   const cellDisplay = (
-    <td
-      style={{
-        background:
-          visualTableColumn.columnType !==
-            VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
-          visualTableColumn.applyBgColorToValues === false
-            ? "#fff"
-            : visualTableColumn.bgColor,
-      }}
-    >
+    <td style={tdStyles}>
       {visualTableColumn.columnType ===
       VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART ? (
         <svg

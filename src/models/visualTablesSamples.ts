@@ -8,6 +8,8 @@ import { IVisualTable } from "../defs/main";
 export const SingleTable: IVisualTable[] = [
   {
     name: "Testing",
+    showTitle: true,
+    fullWidth: false,
     columns: [
       {
         label: "First Urgent Appt",

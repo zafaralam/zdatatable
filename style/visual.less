@@ -34,57 +34,61 @@
 //   cursor: text;
 // }
 
-button {
-  cursor: pointer;
-  min-height: 2rem;
-  text-transform: uppercase;
-  text-align: center;
-  letter-spacing: 0.05rem;
-  word-spacing: 0.2rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: none;
-  background: rgb(208, 209, 211);
-  padding: 10px 8px;
+// button {
+//   cursor: pointer;
+//   min-height: 2rem;
+//   text-transform: uppercase;
+//   text-align: center;
+//   letter-spacing: 0.05rem;
+//   word-spacing: 0.2rem;
+//   font-size: 0.75rem;
+//   font-weight: 600;
+//   border: none;
+//   background: rgb(208, 209, 211);
+//   padding: 10px 8px;
 
-  &:disabled {
-    cursor: not-allowed;
-    background: rgb(216, 216, 218);
-    color: rgb(75, 74, 74);
-  }
-}
+//   &:disabled {
+//     cursor: not-allowed;
+//     background: rgb(216, 216, 218);
+//     color: rgb(75, 74, 74);
+//   }
+// }
 
-.primary-btn {
-  color: white;
-  background: #212e5f;
+// .primary-btn {
+//   color: white;
+//   background: #212e5f;
 
-  &:disabled {
-    background: #181d2c;
-  }
-}
+//   &:disabled {
+//     background: #181d2c;
+//   }
+// }
 
-.icon-btn {
-  background: none;
-  display: inline-flex;
-  border: none; //1px solid red;
-  min-height: 2rem;
-  // flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-}
+// .icon-btn {
+//   background: none;
+//   display: inline-flex;
+//   border: none; //1px solid red;
+//   min-height: 2rem;
+//   // flex-direction: row;
+//   align-items: center;
+//   justify-content: center;
+//   font-size: 1.25rem;
+// }
 
-.card {
-  /* Add shadows to create the "card" effect */
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.13);
-  transition: 0.3s;
-  padding: 8px 10px;
-  margin: 6px;
+// .card {
+//   /* Add shadows to create the "card" effect */
+//   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.13);
+//   transition: 0.3s;
+//   padding: 8px 10px;
+//   margin: 6px;
 
-  /* On mouse-over, add a deeper shadow */
-  &:hover {
-    box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.13);
-  }
+//   /* On mouse-over, add a deeper shadow */
+//   &:hover {
+//     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.13);
+//   }
+// }
+
+.main-container {
+  cursor: default;
 }
 
 .advanced-editor {
@@ -192,6 +196,17 @@ button {
   }
   td {
     padding: 2px 4px;
-    border: none;
+    // border: none;
+  }
+
+  th > div.resize {
+    resize: horizontal;
+    overflow: auto;
+    // width: 120px;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    // border: 1px solid black;
+    display: block;
   }
 }

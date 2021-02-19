@@ -21,6 +21,8 @@ import {
 } from "../../defs/enums";
 import { IVisualTable, IDataColumn, IVisualTableColumn } from "../../defs/main";
 import EditTableColumns from "./EditTableColumns";
+import { VisualConstants } from "./../../VisualConstants";
+
 interface IEditTableProps {
   table: IVisualTable;
   index: number;
@@ -72,17 +74,19 @@ export default class EditTable extends React.Component<
           .slice(0, this.props.table.columns.length + 1)
           .concat([
             {
-              label: "",
-              columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
-              queryName: "",
+              label: VisualConstants.visualTableColumn.label,
+              columnType: VisualConstants.visualTableColumn.columnType,
+              queryName: VisualConstants.visualTableColumn.queryName,
               dataColumnIndex: null,
-              columns: [],
+              columns: VisualConstants.visualTableColumn.columns,
               level: 1,
-              bgColor: "#fff",
-              applyBgColorToValues: false,
-              textColor: "#000",
-              applyTextColorToValues: false,
-              labelFontSize: 16,
+              bgColor: VisualConstants.visualTableColumn.bgColor,
+              applyBgColorToValues:
+                VisualConstants.visualTableColumn.applyBgColorToValues,
+              textColor: VisualConstants.visualTableColumn.textColor,
+              labelFontSize: VisualConstants.visualTableColumn.labelFontSize,
+              textAlign: VisualConstants.visualTableColumn.textAlign,
+              border: VisualConstants.visualTableColumn.border,
             },
           ]),
         totalTableColumns: 0,

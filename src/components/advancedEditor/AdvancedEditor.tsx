@@ -20,6 +20,7 @@ import AdvanceEditorData from "../../models/advanceEditor";
 import Button from "@material-ui/core/Button";
 import AlertDialog from "./AlertDialog";
 import { Paper, Typography } from "@material-ui/core";
+import { VisualConstants } from "./../../VisualConstants";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -182,7 +183,13 @@ export default class AdvanceEditor extends React.Component<
 
     this.setState({
       visualTables: visualTables.concat([
-        { columns: [], name: newTableName, totalTableColumns: 0 },
+        {
+          columns: VisualConstants.visualTable.columns,
+          name: newTableName,
+          totalTableColumns: 0,
+          fullWidth: VisualConstants.visualTable.fullWidth,
+          showTitle: VisualConstants.visualTable.showTitle,
+        },
       ]),
       isDirty: true,
     });

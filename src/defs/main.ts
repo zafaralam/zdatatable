@@ -40,6 +40,8 @@ export interface IVisualMainDisplayState {
 export interface IVisualTable {
   name?: string;
   columns: IVisualTableColumn[];
+  fullWidth: boolean;
+  showTitle: boolean;
   totalTableColumns: number;
 }
 
@@ -52,9 +54,13 @@ export interface IVisualTableColumn {
   columns?: IVisualTableColumn[];
   labelFontSize?: number;
   textColor?: string;
-  applyTextColorToValues?: boolean;
+  // applyTextColorToValues?: boolean;
   bgColor?: string;
   applyBgColorToValues?: boolean;
+  textAlign?: string;
+  border?: IColumnBorder;
+  padding?: IColumnPadding;
+  width?: number;
 }
 
 export interface IVisualValueData {
@@ -81,6 +87,20 @@ export interface IDataColumn {
 
 export interface IVisualValues {
   [key: string]: any;
+}
+
+export interface IColumnBorder {
+  left: boolean;
+  top: boolean;
+  right: boolean;
+  bottom: boolean;
+}
+
+export interface IColumnPadding {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
 }
 
 // export interface ITableValueColumn {

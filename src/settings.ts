@@ -28,7 +28,7 @@
 
 import { dataViewObjectsParser } from "powerbi-visuals-utils-dataviewutils";
 import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
-
+import { VisualConstants } from "./VisualConstants";
 // export class CircleSettings {
 //   public circleColor: string = "white";
 //   public circleThickness: number = 2;
@@ -39,31 +39,33 @@ export class AdvancedEditingSettings {
 }
 
 export class TableTitleSettings {
-  public fontColor: string = "#000";
-  public backgroundColor: string = "#fff";
-  public fontFamily: string = "DIN";
-  public fontSize: number = 10;
-  public padding: number = 1;
+  public fontColor: string = VisualConstants.tableTitleSettings.fontColor;
+  public backgroundColor: string =
+    VisualConstants.tableTitleSettings.backgroundColor;
+  public fontFamily: string = VisualConstants.tableTitleSettings.fontFamily;
+  public fontSize: number = VisualConstants.tableTitleSettings.fontSize;
+  public padding: number = VisualConstants.tableTitleSettings.padding;
 }
 
 export class MainMeasureSettings {
-  public fontColor: string = "#000";
-  public fontFamily: string = "DIN";
-  public fontSize: number = 18;
+  public fontColor: string = VisualConstants.mainMeasureSettings.fontColor;
+  public fontFamily: string = VisualConstants.mainMeasureSettings.fontFamily;
+  public fontSize: number = VisualConstants.mainMeasureSettings.fontSize;
 }
 
 export class SecondaryMeasureSettings {
-  public fontColor: string = "#000";
-  public fontFamily: string = "DIN";
-  public fontSize: number = 10;
+  public fontColor: string = VisualConstants.secondaryMeasureSettings.fontColor;
+  public fontFamily: string =
+    VisualConstants.secondaryMeasureSettings.fontFamily;
+  public fontSize: number = VisualConstants.secondaryMeasureSettings.fontSize;
 }
 
 export class TrendLineSettings {
-  public height: number = 20;
-  public width: number = 150;
-  public fillColor: string = "#ECECEC";
-  public strokeColor: string = "#363636";
-  public strokeWidth: number = 2;
+  public height: number = VisualConstants.trendLineSettings.height;
+  public width: number = VisualConstants.trendLineSettings.width;
+  public fillColor: string = VisualConstants.trendLineSettings.fillColor;
+  public strokeColor: string = VisualConstants.trendLineSettings.strokeColor;
+  public strokeWidth: number = VisualConstants.trendLineSettings.strokeWidth;
 }
 export class VisualSettings extends DataViewObjectsParser {
   // public circle: CircleSettings = new CircleSettings();

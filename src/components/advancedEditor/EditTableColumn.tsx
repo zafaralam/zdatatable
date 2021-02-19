@@ -41,7 +41,8 @@ import {
   BsLayoutThreeColumns,
 } from "react-icons/bs";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { formatPrefix } from "d3";
+// import { formatPrefix } from "d3";
+import { VisualConstants } from "./../../VisualConstants";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
@@ -81,18 +82,26 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
 
     let column: IVisualTableColumn = JSON.parse(JSON.stringify(props.column));
     column.columns.push({
-      label: "",
-      columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
-      queryName: "",
+      ...VisualConstants.visualTableColumn,
       dataColumnIndex: null,
-      columns: [],
       level: level + 1,
-      bgColor: "#fff",
-      applyBgColorToValues: false,
-      textColor: "#000",
-      applyTextColorToValues: false,
-      labelFontSize: 16,
     });
+    // column.columns.push({
+    //   label: VisualConstants.visualTableColumn.label,
+    //   columnType: VisualConstants.visualTableColumn.columnType,
+    //   queryName: VisualConstants.visualTableColumn.queryName,
+    //   dataColumnIndex: null,
+    //   columns: VisualConstants.visualTableColumn.columns,
+    //   level: level + 1,
+    //   bgColor: VisualConstants.visualTableColumn.bgColor,
+    //   applyBgColorToValues:
+    //     VisualConstants.visualTableColumn.applyBgColorToValues,
+    //   textColor: VisualConstants.visualTableColumn.textColor,
+    //   // applyTextColorToValues: false,
+    //   labelFontSize: VisualConstants.visualTableColumn.labelFontSize,
+    //   textAlign: VisualConstants.visualTableColumn.textAlign,
+    //   border: VisualConstants.visualTableColumn.border,
+    // });
     props.onVisualColumnUpdate(column, props.index);
   };
 
@@ -136,7 +145,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       _column["bgColor"] = "#fff";
       _column["applyBgColorToValues"] = false;
       _column["textColor"] = "#000";
-      _column["applyTextColorToValues"] = false;
+      // _column["applyTextColorToValues"] = false;
       _column["labelFontSize"] = 16;
     } else {
       // for a non-display only column a user cannot add sub column.
