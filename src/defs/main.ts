@@ -60,7 +60,7 @@ export interface IVisualTableColumn {
   textAlign?: string;
   border?: IColumnBorder;
   padding?: IColumnPadding;
-  width?: number;
+  width?: number; // this should only be for the measure fields and not for the display only fields.
 }
 
 export interface IVisualValueData {

@@ -5,18 +5,19 @@
 - [] SVG points validation and apply
 - [] Conditional Formatting for measure values
 - [] Add additional settings on each table
-  - [] Full Width
-  - [] Show TItle
+  - [x] Full Width
+  - [x] Show TItle
 - [] Modify settings for columns
   - [] Border
   - [] Padding
-  - [] Text Align on values only
-  - [] For columns make the **Column Type** from select to a group of radio buttons
+  - [x] Text Align on values only
+  - [x] For columns make the **Column Type** from select to a group of radio buttons
   - [] Change the **Measure Selection** select to a scroll list
   - [] Adding columns is tedious, simplify by providing a number text filed next to the **Add Column Button**
 - [] When adding a new table ask how many base columns
 - [] Add common table settings in the Power BI pane to control
 
+  - [] Values Row height
   - [] Margin between tables
   - [] Grouping Column Header text
     - [] Background Color

@@ -7,6 +7,7 @@ import {
   Paper,
   //Card, CardContent,
   TextField,
+  Checkbox,
 } from "@material-ui/core";
 
 import {
@@ -47,11 +48,31 @@ export default class EditTable extends React.Component<
     this.handleAddColumn = this.handleAddColumn.bind(this);
     this.handleRemoveTable = this.handleRemoveTable.bind(this);
     this.handleVisualColumnsUpdate = this.handleVisualColumnsUpdate.bind(this);
+    this.handleShowTableTitleChange = this.handleShowTableTitleChange.bind(
+      this
+    );
+    this.handleTableFullWidthChange = this.handleTableFullWidthChange.bind(
+      this
+    );
   }
 
   private handleTableNameChange(value) {
     this.props.onEditTableUpdate(
       { name: value, columns: this.props.table.columns },
+      this.props.index
+    );
+  }
+
+  private handleShowTableTitleChange(value) {
+    this.props.onEditTableUpdate(
+      { ...this.props.table, showTitle: value },
+      this.props.index
+    );
+  }
+
+  private handleTableFullWidthChange(value) {
+    this.props.onEditTableUpdate(
+      { ...this.props.table, fullWidth: value },
       this.props.index
     );
   }
@@ -74,19 +95,9 @@ export default class EditTable extends React.Component<
           .slice(0, this.props.table.columns.length + 1)
           .concat([
             {
-              label: VisualConstants.visualTableColumn.label,
-              columnType: VisualConstants.visualTableColumn.columnType,
-              queryName: VisualConstants.visualTableColumn.queryName,
+              ...VisualConstants.visualTableColumn,
               dataColumnIndex: null,
-              columns: VisualConstants.visualTableColumn.columns,
               level: 1,
-              bgColor: VisualConstants.visualTableColumn.bgColor,
-              applyBgColorToValues:
-                VisualConstants.visualTableColumn.applyBgColorToValues,
-              textColor: VisualConstants.visualTableColumn.textColor,
-              labelFontSize: VisualConstants.visualTableColumn.labelFontSize,
-              textAlign: VisualConstants.visualTableColumn.textAlign,
-              border: VisualConstants.visualTableColumn.border,
             },
           ]),
         totalTableColumns: 0,
@@ -110,7 +121,7 @@ export default class EditTable extends React.Component<
         <div className="edit-table" key={`edit-table-${this.props.index}`}>
           <div className="edit-table__table-name">
             <Grid container direction="row" alignItems="flex-end" spacing={1}>
-              <Grid item xs={8}>
+              <Grid item xs={4}>
                 <TextField
                   id={`editTableName-${this.props.index}`}
                   label="Table Name"
@@ -122,6 +133,26 @@ export default class EditTable extends React.Component<
                   fullWidth
                   variant="standard"
                 />
+              </Grid>
+              <Grid item xs={2}>
+                <Checkbox
+                  checked={this.props.table.showTitle}
+                  onChange={(e) => {
+                    this.handleShowTableTitleChange(e.target.checked);
+                  }}
+                  inputProps={{ "aria-label": "primary checkbox" }}
+                />
+                <span> Show Title?</span>
+              </Grid>
+              <Grid item xs={2}>
+                <Checkbox
+                  checked={this.props.table.fullWidth}
+                  onChange={(e) => {
+                    this.handleTableFullWidthChange(e.target.checked);
+                  }}
+                  inputProps={{ "aria-label": "primary checkbox" }}
+                />
+                <span>Make table full width?</span>
               </Grid>
               <Grid container item xs={2} justify="flex-end">
                 <Button
