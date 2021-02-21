@@ -38,9 +38,9 @@ export default function CellBorder(props: ICellBorder) {
 
   if (border !== undefined && border !== null) {
     if (border === "none") {
-      borderComponents = VisualConstants.visualTableColumn.border[side].split(
-        " "
-      );
+      borderComponents = VisualConstants.visualTableColumn.border[
+        side === "all" ? "left" : side
+      ].split(" ");
       borderComponents[0] = 0;
     } else {
       borderComponents = border.split(" ");
@@ -48,9 +48,9 @@ export default function CellBorder(props: ICellBorder) {
         parseInt(borderComponents[0].replace(/px/, "")) || 0;
     }
   } else {
-    borderComponents = VisualConstants.visualTableColumn.border[side].split(
-      " "
-    );
+    borderComponents = VisualConstants.visualTableColumn.border[
+      side === "all" ? "left" : side
+    ].split(" ");
   }
   const width = borderComponents[0],
     style = borderComponents[1],
@@ -83,6 +83,7 @@ export default function CellBorder(props: ICellBorder) {
           {side[0].toUpperCase() + side.substring(1)}
         </Typography>
       </Grid>
+
       <Grid item xs={3}>
         <TextField
           margin="dense"

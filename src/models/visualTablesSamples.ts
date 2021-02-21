@@ -7,16 +7,18 @@ import { IVisualTable } from "../defs/main";
 
 export const SingleTable: IVisualTable[] = [
   {
-    name: "Testing",
+    name: "SPECIALIST CLINICS ACCESS POLICY KPIs (NEW REFERRAL)",
     showTitle: true,
     fullWidth: false,
     columns: [
       {
-        label: "First Urgent Appt",
+        label: "First Urgent Appointment Attended Within Priority Timeframe",
         isMeasure: false,
         columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
         queryName: "",
         dataColumnIndex: null,
+        bgColor: "#5F6162",
+        textColor: "#fff",
         level: 1,
         columns: [
           {
@@ -25,6 +27,7 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
             level: 2,
             columns: [
               {
@@ -52,6 +55,7 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
             level: 2,
             columns: [
               {
@@ -78,16 +82,21 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
+            applyBgColorToValues: false,
             level: 2,
           },
         ],
       },
       {
-        label: "First Semi-Urgent Appt",
+        label:
+          "First Semi-Urgent Appointment Attended Within Priority Timeframe",
         isMeasure: false,
         columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
         queryName: "",
         dataColumnIndex: null,
+        bgColor: "#5F6162",
+        textColor: "#fff",
         level: 1,
         columns: [
           {
@@ -96,6 +105,7 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
             level: 2,
             columns: [
               {
@@ -123,6 +133,7 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
             level: 2,
             columns: [
               {
@@ -149,16 +160,20 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
+            applyBgColorToValues: false,
             level: 2,
           },
         ],
       },
       {
-        label: "First Routine Appt",
+        label: "First Routine Appointment Attended Within Priority Timeframe",
         isMeasure: false,
         columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
         queryName: "",
         dataColumnIndex: null,
+        bgColor: "#5F6162",
+        textColor: "#fff",
         level: 1,
         columns: [
           {
@@ -167,6 +182,7 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
             level: 2,
             columns: [
               {
@@ -194,6 +210,7 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
             level: 2,
             columns: [
               {
@@ -220,6 +237,8 @@ export const SingleTable: IVisualTable[] = [
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART,
             queryName: "",
             dataColumnIndex: null,
+            bgColor: "#D9D9D9",
+            applyBgColorToValues: false,
             level: 2,
           },
         ],

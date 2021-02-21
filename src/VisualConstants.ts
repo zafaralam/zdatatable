@@ -4,11 +4,13 @@ import {
   EDIT_COLUMNS_PARENT_TYPE,
 } from "./defs/enums";
 
-const defaultTextColor = "#000",
+const defaultTextColor = "#3F3F44",
   defaultBgColor = "#fff",
-  defaultFontFamily = "Arial";
+  defaultBorderColor = "#83838D", //#0F0F10
+  defaultFontFamily = "Segoe UI";
 export const VisualConstants = {
   //   visual: visual,
+  dinReplacementFont: "Roboto, helvetica, arial, sans-serif",
   visualTable: {
     name: "",
     columns: [],
@@ -31,16 +33,16 @@ export const VisualConstants = {
     textAlign: "center",
     width: null,
     border: {
-      left: "1px solid gray",
-      top: "1px solid gray",
-      right: "1px solid gray",
-      bottom: "1px solid gray",
+      left: `1px solid ${defaultBorderColor}`,
+      top: `1px solid ${defaultBorderColor}`,
+      right: `1px solid ${defaultBorderColor}`,
+      bottom: `1px solid ${defaultBorderColor}`,
     },
     padding: {
-      left: 4,
-      top: 2,
-      right: 4,
-      bottom: 2,
+      left: 2,
+      top: 4,
+      right: 2,
+      bottom: 4,
     },
   },
   mainMeasureCellWidth: 50,
@@ -67,8 +69,8 @@ export const VisualConstants = {
   trendLineSettings: {
     height: 20,
     width: 180,
-    fillColor: "#ECECEC",
+    fillColor: "#FAFAFA", //"#ECECEC",
     strokeColor: "#363636",
-    strokeWidth: 2,
+    strokeWidth: 1,
   },
 };

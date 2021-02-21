@@ -95,6 +95,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     let column: IVisualTableColumn = JSON.parse(JSON.stringify(props.column));
     column.columns.push({
       ...VisualConstants.visualTableColumn,
+      labelFontSize: 8, // * So that sub-columns automatically get a smaller font size.
       dataColumnIndex: null,
       level: level + 1,
     });
@@ -123,19 +124,37 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
   };
 
   const handlePaddingChange = (side: string, value: number) => {
-    const _padding = {
+    let _padding = {
       ...(padding || VisualConstants.visualTableColumn.padding),
-      [side]: value,
     };
+    if (side === "all") {
+      _padding = {
+        left: value,
+        top: value,
+        right: value,
+        bottom: value,
+      };
+    } else {
+      _padding[side] = value;
+    }
 
     handleColumnPropertyChange("padding", _padding);
   };
 
-  const handleBorderChange = (side: string, value: number) => {
-    const _border = {
+  const handleBorderChange = (side: string, value: string) => {
+    let _border = {
       ...(border || VisualConstants.visualTableColumn.border),
-      [side]: value,
     };
+    if (side === "all") {
+      _border = {
+        left: value,
+        top: value,
+        right: value,
+        bottom: value,
+      };
+    } else {
+      _border[side] = value;
+    }
     handleColumnPropertyChange("border", _border);
   };
 
@@ -453,7 +472,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                       }
                       InputProps={{
                         endAdornment: (
-                          <InputAdornment position="start">px</InputAdornment>
+                          <InputAdornment position="start">pt</InputAdornment>
                         ),
                       }}
                       onChange={(e) => {
@@ -563,6 +582,27 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                     <TextField
                       margin="dense"
                       size="small"
+                      label="All"
+                      type="number"
+                      value={
+                        padding?.left !== padding?.bottom &&
+                        padding?.left !== padding?.right &&
+                        padding?.left !== padding?.top
+                          ? null
+                          : padding?.left
+                      }
+                      onChange={(e) => {
+                        handlePaddingChange(
+                          "all",
+                          parseInt(e.target.value) || 0
+                        );
+                      }}
+                    ></TextField>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <TextField
+                      margin="dense"
+                      size="small"
                       label="Left"
                       type="number"
                       value={padding?.left || 0}
@@ -626,7 +666,18 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
           <div style={{ marginTop: "8px" }}>
             <Paper variant="outlined">
               <FormControl className={classes.formControl} fullWidth>
-                <Typography variant="body1">Border</Typography>
+                <Grid container direction="row">
+                  <Grid item xs={2}>
+                    <Typography variant="body1">Border</Typography>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <CellBorder
+                      border={border?.left}
+                      side="all"
+                      onBorderUpdate={handleBorderChange}
+                    />
+                  </Grid>
+                </Grid>
                 <Grid container direction="row">
                   <Grid item xs={6}>
                     <CellBorder

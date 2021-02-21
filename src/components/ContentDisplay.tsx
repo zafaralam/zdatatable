@@ -57,7 +57,11 @@ function visualTable(props: IVisualTableProps) {
   const tableTitleStyles: React.CSSProperties = {
     color: tableTitleSettings?.fontColor,
     background: tableTitleSettings?.backgroundColor,
-    fontFamily: tableTitleSettings?.fontFamily,
+    fontFamily:
+      tableTitleSettings?.fontFamily &&
+      tableTitleSettings.fontFamily.indexOf("wf_standard-font") !== -1
+        ? VisualConstants.dinReplacementFont
+        : tableTitleSettings?.fontFamily,
     fontSize: `${tableTitleSettings?.fontSize}pt`,
     padding: `${tableTitleSettings?.padding}px`,
   };
@@ -122,10 +126,49 @@ function visualTable(props: IVisualTableProps) {
                       }
                       style={{
                         ...{
-                          borderLeft: column.border?.left || "none",
-                          borderTop: column.border?.top || "none",
-                          borderRight: column.border?.right || "none",
-                          borderBottom: column.border?.bottom || "none",
+                          borderLeft:
+                            column.border?.left ||
+                            VisualConstants.visualTableColumn.border.left,
+                          borderTop:
+                            column.border?.top ||
+                            VisualConstants.visualTableColumn.border.top,
+                          borderRight:
+                            column.border?.right ||
+                            VisualConstants.visualTableColumn.border.right,
+                          borderBottom:
+                            column.border?.bottom ||
+                            VisualConstants.visualTableColumn.border.bottom,
+                          background:
+                            column?.bgColor ||
+                            VisualConstants.visualTableColumn.bgColor,
+                          color:
+                            column?.textColor ||
+                            VisualConstants.visualTableColumn.textColor,
+                          fontSize: `${
+                            column?.labelFontSize ||
+                            VisualConstants.visualTableColumn.labelFontSize
+                          }pt`,
+                          textAlign: txtAlign,
+                          ...{
+                            paddingLeft: `${
+                              column.padding?.left ||
+                              VisualConstants.visualTableColumn.padding.left
+                            }px`,
+                            paddingTop: `${
+                              column.padding?.top ||
+                              VisualConstants.visualTableColumn.padding.top
+                            }px`,
+                            paddingRight:
+                              `${
+                                column.padding?.right ||
+                                VisualConstants.visualTableColumn.padding.right
+                              }px` || 0,
+                            paddingBottom:
+                              `${
+                                column.padding?.bottom ||
+                                VisualConstants.visualTableColumn.padding.bottom
+                              }px` || 0,
+                          },
                         },
                       }}
                       colSpan={getColumnSpan(column)}
@@ -137,26 +180,9 @@ function visualTable(props: IVisualTableProps) {
                           : 1
                       }
                     >
-                      <div
-                        className="display-table__header-cell"
-                        style={{
-                          background: column?.bgColor || "#fff",
-                          color: column?.textColor || "#000",
-                          fontSize: `${
-                            column?.labelFontSize ||
-                            VisualConstants.visualTableColumn.labelFontSize
-                          }px`,
-                          textAlign: txtAlign,
-                          ...{
-                            paddingLeft: `${column.padding?.left}px` || 0,
-                            paddingTop: `${column.padding?.top}px` || 0,
-                            paddingRight: `${column.padding?.right}px` || 0,
-                            paddingBottom: `${column.padding?.bottom}px` || 0,
-                          },
-                        }}
-                      >
-                        {column.label}
-                      </div>
+                      {/* <div className="display-table__header-cell" style={{}}> */}
+                      {column.label}
+                      {/* </div> */}
                     </th>
                   );
                 })}
@@ -210,13 +236,24 @@ function CellValueDisplay(
     ...(visualTableColumn.columnType ===
     VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
       ? {
-          fontFamily: `${mainMeasureSettings?.fontFamily}, helvetica, arial, sans-serif`,
-          fontSize: mainMeasureSettings?.fontSize,
+          fontFamily: `${
+            mainMeasureSettings?.fontFamily &&
+            mainMeasureSettings?.fontFamily.indexOf("wf_standard-font") !== -1
+              ? VisualConstants.dinReplacementFont
+              : mainMeasureSettings?.fontFamily
+          }`,
+          fontSize: `${mainMeasureSettings?.fontSize}pt`,
           // color: mainMeasureSettings?.fontColor,
         }
       : {
-          fontFamily: `${secondaryMeasureSettings?.fontFamily}, helvetica, arial, sans-serif`,
-          fontSize: secondaryMeasureSettings?.fontSize,
+          fontFamily: `${
+            secondaryMeasureSettings?.fontFamily &&
+            secondaryMeasureSettings?.fontFamily.indexOf("wf_standard-font") !==
+              -1
+              ? VisualConstants.dinReplacementFont
+              : secondaryMeasureSettings?.fontFamily
+          }`,
+          fontSize: `${secondaryMeasureSettings?.fontSize}pt`,
           // color: secondaryMeasureSettings?.fontColor,
         }),
   };
@@ -234,16 +271,43 @@ function CellValueDisplay(
           width: `${visualTableColumn?.width || 50}px`,
         }
       : {}),
+    ...(visualTableColumn.columnType === VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART
+      ? {
+          width: `${
+            trendLineSettings?.width || VisualConstants.trendLineSettings.width
+          }px`,
+        }
+      : {}),
     ...{
-      borderLeft: visualTableColumn.border?.left || "none",
-      borderTop: visualTableColumn.border?.top || "none",
-      borderRight: visualTableColumn.border?.right || "none",
-      borderBottom: visualTableColumn.border?.bottom || "none",
+      borderLeft:
+        visualTableColumn.border?.left ||
+        VisualConstants.visualTableColumn.border.left,
+      borderTop:
+        visualTableColumn.border?.top ||
+        VisualConstants.visualTableColumn.border.top,
+      borderRight:
+        visualTableColumn.border?.right ||
+        VisualConstants.visualTableColumn.border.right,
+      borderBottom:
+        visualTableColumn.border?.bottom ||
+        VisualConstants.visualTableColumn.border.bottom,
 
-      paddingLeft: `${visualTableColumn.padding?.left}px` || 0,
-      paddingTop: `${visualTableColumn.padding?.top}px` || 0,
-      paddingRight: `${visualTableColumn.padding?.right}px` || 0,
-      paddingBottom: `${visualTableColumn.padding?.bottom}px` || 0,
+      paddingLeft: `${
+        visualTableColumn.padding?.left ||
+        VisualConstants.visualTableColumn.padding.left
+      }px`,
+      paddingTop: `${
+        visualTableColumn.padding?.top ||
+        VisualConstants.visualTableColumn.padding.top
+      }px`,
+      paddingRight: `${
+        visualTableColumn.padding?.right ||
+        VisualConstants.visualTableColumn.padding.right
+      }px`,
+      paddingBottom: `${
+        visualTableColumn.padding?.bottom ||
+        VisualConstants.visualTableColumn.padding.bottom
+      }px`,
     },
   };
 
