@@ -176,23 +176,31 @@
 
 .display-table {
   border-collapse: collapse;
-  border: 1px solid black;
+  // border: 1px solid black;
   margin-bottom: 16px;
   //   caption {
   //     padding: 10px;
   //   }
   th,
-  td {
-    border: 1px solid black;
+  td,
+  tr {
+    // border: 1px solid gray;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
   }
 
   th.empty-header-col {
     border: none;
   }
   th {
-    padding: 2px 4px;
-    // font-size: 0.85rem;
-    // font-weight: 600;
+    &.display-table__header-cell {
+      padding: 2px 4px;
+      font-weight: normal;
+      display: block;
+      height: 100%;
+      margin: 0;
+    }
   }
   td {
     padding: 2px 4px;

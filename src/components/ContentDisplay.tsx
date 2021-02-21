@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   IVisualData,
   IVisualTable,
@@ -22,6 +23,7 @@ import {
   MainMeasureSettings,
   SecondaryMeasureSettings,
 } from "../settings";
+import { VisualConstants } from "../VisualConstants";
 interface IContentDisplayProps {
   host: IVisualHost;
   visualData: IVisualData;
@@ -69,7 +71,11 @@ function visualTable(props: IVisualTableProps) {
   return (
     <div key={tableIndex}>
       <table className="display-table">
-        <caption style={tableTitleStyles}>{table.name}</caption>
+        {props.visualTable.showTitle === true ? (
+          <caption style={tableTitleStyles}>{table.name}</caption>
+        ) : (
+          ""
+        )}
         <thead>
           {[...Array(tableHeaderMaxDepth)].map((_, i) => {
             return (
@@ -98,6 +104,13 @@ function visualTable(props: IVisualTableProps) {
                   ""
                 )}
                 {getTableHeaderAtLevel(table, i + 1).map((column, idxCol) => {
+                  const txtAlign =
+                    column?.textAlign === "left"
+                      ? "left"
+                      : column?.textAlign === "right"
+                      ? "right"
+                      : "center";
+
                   return (
                     <th
                       className={
@@ -108,9 +121,12 @@ function visualTable(props: IVisualTableProps) {
                           : ""
                       }
                       style={{
-                        background: column?.bgColor || "#fff",
-                        color: column?.textColor || "#000",
-                        fontSize: `${column?.labelFontSize || 16}px`,
+                        ...{
+                          borderLeft: column.border?.left || "none",
+                          borderTop: column.border?.top || "none",
+                          borderRight: column.border?.right || "none",
+                          borderBottom: column.border?.bottom || "none",
+                        },
                       }}
                       colSpan={getColumnSpan(column)}
                       rowSpan={
@@ -121,7 +137,26 @@ function visualTable(props: IVisualTableProps) {
                           : 1
                       }
                     >
-                      {column.label}
+                      <div
+                        className="display-table__header-cell"
+                        style={{
+                          background: column?.bgColor || "#fff",
+                          color: column?.textColor || "#000",
+                          fontSize: `${
+                            column?.labelFontSize ||
+                            VisualConstants.visualTableColumn.labelFontSize
+                          }px`,
+                          textAlign: txtAlign,
+                          ...{
+                            paddingLeft: `${column.padding?.left}px` || 0,
+                            paddingTop: `${column.padding?.top}px` || 0,
+                            paddingRight: `${column.padding?.right}px` || 0,
+                            paddingBottom: `${column.padding?.bottom}px` || 0,
+                          },
+                        }}
+                      >
+                        {column.label}
+                      </div>
                     </th>
                   );
                 })}
@@ -161,6 +196,12 @@ function CellValueDisplay(
   secondaryMeasureSettings: SecondaryMeasureSettings,
   trendLineSettings: TrendLineSettings
 ) {
+  const txtAlign =
+    visualTableColumn?.textAlign === "left"
+      ? "left"
+      : visualTableColumn?.textAlign === "right"
+      ? "right"
+      : "center";
   const measureStyles: React.CSSProperties = {
     display: "inline-block",
     width: "100%", // * DO NOT REMOVE THIS FORM CELL.
@@ -169,12 +210,12 @@ function CellValueDisplay(
     ...(visualTableColumn.columnType ===
     VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
       ? {
-          fontFamily: mainMeasureSettings?.fontFamily,
+          fontFamily: `${mainMeasureSettings?.fontFamily}, helvetica, arial, sans-serif`,
           fontSize: mainMeasureSettings?.fontSize,
           // color: mainMeasureSettings?.fontColor,
         }
       : {
-          fontFamily: secondaryMeasureSettings?.fontFamily,
+          fontFamily: `${secondaryMeasureSettings?.fontFamily}, helvetica, arial, sans-serif`,
           fontSize: secondaryMeasureSettings?.fontSize,
           // color: secondaryMeasureSettings?.fontColor,
         }),
@@ -187,6 +228,23 @@ function CellValueDisplay(
       visualTableColumn.applyBgColorToValues === false
         ? "#fff"
         : visualTableColumn.bgColor,
+    ...(visualTableColumn.columnType !== VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART
+      ? {
+          textAlign: txtAlign,
+          width: `${visualTableColumn?.width || 50}px`,
+        }
+      : {}),
+    ...{
+      borderLeft: visualTableColumn.border?.left || "none",
+      borderTop: visualTableColumn.border?.top || "none",
+      borderRight: visualTableColumn.border?.right || "none",
+      borderBottom: visualTableColumn.border?.bottom || "none",
+
+      paddingLeft: `${visualTableColumn.padding?.left}px` || 0,
+      paddingTop: `${visualTableColumn.padding?.top}px` || 0,
+      paddingRight: `${visualTableColumn.padding?.right}px` || 0,
+      paddingBottom: `${visualTableColumn.padding?.bottom}px` || 0,
+    },
   };
 
   const cellDisplay = (

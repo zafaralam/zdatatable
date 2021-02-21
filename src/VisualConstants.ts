@@ -20,6 +20,7 @@ export const VisualConstants = {
     label: "",
     columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
     // level: null, // Should be done in the Edit table and edit column
+    isMeasure: false,
     queryName: "",
     dataColumnIndex: null,
     columns: [],
@@ -28,11 +29,12 @@ export const VisualConstants = {
     bgColor: defaultBgColor,
     applyBgColorToValues: false,
     textAlign: "center",
+    width: null,
     border: {
-      left: true,
-      top: true,
-      right: true,
-      bottom: true,
+      left: "1px solid gray",
+      top: "1px solid gray",
+      right: "1px solid gray",
+      bottom: "1px solid gray",
     },
     padding: {
       left: 4,
@@ -41,6 +43,8 @@ export const VisualConstants = {
       bottom: 2,
     },
   },
+  mainMeasureCellWidth: 50,
+  secondaryMeasureCellWidth: 25,
 
   tableTitleSettings: {
     fontColor: defaultTextColor,

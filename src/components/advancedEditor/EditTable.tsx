@@ -91,6 +91,8 @@ export default class EditTable extends React.Component<
     this.props.onEditTableUpdate(
       {
         name: this.props.table.name,
+        showTitle: this.props.table.showTitle,
+        fullWidth: this.props.table.fullWidth,
         columns: this.props.table.columns
           .slice(0, this.props.table.columns.length + 1)
           .concat([
@@ -108,7 +110,12 @@ export default class EditTable extends React.Component<
 
   private handleVisualColumnsUpdate(columns: IVisualTableColumn[]) {
     this.props.onEditTableUpdate(
-      { name: this.props.table.name, columns: columns },
+      {
+        name: this.props.table.name,
+        columns: columns,
+        showTitle: this.props.table.showTitle,
+        fullWidth: this.props.table.fullWidth,
+      },
       this.props.index
     );
   }
@@ -145,14 +152,17 @@ export default class EditTable extends React.Component<
                 <span> Show Title?</span>
               </Grid>
               <Grid item xs={2}>
-                <Checkbox
+                {/* // * Removing for now 
+                  // ? Would need to think of a way of doing this when using with width
+                */}
+                {/* <Checkbox
                   checked={this.props.table.fullWidth}
                   onChange={(e) => {
                     this.handleTableFullWidthChange(e.target.checked);
                   }}
                   inputProps={{ "aria-label": "primary checkbox" }}
                 />
-                <span>Make table full width?</span>
+                <span>Make table full width?</span> */}
               </Grid>
               <Grid container item xs={2} justify="flex-end">
                 <Button

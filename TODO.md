@@ -8,8 +8,9 @@
   - [x] Full Width
   - [x] Show TItle
 - [] Modify settings for columns
-  - [] Border
-  - [] Padding
+  - [x] Border
+  - [x] Padding
+  - [x] Width
   - [x] Text Align on values only
   - [x] For columns make the **Column Type** from select to a group of radio buttons
   - [] Change the **Measure Selection** select to a scroll list
@@ -20,6 +21,7 @@
   - [] Values Row height
   - [] Margin between tables
   - [] Grouping Column Header text
+    - [] Width
     - [] Background Color
     - [] Text Align
     - [] Font Color

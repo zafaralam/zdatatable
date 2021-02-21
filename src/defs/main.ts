@@ -48,6 +48,7 @@ export interface IVisualTable {
 export interface IVisualTableColumn {
   label: string;
   columnType: VISUAL_DISPLAY_COLUMN_TYPE;
+  isMeasure: boolean;
   level: number;
   queryName?: string;
   dataColumnIndex?: number;
@@ -90,10 +91,10 @@ export interface IVisualValues {
 }
 
 export interface IColumnBorder {
-  left: boolean;
-  top: boolean;
-  right: boolean;
-  bottom: boolean;
+  left: string;
+  top: string;
+  right: string;
+  bottom: string;
 }
 
 export interface IColumnPadding {

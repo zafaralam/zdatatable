@@ -13,6 +13,7 @@ export const SingleTable: IVisualTable[] = [
     columns: [
       {
         label: "First Urgent Appt",
+        isMeasure: false,
         columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
         queryName: "",
         dataColumnIndex: null,
@@ -20,6 +21,7 @@ export const SingleTable: IVisualTable[] = [
         columns: [
           {
             label: "Last Month",
+            isMeasure: false,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
@@ -27,6 +29,7 @@ export const SingleTable: IVisualTable[] = [
             columns: [
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
                 queryName:
                   "fctOPEpisodeFirstAppt.Urgent First Appointment Attended Within Waiting Period",
@@ -35,6 +38,7 @@ export const SingleTable: IVisualTable[] = [
               },
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
                 queryName: "",
                 dataColumnIndex: null,
@@ -44,6 +48,7 @@ export const SingleTable: IVisualTable[] = [
           },
           {
             label: "Current FYTD",
+            isMeasure: false,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
@@ -51,6 +56,7 @@ export const SingleTable: IVisualTable[] = [
             columns: [
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
                 queryName: "",
                 dataColumnIndex: null,
@@ -58,6 +64,7 @@ export const SingleTable: IVisualTable[] = [
               },
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
                 queryName: "",
                 dataColumnIndex: null,
@@ -67,6 +74,7 @@ export const SingleTable: IVisualTable[] = [
           },
           {
             label: "Trend (13m)",
+            isMeasure: true,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART,
             queryName: "",
             dataColumnIndex: null,
@@ -76,6 +84,7 @@ export const SingleTable: IVisualTable[] = [
       },
       {
         label: "First Semi-Urgent Appt",
+        isMeasure: false,
         columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
         queryName: "",
         dataColumnIndex: null,
@@ -83,6 +92,7 @@ export const SingleTable: IVisualTable[] = [
         columns: [
           {
             label: "Last Month",
+            isMeasure: false,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
@@ -90,6 +100,7 @@ export const SingleTable: IVisualTable[] = [
             columns: [
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
                 queryName:
                   "fctOPEpisodeFirstAppt.Semi Urgent First Appointment Booked",
@@ -98,6 +109,7 @@ export const SingleTable: IVisualTable[] = [
               },
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
                 queryName: "",
                 dataColumnIndex: null,
@@ -107,6 +119,7 @@ export const SingleTable: IVisualTable[] = [
           },
           {
             label: "Current FYTD",
+            isMeasure: false,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
@@ -114,6 +127,7 @@ export const SingleTable: IVisualTable[] = [
             columns: [
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
                 queryName: "",
                 dataColumnIndex: null,
@@ -121,6 +135,7 @@ export const SingleTable: IVisualTable[] = [
               },
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
                 queryName: "",
                 dataColumnIndex: null,
@@ -130,6 +145,7 @@ export const SingleTable: IVisualTable[] = [
           },
           {
             label: "Trend (13m)",
+            isMeasure: true,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART,
             queryName: "",
             dataColumnIndex: null,
@@ -139,6 +155,7 @@ export const SingleTable: IVisualTable[] = [
       },
       {
         label: "First Routine Appt",
+        isMeasure: false,
         columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
         queryName: "",
         dataColumnIndex: null,
@@ -146,6 +163,7 @@ export const SingleTable: IVisualTable[] = [
         columns: [
           {
             label: "Last Month",
+            isMeasure: false,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
@@ -153,6 +171,7 @@ export const SingleTable: IVisualTable[] = [
             columns: [
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
                 queryName:
                   "fctOPEpisodeFirstAppt.Routine First Appointment Booked",
@@ -161,6 +180,7 @@ export const SingleTable: IVisualTable[] = [
               },
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
                 queryName: "",
                 dataColumnIndex: null,
@@ -170,6 +190,7 @@ export const SingleTable: IVisualTable[] = [
           },
           {
             label: "Current FYTD",
+            isMeasure: false,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
             queryName: "",
             dataColumnIndex: null,
@@ -177,6 +198,7 @@ export const SingleTable: IVisualTable[] = [
             columns: [
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
                 queryName: "",
                 dataColumnIndex: null,
@@ -184,6 +206,7 @@ export const SingleTable: IVisualTable[] = [
               },
               {
                 label: "",
+                isMeasure: true,
                 columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
                 queryName: "",
                 dataColumnIndex: null,
@@ -193,6 +216,7 @@ export const SingleTable: IVisualTable[] = [
           },
           {
             label: "Trend (13m)",
+            isMeasure: true,
             columnType: VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART,
             queryName: "",
             dataColumnIndex: null,
