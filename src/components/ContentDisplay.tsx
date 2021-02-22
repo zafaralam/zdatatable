@@ -15,6 +15,12 @@ import {
   getColumnSpan,
   getMaxTableHederDepth,
   getTableHeaderAtLevel,
+  getHeaderColumnWidth,
+  fontWeightCSSValue,
+  textAlignCSSValue,
+  fontFamilyCSSValue,
+  borderGroupingColumCSSValue,
+  validatePolyline,
 } from "./../utils/common";
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "./../defs/enums";
 import {
@@ -22,6 +28,7 @@ import {
   TrendLineSettings,
   MainMeasureSettings,
   SecondaryMeasureSettings,
+  GroupingColumnSettings,
 } from "../settings";
 import { VisualConstants } from "../VisualConstants";
 interface IContentDisplayProps {
@@ -32,6 +39,7 @@ interface IContentDisplayProps {
   mainMeasureSettings?: MainMeasureSettings;
   secondaryMeasureSettings?: SecondaryMeasureSettings;
   trendLineSettings?: TrendLineSettings;
+  groupingColumnSettings?: GroupingColumnSettings;
 }
 
 interface IVisualTableProps {
@@ -42,6 +50,7 @@ interface IVisualTableProps {
   mainMeasureSettings?: MainMeasureSettings;
   secondaryMeasureSettings?: SecondaryMeasureSettings;
   trendLineSettings?: TrendLineSettings;
+  groupingColumnSettings: GroupingColumnSettings;
 }
 
 function visualTable(props: IVisualTableProps) {
@@ -53,21 +62,93 @@ function visualTable(props: IVisualTableProps) {
     mainMeasureSettings,
     secondaryMeasureSettings,
     trendLineSettings,
+    groupingColumnSettings,
   } = props;
+
   const tableTitleStyles: React.CSSProperties = {
     color: tableTitleSettings?.fontColor,
     background: tableTitleSettings?.backgroundColor,
-    fontFamily:
-      tableTitleSettings?.fontFamily &&
-      tableTitleSettings.fontFamily.indexOf("wf_standard-font") !== -1
-        ? VisualConstants.dinReplacementFont
-        : tableTitleSettings?.fontFamily,
+    fontFamily: fontFamilyCSSValue(
+      tableTitleSettings?.fontFamily || VisualConstants.dinReplacementFont
+    ),
     fontSize: `${tableTitleSettings?.fontSize}pt`,
     padding: `${tableTitleSettings?.padding}px`,
+    fontWeight: fontWeightCSSValue(
+      tableTitleSettings?.fontWeight ||
+        VisualConstants.tableTitleSettings.fontWeight
+    ),
+    // ...titleFontWeight
   };
+
+  const groupingColumnHeaderStyles: React.CSSProperties = {
+    width: `${
+      groupingColumnSettings?.width ||
+      VisualConstants.groupingColumnSettings.width
+    }px`,
+    border: borderGroupingColumCSSValue(
+      groupingColumnSettings?.borderWidth,
+      groupingColumnSettings?.borderColor
+    ),
+    maxWidth: `${
+      groupingColumnSettings?.width ||
+      VisualConstants.groupingColumnSettings.width
+    }px`,
+    background:
+      groupingColumnSettings?.headerBackgroundColor ||
+      VisualConstants.groupingColumnSettings.headerBackgroundColor,
+    color:
+      groupingColumnSettings?.headerFontColor ||
+      VisualConstants.groupingColumnSettings.headerFontColor,
+    fontFamily: fontFamilyCSSValue(
+      groupingColumnSettings?.headerFontFamily ||
+        VisualConstants.groupingColumnSettings.headerFontFamily
+    ),
+    fontWeight: fontWeightCSSValue(
+      groupingColumnSettings?.headerFontWeight ||
+        VisualConstants.groupingColumnSettings.headerFontWeight
+    ),
+    fontSize: `${
+      groupingColumnSettings?.headerFontSize ||
+      VisualConstants.groupingColumnSettings.headerFontSize
+    }pt`,
+    textAlign: textAlignCSSValue(
+      groupingColumnSettings?.headerTextAlign ||
+        VisualConstants.groupingColumnSettings.headerTextAlign
+    ),
+  };
+
+  const groupingColumnValuesStyles: React.CSSProperties = {
+    border: borderGroupingColumCSSValue(
+      groupingColumnSettings?.borderWidth,
+      groupingColumnSettings?.borderColor
+    ),
+    background:
+      groupingColumnSettings?.valuesBackgroundColor ||
+      VisualConstants.groupingColumnSettings.valuesBackgroundColor,
+    color:
+      groupingColumnSettings?.valuesFontColor ||
+      VisualConstants.groupingColumnSettings.valuesFontColor,
+    fontFamily: fontFamilyCSSValue(
+      groupingColumnSettings?.valuesFontFamily ||
+        VisualConstants.groupingColumnSettings.valuesFontFamily
+    ),
+    fontWeight: fontWeightCSSValue(
+      groupingColumnSettings?.valuesFontWeight ||
+        VisualConstants.groupingColumnSettings.valuesFontWeight
+    ),
+    fontSize: `${
+      groupingColumnSettings?.valuesFontSize ||
+      VisualConstants.groupingColumnSettings.valuesFontSize
+    }pt`,
+    textAlign: textAlignCSSValue(
+      groupingColumnSettings?.valuesTextAlign ||
+        VisualConstants.groupingColumnSettings.valuesTextAlign
+    ),
+  };
+
   const groupingColumn = visualData.columns.find((x) => x.grouping === true);
-  // console.log("Ok here");
-  // * this would be used to display values in the table
+  // console.log(groupingColumn);
+  // * Used to display values in the table
   const tableValueColumns = getTableValueColumns(table);
   const tableHeaderMaxDepth = getMaxTableHederDepth(table);
 
@@ -90,8 +171,14 @@ function visualTable(props: IVisualTableProps) {
                     : "header-row"
                 }
               >
-                {i === 0 ? (
-                  <th rowSpan={tableHeaderMaxDepth}>
+                {i === 0 &&
+                groupingColumnSettings?.showGroupingColumn &&
+                groupingColumn !== undefined ? (
+                  <th
+                    className="grouping-column__header"
+                    rowSpan={tableHeaderMaxDepth}
+                    style={groupingColumnHeaderStyles}
+                  >
                     {/* <div
                       className="resize"
                       onMouseDown={(e) => {
@@ -108,15 +195,11 @@ function visualTable(props: IVisualTableProps) {
                   ""
                 )}
                 {getTableHeaderAtLevel(table, i + 1).map((column, idxCol) => {
-                  const txtAlign =
-                    column?.textAlign === "left"
-                      ? "left"
-                      : column?.textAlign === "right"
-                      ? "right"
-                      : "center";
+                  const width = getHeaderColumnWidth(column);
 
                   return (
                     <th
+                      key={idxCol}
                       className={
                         column.label.length === 0 &&
                         column.columnType !==
@@ -126,6 +209,14 @@ function visualTable(props: IVisualTableProps) {
                       }
                       style={{
                         ...{
+                          fontFamily:
+                            column?.labelFontFamily ||
+                            VisualConstants.visualTableColumn.labelFontFamily,
+                          fontWeight: fontWeightCSSValue(
+                            column?.labelFontWeight ||
+                              VisualConstants.visualTableColumn.labelFontWeight
+                          ),
+                          width: `${width}px`,
                           borderLeft:
                             column.border?.left ||
                             VisualConstants.visualTableColumn.border.left,
@@ -148,7 +239,10 @@ function visualTable(props: IVisualTableProps) {
                             column?.labelFontSize ||
                             VisualConstants.visualTableColumn.labelFontSize
                           }pt`,
-                          textAlign: txtAlign,
+                          textAlign: textAlignCSSValue(
+                            column?.textAlign ||
+                              VisualConstants.visualTableColumn.textAlign
+                          ),
                           ...{
                             paddingLeft: `${
                               column.padding?.left ||
@@ -194,7 +288,18 @@ function visualTable(props: IVisualTableProps) {
           {visualData.values.map((row) => {
             return (
               <tr>
-                <td>{row[groupingColumn?.queryName]}</td>
+                {groupingColumnSettings?.showGroupingColumn &&
+                groupingColumn !== undefined ? (
+                  <td
+                    className="grouping-column__value"
+                    style={groupingColumnValuesStyles}
+                  >
+                    {row[groupingColumn?.queryName]}
+                  </td>
+                ) : (
+                  ""
+                )}
+
                 {tableValueColumns.map((col, i) => {
                   return CellValueDisplay(
                     col,
@@ -222,38 +327,35 @@ function CellValueDisplay(
   secondaryMeasureSettings: SecondaryMeasureSettings,
   trendLineSettings: TrendLineSettings
 ) {
-  const txtAlign =
-    visualTableColumn?.textAlign === "left"
-      ? "left"
-      : visualTableColumn?.textAlign === "right"
-      ? "right"
-      : "center";
   const measureStyles: React.CSSProperties = {
-    display: "inline-block",
-    width: "100%", // * DO NOT REMOVE THIS FORM CELL.
+    // display: "inline-block",
+    // width: "100%", // * DO NOT REMOVE THIS FORM CELL.
     // textAlign: "center",
 
     ...(visualTableColumn.columnType ===
     VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
       ? {
-          fontFamily: `${
-            mainMeasureSettings?.fontFamily &&
-            mainMeasureSettings?.fontFamily.indexOf("wf_standard-font") !== -1
-              ? VisualConstants.dinReplacementFont
-              : mainMeasureSettings?.fontFamily
-          }`,
+          fontFamily: fontFamilyCSSValue(
+            mainMeasureSettings?.fontFamily ||
+              VisualConstants.dinReplacementFont
+          ),
           fontSize: `${mainMeasureSettings?.fontSize}pt`,
+          fontWeight: fontWeightCSSValue(
+            mainMeasureSettings?.fontWeight ||
+              VisualConstants.mainMeasureSettings.fontWeight
+          ),
           // color: mainMeasureSettings?.fontColor,
         }
       : {
-          fontFamily: `${
-            secondaryMeasureSettings?.fontFamily &&
-            secondaryMeasureSettings?.fontFamily.indexOf("wf_standard-font") !==
-              -1
-              ? VisualConstants.dinReplacementFont
-              : secondaryMeasureSettings?.fontFamily
-          }`,
+          fontFamily: fontFamilyCSSValue(
+            secondaryMeasureSettings?.fontFamily ||
+              VisualConstants.dinReplacementFont
+          ),
           fontSize: `${secondaryMeasureSettings?.fontSize}pt`,
+          fontWeight: fontWeightCSSValue(
+            secondaryMeasureSettings?.fontWeight ||
+              VisualConstants.mainMeasureSettings.fontWeight
+          ),
           // color: secondaryMeasureSettings?.fontColor,
         }),
   };
@@ -267,8 +369,17 @@ function CellValueDisplay(
         : visualTableColumn.bgColor,
     ...(visualTableColumn.columnType !== VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART
       ? {
-          textAlign: txtAlign,
-          width: `${visualTableColumn?.width || 50}px`,
+          textAlign: textAlignCSSValue(
+            visualTableColumn?.textAlign ||
+              VisualConstants.visualTableColumn.textAlign
+          ),
+          width: `${
+            visualTableColumn?.width ||
+            (visualTableColumn.columnType ===
+            VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
+              ? VisualConstants.mainMeasureCellWidth
+              : VisualConstants.secondaryMeasureCellWidth)
+          }px`,
         }
       : {}),
     ...(visualTableColumn.columnType === VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART
@@ -311,28 +422,39 @@ function CellValueDisplay(
     },
   };
 
+  // Original
+  // const points =
+  //   "-18035,0 -76,18 -63,18 -51,0 -38,0 -26,0 -13,18 0,18 11,0 24,18 37,18 49,0 62,0 74,0 87,0 99,18 112,18 124,0 137,18 150,18 162,18";
+
+  // Testing only
+  const points = rowValue[visualTableColumn.queryName];
+  //"-26,0 -13,18 0,18 11,0 24,18 37,18 112,18 124,0 137,18 150,18 162,18";
   const cellDisplay = (
     <td style={tdStyles}>
       {visualTableColumn.columnType ===
       VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART ? (
-        <svg
-          style={{
-            height: `${trendLineSettings?.height}px`,
-            width: `${trendLineSettings?.width}px`,
-          }}
-        >
-          <g transform="translate(9, 1)">
-            <polyline
-              stroke={trendLineSettings?.strokeColor}
-              fill={trendLineSettings?.fillColor}
-              stroke-width={`${trendLineSettings?.strokeWidth}`}
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-dasharray="0"
-              points="-18035,0 -76,18 -63,18 -51,0 -38,0 -26,0 -13,18 0,18 11,0 24,18 37,18 49,0 62,0 74,0 87,0 99,18 112,18 124,0 137,18 150,18 162,18"
-            />
-          </g>
-        </svg>
+        points && validatePolyline(points) ? (
+          <svg
+            style={{
+              height: `${trendLineSettings?.height}px`,
+              width: `${trendLineSettings?.width}px`,
+            }}
+          >
+            <g transform="translate(9, 1)">
+              <polyline
+                stroke={trendLineSettings?.strokeColor}
+                fill={trendLineSettings?.fillColor}
+                stroke-width={`${trendLineSettings?.strokeWidth}`}
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-dasharray="0"
+                points={points}
+              />
+            </g>
+          </svg>
+        ) : (
+          ""
+        )
       ) : visualTableColumn.queryName.length === 0 ||
         rowValue[visualTableColumn.queryName] === undefined ||
         rowValue[visualTableColumn.queryName] === null ||
@@ -368,6 +490,7 @@ export function ContentDisplay(props: IContentDisplayProps) {
             mainMeasureSettings: props.mainMeasureSettings,
             secondaryMeasureSettings: props.secondaryMeasureSettings,
             trendLineSettings: props.trendLineSettings,
+            groupingColumnSettings: props.groupingColumnSettings,
           })
         )}
       </div>

@@ -25,13 +25,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface ICellBorder {
+interface ICellBorderProps {
   side: string;
   border: string;
   onBorderUpdate: Function;
 }
 
-export default function CellBorder(props: ICellBorder) {
+export default function CellBorder(props: ICellBorderProps) {
   const classes = useStyles();
   const { side, border } = props;
   let borderComponents;

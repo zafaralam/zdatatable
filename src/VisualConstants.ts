@@ -7,10 +7,10 @@ import {
 const defaultTextColor = "#3F3F44",
   defaultBgColor = "#fff",
   defaultBorderColor = "#83838D", //#0F0F10
-  defaultFontFamily = "Segoe UI";
+  defaultFontFamily = "Roboto, helvetica, arial, sans-serif"; //"Segoe UI";
 export const VisualConstants = {
   //   visual: visual,
-  dinReplacementFont: "Roboto, helvetica, arial, sans-serif",
+  dinReplacementFont: "Roboto, helvetica, arial, sans-serif", // * This is also the default font used.
   visualTable: {
     name: "",
     columns: [],
@@ -27,6 +27,8 @@ export const VisualConstants = {
     dataColumnIndex: null,
     columns: [],
     labelFontSize: 10,
+    labelFontFamily: defaultFontFamily,
+    labelFontWeight: "normal",
     textColor: defaultTextColor,
     bgColor: defaultBgColor,
     applyBgColorToValues: false,
@@ -45,13 +47,18 @@ export const VisualConstants = {
       bottom: 4,
     },
   },
-  mainMeasureCellWidth: 50,
-  secondaryMeasureCellWidth: 25,
+  baseColumnBgColor: "#5F6162",
+  baseColumnTextColor: "#fff",
+  subColumnBgColor: "#D9D9D9",
+  mainMeasureCellWidth: 65,
+  secondaryMeasureCellWidth: 35,
 
   tableTitleSettings: {
     fontColor: defaultTextColor,
     fontFamily: defaultFontFamily,
+
     fontSize: 14,
+    fontWeight: "bold",
     backgroundColor: defaultBgColor,
     padding: 1,
   },
@@ -60,11 +67,13 @@ export const VisualConstants = {
     fontColor: defaultTextColor,
     fontFamily: defaultFontFamily,
     fontSize: 18,
+    fontWeight: "bold",
   },
   secondaryMeasureSettings: {
     fontColor: defaultTextColor,
     fontFamily: defaultFontFamily,
     fontSize: 10,
+    fontWeight: "normal",
   },
   trendLineSettings: {
     height: 20,
@@ -73,4 +82,141 @@ export const VisualConstants = {
     strokeColor: "#363636",
     strokeWidth: 1,
   },
+  groupingColumnSettings: {
+    showGroupingColumn: true,
+    width: 200, // based on excel 8.43 = 64px
+    borderWidth: 1,
+    borderColor: defaultBorderColor,
+    headerBackgroundColor: "#5F6162",
+    headerFontColor: "#fff",
+    headerFontFamily: defaultFontFamily,
+    headerFontSize: 11,
+    headerFontWeight: "bold",
+    headerTextAlign: "center",
+    valuesBackgroundColor: "#fff",
+    valuesFontColor: "#000",
+    valuesFontFamily: defaultFontFamily,
+    valuesFontSize: 10,
+    valuesFontWeight: "normal",
+    valuesTextAlign: "left",
+  },
 };
+
+export const FontWeights = [
+  {
+    displayName: "Initial",
+    value: "initial",
+  },
+  {
+    displayName: "Normal",
+    value: "normal",
+  },
+  {
+    displayName: "Lighter",
+    value: "lighter",
+  },
+  {
+    displayName: "Bold",
+    value: "bold",
+  },
+];
+
+export const FontFamilies = [
+  {
+    displayName: "Arial",
+    value: "Arial",
+  },
+  {
+    displayName: "Arial Black",
+    value: '"Arial Black"',
+  },
+  {
+    displayName: "Arial Unicode MS",
+    value: '"Arial Unicode MS"',
+  },
+  {
+    displayName: "Calibri",
+    value: "Calibri",
+  },
+  {
+    displayName: "Cambria",
+    value: "Cambria",
+  },
+  {
+    displayName: "Cambria Math",
+    value: '"Cambria Math"',
+  },
+  {
+    displayName: "Candara",
+    value: "Candara",
+  },
+  {
+    displayName: "Comic Sans MS",
+    value: '"Comic Sans MS"',
+  },
+  {
+    displayName: "Consolas",
+    value: "Consolas",
+  },
+  {
+    displayName: "Constantia",
+    value: "Constantia",
+  },
+  {
+    displayName: "Corbel",
+    value: "Corbel",
+  },
+  {
+    displayName: "Courier New",
+    value: '"Courier New"',
+  },
+  {
+    displayName: "Georgia",
+    value: "Georgia",
+  },
+  {
+    displayName: "Helvetica",
+    value: "'Helvetica', 'Arial', sans-serif",
+  },
+  {
+    displayName: "Lucida Sans Unicode",
+    value: '"Lucida Sans Unicode"',
+  },
+  { displayName: "Roboto", value: "Roboto, helvetica, arial, sans-serif" },
+  {
+    displayName: "Segoe (Bold)",
+    value: '"Segoe UI Bold", wf_segoe-ui_bold, helvetica, arial, sans-serif',
+  },
+  {
+    displayName: "Segoe UI",
+    value: '"Segoe UI", wf_segoe-ui_normal, helvetica, arial, sans-serif',
+  },
+  {
+    displayName: "Segoe UI Light",
+    value: '"Segoe UI Light", wf_segoe-ui_bold, helvetica, arial, sans-serif',
+  },
+  {
+    displayName: "Symbol",
+    value: "Symbol",
+  },
+  {
+    displayName: "Tahoma",
+    value: "Tahoma",
+  },
+  {
+    displayName: "Times New Roman",
+    value: '"Times New Roman"',
+  },
+  {
+    displayName: "Trebuchet MS",
+    value: '"Trebuchet MS"',
+  },
+  {
+    displayName: "Verdana",
+    value: "Verdana",
+  },
+  {
+    displayName: "Wingdings",
+    value: "Wingdings",
+  },
+];

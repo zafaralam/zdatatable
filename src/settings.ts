@@ -44,6 +44,7 @@ export class TableTitleSettings {
     VisualConstants.tableTitleSettings.backgroundColor;
   public fontFamily: string = VisualConstants.tableTitleSettings.fontFamily;
   public fontSize: number = VisualConstants.tableTitleSettings.fontSize;
+  public fontWeight: string = VisualConstants.tableTitleSettings.fontWeight;
   public padding: number = VisualConstants.tableTitleSettings.padding;
 }
 
@@ -51,6 +52,7 @@ export class MainMeasureSettings {
   public fontColor: string = VisualConstants.mainMeasureSettings.fontColor;
   public fontFamily: string = VisualConstants.mainMeasureSettings.fontFamily;
   public fontSize: number = VisualConstants.mainMeasureSettings.fontSize;
+  public fontWeight: string = VisualConstants.mainMeasureSettings.fontWeight;
 }
 
 export class SecondaryMeasureSettings {
@@ -58,6 +60,8 @@ export class SecondaryMeasureSettings {
   public fontFamily: string =
     VisualConstants.secondaryMeasureSettings.fontFamily;
   public fontSize: number = VisualConstants.secondaryMeasureSettings.fontSize;
+  public fontWeight: string =
+    VisualConstants.secondaryMeasureSettings.fontWeight;
 }
 
 export class TrendLineSettings {
@@ -67,6 +71,42 @@ export class TrendLineSettings {
   public strokeColor: string = VisualConstants.trendLineSettings.strokeColor;
   public strokeWidth: number = VisualConstants.trendLineSettings.strokeWidth;
 }
+
+export class GroupingColumnSettings {
+  public showGroupingColumn: boolean =
+    VisualConstants.groupingColumnSettings.showGroupingColumn;
+  public width: number = VisualConstants.groupingColumnSettings.width;
+  public borderWidth: number =
+    VisualConstants.groupingColumnSettings.borderWidth;
+  public borderColor: string =
+    VisualConstants.groupingColumnSettings.borderColor;
+  public headerBackgroundColor: string =
+    VisualConstants.groupingColumnSettings.headerBackgroundColor;
+  public headerFontColor: string =
+    VisualConstants.groupingColumnSettings.headerFontColor;
+  public headerFontFamily: string =
+    VisualConstants.groupingColumnSettings.headerFontFamily;
+  public headerFontSize: number =
+    VisualConstants.groupingColumnSettings.headerFontSize;
+  public headerFontWeight: string =
+    VisualConstants.groupingColumnSettings.headerFontWeight;
+  public headerTextAlign: string =
+    VisualConstants.groupingColumnSettings.headerTextAlign;
+  public valuesBackgroundColor: string =
+    VisualConstants.groupingColumnSettings.valuesBackgroundColor;
+  public valuesFontColor: string =
+    VisualConstants.groupingColumnSettings.valuesFontColor;
+  public valuesFontFamily: string =
+    VisualConstants.groupingColumnSettings.valuesFontFamily;
+  public valuesFontSize: number =
+    VisualConstants.groupingColumnSettings.valuesFontSize;
+  public valuesFontWeight: string =
+    VisualConstants.groupingColumnSettings.valuesFontWeight;
+  public valuesTextAlign: string =
+    VisualConstants.groupingColumnSettings.valuesTextAlign;
+  // public header: boolean = true;
+  // public values: boolean = true;
+}
 export class VisualSettings extends DataViewObjectsParser {
   // public circle: CircleSettings = new CircleSettings();
   public advancedEditing: AdvancedEditingSettings = new AdvancedEditingSettings();
@@ -74,4 +114,5 @@ export class VisualSettings extends DataViewObjectsParser {
   public mainMeasure: MainMeasureSettings = new MainMeasureSettings();
   public secondaryMeasure: SecondaryMeasureSettings = new SecondaryMeasureSettings();
   public trendLine: TrendLineSettings = new TrendLineSettings();
+  public groupingColumn: GroupingColumnSettings = new GroupingColumnSettings();
 }

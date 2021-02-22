@@ -10,6 +10,7 @@ import {
   TrendLineSettings,
   MainMeasureSettings,
   SecondaryMeasureSettings,
+  GroupingColumnSettings,
 } from "../settings";
 import AdvanceEditorData from "../models/advanceEditor";
 // Visual Settings Imports here
@@ -35,6 +36,7 @@ export interface IVisualMainDisplayState {
   mainMeasureSettings: MainMeasureSettings;
   secondaryMeasureSettings: SecondaryMeasureSettings;
   trendLineSettings: TrendLineSettings;
+  groupingColumnSettings: GroupingColumnSettings;
 }
 
 export interface IVisualTable {
@@ -54,6 +56,8 @@ export interface IVisualTableColumn {
   dataColumnIndex?: number;
   columns?: IVisualTableColumn[];
   labelFontSize?: number;
+  labelFontFamily?: string;
+  labelFontWeight?: string;
   textColor?: string;
   // applyTextColorToValues?: boolean;
   bgColor?: string;

@@ -58,7 +58,7 @@ export default class EditTable extends React.Component<
 
   private handleTableNameChange(value) {
     this.props.onEditTableUpdate(
-      { name: value, columns: this.props.table.columns },
+      { name: value, columns: this.props.table.columns, showTitle: value },
       this.props.index
     );
   }
@@ -100,6 +100,8 @@ export default class EditTable extends React.Component<
               ...VisualConstants.visualTableColumn,
               dataColumnIndex: null,
               level: 1,
+              bgColor: VisualConstants.baseColumnBgColor,
+              textColor: VisualConstants.baseColumnTextColor,
             },
           ]),
         totalTableColumns: 0,

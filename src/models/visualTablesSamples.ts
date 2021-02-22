@@ -20,6 +20,7 @@ export const SingleTable: IVisualTable[] = [
         bgColor: "#5F6162",
         textColor: "#fff",
         level: 1,
+        padding: { left: 20, top: 0, right: 16, bottom: 0 },
         columns: [
           {
             label: "Last Month",
@@ -29,6 +30,7 @@ export const SingleTable: IVisualTable[] = [
             dataColumnIndex: null,
             bgColor: "#D9D9D9",
             level: 2,
+            labelFontSize: 8,
             columns: [
               {
                 label: "",
@@ -57,6 +59,7 @@ export const SingleTable: IVisualTable[] = [
             dataColumnIndex: null,
             bgColor: "#D9D9D9",
             level: 2,
+            labelFontSize: 8,
             columns: [
               {
                 label: "",
@@ -85,6 +88,7 @@ export const SingleTable: IVisualTable[] = [
             bgColor: "#D9D9D9",
             applyBgColorToValues: false,
             level: 2,
+            labelFontSize: 8,
           },
         ],
       },
@@ -98,6 +102,7 @@ export const SingleTable: IVisualTable[] = [
         bgColor: "#5F6162",
         textColor: "#fff",
         level: 1,
+
         columns: [
           {
             label: "Last Month",
@@ -107,6 +112,7 @@ export const SingleTable: IVisualTable[] = [
             dataColumnIndex: null,
             bgColor: "#D9D9D9",
             level: 2,
+            labelFontSize: 8,
             columns: [
               {
                 label: "",
@@ -135,6 +141,7 @@ export const SingleTable: IVisualTable[] = [
             dataColumnIndex: null,
             bgColor: "#D9D9D9",
             level: 2,
+            labelFontSize: 8,
             columns: [
               {
                 label: "",
@@ -163,6 +170,7 @@ export const SingleTable: IVisualTable[] = [
             bgColor: "#D9D9D9",
             applyBgColorToValues: false,
             level: 2,
+            labelFontSize: 8,
           },
         ],
       },
@@ -175,6 +183,7 @@ export const SingleTable: IVisualTable[] = [
         bgColor: "#5F6162",
         textColor: "#fff",
         level: 1,
+        padding: { left: 16, top: 0, right: 16, bottom: 0 },
         columns: [
           {
             label: "Last Month",
@@ -184,6 +193,7 @@ export const SingleTable: IVisualTable[] = [
             dataColumnIndex: null,
             bgColor: "#D9D9D9",
             level: 2,
+            labelFontSize: 8,
             columns: [
               {
                 label: "",
@@ -212,6 +222,7 @@ export const SingleTable: IVisualTable[] = [
             dataColumnIndex: null,
             bgColor: "#D9D9D9",
             level: 2,
+            labelFontSize: 8,
             columns: [
               {
                 label: "",
@@ -240,10 +251,100 @@ export const SingleTable: IVisualTable[] = [
             bgColor: "#D9D9D9",
             applyBgColorToValues: false,
             level: 2,
+            labelFontSize: 8,
           },
         ],
       },
     ],
-    totalTableColumns: 0,
+    totalTableColumns: 3,
+  },
+  {
+    totalTableColumns: 1,
+    name: "SPECIALIST CLINICS ACCESS POLICY KPIs (NEW REFERRAL)",
+    showTitle: true,
+    fullWidth: false,
+    columns: [
+      {
+        label: "First Urgent Appointment Attended Within Priority Timeframe",
+        isMeasure: false,
+        columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
+        queryName: "",
+        dataColumnIndex: null,
+        bgColor: "#5F6162",
+        textColor: "#fff",
+        level: 1,
+        padding: { left: 20, top: 0, right: 16, bottom: 0 },
+        columns: [
+          {
+            label: "Last Month",
+            isMeasure: false,
+            columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
+            queryName: "",
+            dataColumnIndex: null,
+            bgColor: "#D9D9D9",
+            level: 2,
+            labelFontSize: 8,
+            columns: [
+              {
+                label: "",
+                isMeasure: true,
+                columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
+                queryName:
+                  "fctOPEpisodeFirstAppt.Urgent First Appointment Attended Within Waiting Period",
+                dataColumnIndex: 0,
+                level: 3,
+              },
+              {
+                label: "",
+                isMeasure: true,
+                columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
+                queryName: "",
+                dataColumnIndex: null,
+                level: 3,
+              },
+            ],
+          },
+          {
+            label: "Current FYTD",
+            isMeasure: false,
+            columnType: VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
+            queryName: "",
+            dataColumnIndex: null,
+            bgColor: "#D9D9D9",
+            level: 2,
+            labelFontSize: 8,
+            columns: [
+              {
+                label: "",
+                isMeasure: true,
+                columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN,
+                queryName: "",
+                dataColumnIndex: null,
+                level: 3,
+              },
+              {
+                label: "",
+                isMeasure: true,
+                columnType: VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY,
+                queryName: "",
+                dataColumnIndex: null,
+                level: 3,
+              },
+            ],
+          },
+          {
+            label: "Trend (13m)",
+            isMeasure: true,
+            columnType: VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART,
+            queryName: "",
+            dataColumnIndex: null,
+            bgColor: "#D9D9D9",
+            applyBgColorToValues: false,
+            level: 2,
+            labelFontSize: 8,
+          },
+        ],
+      },
+    ],
   },
 ];

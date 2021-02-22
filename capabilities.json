@@ -13,7 +13,7 @@
     ],
     "objects": {
         "tableTitle": {
-            "displayName": "Table Title Formatting",
+            "displayName": "Table Title",
             "description": "Formatting options for individual table",
             "properties": {
                 "backgroundColor": {
@@ -52,10 +52,216 @@
                         }
                     }
                 },
+                "fontWeight": {
+                    "displayName": "Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                },
                 "padding": {
                     "displayName": "Padding (px)",
                     "type": {
                         "numeric": true
+                    }
+                }
+            }
+        },
+        "groupingColumn": {
+            "displayName": "Grouping Column",
+            "description": "Formatting options for the grouping header and values column",
+            "properties": {
+                "showGroupingColumn": {
+                    "displayName": "Show Grouping Column",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "width": {
+                    "displayName": "Column Width (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderWidth": {
+                    "displayName": "Border Width 9px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderColor": {
+                    "displayName": "Border Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "header": {
+                    "displayName": "Header Formatting",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "headerBackgroundColor": {
+                    "displayName": "Header Background Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "headerFontColor": {
+                    "displayName": "Header Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "headerFontFamily": {
+                    "displayName": "Header Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "headerFontSize": {
+                    "displayName": "Header Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "headerFontWeight": {
+                    "displayName": "Header Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                },
+                "headerTextAlign": {
+                    "displayName": "Header Text Align",
+                    "type": {
+                        "formatting": {
+                            "alignment": true
+                        }
+                    }
+                },
+                "values": {
+                    "displayName": "Values Formatting",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "valuesBackgroundColor": {
+                    "displayName": "Values Background Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "valuesFontColor": {
+                    "displayName": "Values Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "valuesFontFamily": {
+                    "displayName": "Values Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "valuesFontSize": {
+                    "displayName": "Values Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "valuesFontWeight": {
+                    "displayName": "Values Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                },
+                "valuesTextAlign": {
+                    "displayName": "Values Text Align",
+                    "type": {
+                        "formatting": {
+                            "alignment": true
+                        }
                     }
                 }
             }
@@ -89,6 +295,30 @@
                             "fontSize": true
                         }
                     }
+                },
+                "fontWeight": {
+                    "displayName": "Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
                 }
             }
         },
@@ -121,11 +351,35 @@
                             "fontSize": true
                         }
                     }
+                },
+                "fontWeight": {
+                    "displayName": "Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
                 }
             }
         },
         "trendLine": {
-            "displayName": "Trend Line Formatting",
+            "displayName": "Trend Line",
             "description": "Formatting options for the trend line charts",
             "properties": {
                 "height": {
@@ -175,30 +429,9 @@
                 "visualTables": {
                     "displayName": "Visual Tables",
                     "type": {
-                        "text": true
-                    }
-                }
-            }
-        },
-        "circle": {
-            "displayName": "Circle",
-            "properties": {
-                "circleColor": {
-                    "displayName": "Color",
-                    "description": "The fill color of the circle.",
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
+                        "scripting": {
+                            "source": true
                         }
-                    }
-                },
-                "circleThickness": {
-                    "displayName": "Thickness",
-                    "description": "The circle thickness.",
-                    "type": {
-                        "numeric": true
                     }
                 }
             }

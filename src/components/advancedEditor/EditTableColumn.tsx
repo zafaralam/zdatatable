@@ -33,13 +33,6 @@ import {
 
 import CellBorder from "./CellBorder";
 
-interface IEditTableColumnProps {
-  column: IVisualTableColumn;
-  index: number;
-  dataColumns: IDataColumn[];
-  onVisualColumnUpdate: Function;
-  onVisualColumnRemoval: Function;
-}
 import {
   BsFillTrashFill,
   //   BsPlusSquare,
@@ -51,7 +44,21 @@ import {
 } from "react-icons/bs";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 // import { formatPrefix } from "d3";
-import { VisualConstants } from "./../../VisualConstants";
+import {
+  VisualConstants,
+  FontFamilies,
+  FontWeights,
+} from "./../../VisualConstants";
+// import { lab } from "d3";
+
+interface IEditTableColumnProps {
+  column: IVisualTableColumn;
+  index: number;
+  dataColumns: IDataColumn[];
+  onVisualColumnUpdate: Function;
+  onVisualColumnRemoval: Function;
+}
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
@@ -76,6 +83,9 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     textAlign,
     padding,
     border,
+    labelFontFamily,
+    labelFontSize,
+    labelFontWeight,
   } = props.column;
   const hasColumns = columns && columns.length !== 0,
     columnsAllowed = columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
@@ -96,6 +106,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     column.columns.push({
       ...VisualConstants.visualTableColumn,
       labelFontSize: 8, // * So that sub-columns automatically get a smaller font size.
+      bgColor: VisualConstants.subColumnBgColor,
       dataColumnIndex: null,
       level: level + 1,
     });
@@ -221,6 +232,20 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     else _column.dataColumnIndex = null;
 
     props.onVisualColumnUpdate(_column, props.index);
+  };
+
+  const handleLabelFontFamilyChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as string;
+    handleColumnPropertyChange("labelFontFamily", _valueToSet);
+  };
+
+  const handleLabelFontWeightChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as string;
+    handleColumnPropertyChange("labelFontWeight", _valueToSet);
   };
 
   return (
@@ -357,9 +382,9 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   </MenuItem>
                   {props.dataColumns
                     .filter((i) => i.content === true)
-                    .map((dc) => {
+                    .map((dc, mIdx) => {
                       return (
-                        <MenuItem value={dc.queryName}>
+                        <MenuItem key={mIdx} value={dc.queryName}>
                           {dc.displayName}
                         </MenuItem>
                       );
@@ -454,42 +479,99 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
             ""
           )}
           <div>
-            <Grid container direction="row" spacing={2} justify="space-between">
+            <Grid container direction="row" spacing={1} justify="space-between">
               {(columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
                 label.length !== 0) ||
               columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
-                <Grid item xs={6}>
-                  <FormControl className={classes.formControl} fullWidth>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      label="Label Font Size"
-                      type="number"
-                      value={
-                        props.column.labelFontSize === undefined
-                          ? VisualConstants.visualTableColumn.labelFontSize
-                          : props.column.labelFontSize
-                      }
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="start">pt</InputAdornment>
-                        ),
-                      }}
-                      onChange={(e) => {
-                        handleColumnPropertyChange(
-                          "labelFontSize",
-                          e.target.value
-                        );
-                      }}
-                    />
-                  </FormControl>
+                <Grid
+                  container
+                  direction="row"
+                  item
+                  xs={10}
+                  spacing={1}
+                  alignItems="center"
+                >
+                  <Grid item xs={4}>
+                    <FormControl className={classes.formControl} fullWidth>
+                      <InputLabel id="select-measure-label">
+                        Label Font Family
+                      </InputLabel>
+                      <Select
+                        labelId="select-measure-label"
+                        value={
+                          labelFontFamily ||
+                          VisualConstants.visualTableColumn.labelFontFamily
+                        }
+                        onChange={handleLabelFontFamilyChange}
+                        fullWidth
+                      >
+                        {FontFamilies.map((dc, mIdx) => {
+                          return (
+                            <MenuItem key={mIdx} value={dc.value}>
+                              {dc.displayName}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl className={classes.formControl} fullWidth>
+                      <InputLabel id="select-measure-label">
+                        Label Font Weight
+                      </InputLabel>
+                      <Select
+                        labelId="select-measure-label"
+                        value={
+                          labelFontWeight ||
+                          VisualConstants.visualTableColumn.labelFontWeight
+                        }
+                        onChange={handleLabelFontWeightChange}
+                        fullWidth
+                      >
+                        {FontWeights.map((dc, mIdx) => {
+                          return (
+                            <MenuItem key={mIdx} value={dc.value}>
+                              {dc.displayName}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <FormControl className={classes.formControl} fullWidth>
+                      <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Label Font Size"
+                        type="number"
+                        value={
+                          labelFontSize === undefined
+                            ? VisualConstants.visualTableColumn.labelFontSize
+                            : labelFontSize
+                        }
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="start">pt</InputAdornment>
+                          ),
+                        }}
+                        onChange={(e) => {
+                          handleColumnPropertyChange(
+                            "labelFontSize",
+                            e.target.value
+                          );
+                        }}
+                      />
+                    </FormControl>
+                  </Grid>
                 </Grid>
               ) : (
                 ""
               )}
               {props.column.isMeasure === true &&
               columnType !== VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART ? (
-                <Grid item xs={6}>
+                <Grid item xs={2}>
                   <FormControl className={classes.formControl} fullWidth>
                     <TextField
                       autoFocus

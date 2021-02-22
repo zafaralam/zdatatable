@@ -11,6 +11,7 @@ import {
   TrendLineSettings,
   MainMeasureSettings,
   SecondaryMeasureSettings,
+  GroupingColumnSettings,
 } from "../../settings";
 import { IVisualData, IVisualTable } from "../../defs/main";
 import { ContentDisplay } from "./../ContentDisplay";
@@ -32,6 +33,7 @@ interface IAdvanceEditorProps {
   mainMeasureSettings?: MainMeasureSettings;
   secondaryMeasureSettings?: SecondaryMeasureSettings;
   trendLineSettings?: TrendLineSettings;
+  groupingColumnSettings?: GroupingColumnSettings;
   // updateDisplayTables: Function;
   // visualTables: IVisualTable[];
 }
@@ -138,6 +140,7 @@ export default class AdvanceEditor extends React.Component<
           mainMeasureSettings={this.props.mainMeasureSettings}
           secondaryMeasureSettings={this.props.secondaryMeasureSettings}
           trendLineSettings={this.props.trendLineSettings}
+          groupingColumnSettings={this.props.groupingColumnSettings}
         />
       </div>
     );
@@ -218,7 +221,7 @@ export default class AdvanceEditor extends React.Component<
 
     this.setState({ isDirty: false }, () => {
       changes.replace[0].properties["visualTables"] = JSON.stringify({
-        tables: [],
+        tables: JSON.stringify(this.state.visualTables),
         tableCount: this.state.visualTables.length,
         updateDatetime: Date.now().toLocaleString(),
       });

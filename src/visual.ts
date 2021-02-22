@@ -89,9 +89,9 @@ export class Visual implements IVisual {
     this.dataColumns = [];
     // this.visualTables = [];
     this.advEditorData = new AdvanceEditorData();
-    this.advEditorData.updateVisualTables(
-      JSON.parse(JSON.stringify(SampleData))
-    );
+    // this.advEditorData.updateVisualTables(
+    //   JSON.parse(JSON.stringify(SampleData))
+    // );
 
     this.reactRoot = React.createElement(VisualMainDisplay, {
       host: this.host,
@@ -128,8 +128,24 @@ export class Visual implements IVisual {
         options && options.dataViews && options.dataViews[0],
         this.dataColumns
       );
+      //console.log(this.settings.advancedEditing);
 
-      // console.log(this.settings.tableTitle);
+      // * Might need to do a bit more here
+      // Double parsing is required as the tables structure is also a string.
+      const _visualTables = JSON.parse(
+        this.settings.advancedEditing.visualTables
+      );
+
+      if (
+        _visualTables["tables"] !== undefined &&
+        _visualTables["tables"] !== "[]"
+      ) {
+        this.advEditorData.updateVisualTables(
+          JSON.parse(_visualTables["tables"]) as IVisualTable[]
+        );
+      }
+
+      // console.log(typeof this.advEditorData.visualTables);
 
       let state: IVisualMainDisplayState = {
         updateOptions: options,
@@ -152,6 +168,7 @@ export class Visual implements IVisual {
         mainMeasureSettings: this.settings.mainMeasure,
         secondaryMeasureSettings: this.settings.secondaryMeasure,
         trendLineSettings: this.settings.trendLine,
+        groupingColumnSettings: this.settings.groupingColumn,
         // visualTables: this.visualTables,
       };
 

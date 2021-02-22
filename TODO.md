@@ -18,20 +18,21 @@
 - [] When adding a new table ask how many base columns
 - [] Add common table settings in the Power BI pane to control
 
-  - [] Values Row height
+  - [x] Values Row height (This is controlled by the first non-trend measure value column padding top and bottom)
   - [] Margin between tables
-  - [] Grouping Column Header text
-    - [] Width
-    - [] Background Color
-    - [] Text Align
-    - [] Font Color
-    - [] Font Size
-    - [] Font family
-  - [] Grouping Column Values
-    - [] Background Color
-    - [] Text Align
-    - [] Font Color
-    - [] Font Size
-    - [] Font family
+  - [] Border for tables
+  - [x] Grouping Column Header text
+    - [x] Width
+    - [x] Background Color
+    - [x] Text Align
+    - [x] Font Color
+    - [x] Font Size
+    - [x] Font family
+  - [x] Grouping Column Values
+    - [x] Background Color
+    - [x] Text Align
+    - [x] Font Color
+    - [x] Font Size
+    - [x] Font family
 
 - [] Add a text editor to paste in pre-existing **JSON** that can be converted to tables. this would be handy and very useful for creating tables quickly

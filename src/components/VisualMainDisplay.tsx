@@ -22,6 +22,7 @@ export const initialState: IVisualMainDisplayState = {
   mainMeasureSettings: defaultSettings["mainMeasureSettings"],
   secondaryMeasureSettings: defaultSettings["secondaryMeasureSettings"],
   trendLineSettings: defaultSettings["trendLineSettings"],
+  groupingColumnSettings: defaultSettings["groupingColumnSettings"],
   // visualTables: [],
 };
 
@@ -66,6 +67,7 @@ export class VisualMainDisplay extends React.Component<
       mainMeasureSettings,
       secondaryMeasureSettings,
       trendLineSettings,
+      groupingColumnSettings,
     } = this.state;
 
     switch (true) {
@@ -82,7 +84,7 @@ export class VisualMainDisplay extends React.Component<
             mainMeasureSettings={mainMeasureSettings}
             secondaryMeasureSettings={secondaryMeasureSettings}
             trendLineSettings={trendLineSettings}
-
+            groupingColumnSettings={groupingColumnSettings}
             // updateDisplayTables={this.props.updateDisplayTables}
             // visualTables={this.state.visualTables}
           />
@@ -99,6 +101,7 @@ export class VisualMainDisplay extends React.Component<
             mainMeasureSettings={mainMeasureSettings}
             secondaryMeasureSettings={secondaryMeasureSettings}
             trendLineSettings={trendLineSettings}
+            groupingColumnSettings={groupingColumnSettings}
           />
         );
       }

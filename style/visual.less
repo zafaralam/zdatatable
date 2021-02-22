@@ -176,6 +176,7 @@
 }
 
 .display-table {
+  // table-layout: fixed;
   transform: scale(1);
   transform-origin: 0% 0% 0px;
   border-collapse: collapse;
@@ -202,10 +203,16 @@
       margin: 0;
     }
   }
-  td {
-    padding: 2px 4px;
-    // border: none;
+  th.grouping-column__header,
+  td.grouping-column__value {
+    padding-left: 4px;
+    padding-right: 4px;
   }
+  //td {
+  // display: inline-block;
+  // padding: 2px 4px;
+  // border: none;
+  //}
 
   th > div.resize {
     resize: horizontal;
