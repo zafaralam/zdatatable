@@ -76,6 +76,14 @@
                         ]
                     }
                 },
+                "textAlign": {
+                    "displayName": "Text Align",
+                    "type": {
+                        "formatting": {
+                            "alignment": true
+                        }
+                    }
+                },
                 "padding": {
                     "displayName": "Padding (px)",
                     "type": {
@@ -101,7 +109,7 @@
                     }
                 },
                 "borderWidth": {
-                    "displayName": "Border Width 9px)",
+                    "displayName": "Border Width (px)",
                     "type": {
                         "numeric": true
                     }
@@ -114,6 +122,18 @@
                                 "color": true
                             }
                         }
+                    }
+                },
+                "applyBorderToHeader": {
+                    "displayName": "Apply border to Header",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "applyBorderToValues": {
+                    "displayName": "Apply border to Values",
+                    "type": {
+                        "bool": true
                     }
                 },
                 "header": {

@@ -56,7 +56,7 @@ export const VisualConstants = {
   tableTitleSettings: {
     fontColor: defaultTextColor,
     fontFamily: defaultFontFamily,
-
+    textAlign: "center",
     fontSize: 14,
     fontWeight: "bold",
     backgroundColor: defaultBgColor,
@@ -99,6 +99,8 @@ export const VisualConstants = {
     valuesFontSize: 10,
     valuesFontWeight: "normal",
     valuesTextAlign: "left",
+    applyBorderToHeader: true,
+    applyBorderToValues: true,
   },
 };
 

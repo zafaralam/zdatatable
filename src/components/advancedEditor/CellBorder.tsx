@@ -113,7 +113,7 @@ export default function CellBorder(props: ICellBorderProps) {
           <MenuItem value="groove">Groove</MenuItem>
         </Select>
       </Grid>
-      <Grid item xs={1}>
+      <Grid item xs={2}>
         <ColorPicker
           color={color}
           onColorChange={(bColor) => {

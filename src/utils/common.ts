@@ -162,6 +162,7 @@ export function borderGroupingColumCSSValue(
   width: number,
   color: string
 ): string {
+  if (width === undefined || width === null || width === 0) return "none";
   return `${
     width || VisualConstants.groupingColumnSettings.borderWidth
   }px solid ${color || VisualConstants.groupingColumnSettings.borderWidth}`;

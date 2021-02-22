@@ -108,7 +108,7 @@ export default class AdvanceEditor extends React.Component<
             </Grid>
             <Grid container item xs={4} justify="flex-end">
               <Button
-                color="primary"
+                color="default"
                 onClick={(e) => {
                   this.setState({ hidePreview: !this.state.hidePreview });
                 }}

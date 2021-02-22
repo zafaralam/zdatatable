@@ -77,6 +77,10 @@ function visualTable(props: IVisualTableProps) {
       tableTitleSettings?.fontWeight ||
         VisualConstants.tableTitleSettings.fontWeight
     ),
+    textAlign: textAlignCSSValue(
+      tableTitleSettings?.textAlign ||
+        VisualConstants.tableTitleSettings.textAlign
+    ),
     // ...titleFontWeight
   };
 
@@ -85,10 +89,14 @@ function visualTable(props: IVisualTableProps) {
       groupingColumnSettings?.width ||
       VisualConstants.groupingColumnSettings.width
     }px`,
-    border: borderGroupingColumCSSValue(
-      groupingColumnSettings?.borderWidth,
-      groupingColumnSettings?.borderColor
-    ),
+    ...(groupingColumnSettings.applyBorderToHeader
+      ? {
+          border: borderGroupingColumCSSValue(
+            groupingColumnSettings?.borderWidth,
+            groupingColumnSettings?.borderColor
+          ),
+        }
+      : {}),
     maxWidth: `${
       groupingColumnSettings?.width ||
       VisualConstants.groupingColumnSettings.width
@@ -118,10 +126,14 @@ function visualTable(props: IVisualTableProps) {
   };
 
   const groupingColumnValuesStyles: React.CSSProperties = {
-    border: borderGroupingColumCSSValue(
-      groupingColumnSettings?.borderWidth,
-      groupingColumnSettings?.borderColor
-    ),
+    ...(groupingColumnSettings.applyBorderToValues
+      ? {
+          border: borderGroupingColumCSSValue(
+            groupingColumnSettings?.borderWidth,
+            groupingColumnSettings?.borderColor
+          ),
+        }
+      : {}),
     background:
       groupingColumnSettings?.valuesBackgroundColor ||
       VisualConstants.groupingColumnSettings.valuesBackgroundColor,

@@ -292,6 +292,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
               maxWidth: "180px",
               display: "inline-block",
               fontSize: "0.75rem",
+              fontStyle: label.length === 0 ? "italic" : "normal",
             }}
           >
             {label.length === 0

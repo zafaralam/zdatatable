@@ -142,7 +142,7 @@ export class Visual implements IVisual {
         _visualTables["tables"] !== "[]" &&
         _visualTables["tables"].length !== 0
       ) {
-        console.log(_visualTables);
+        console.dir(_visualTables["tables"]);
         this.advEditorData.updateVisualTables(
           JSON.parse(_visualTables["tables"]) as IVisualTable[]
         );

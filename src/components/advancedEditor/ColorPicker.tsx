@@ -1,3 +1,4 @@
+import { Grid, TextField } from "@material-ui/core";
 import * as React from "react";
 import { SketchPicker } from "react-color";
 import { render } from "react-dom";
@@ -51,9 +52,27 @@ export default function ColorPicker(props: IColorPickerProps) {
 
   return (
     <div>
-      <div style={swatchStyles} onClick={handleOpenColorPicker}>
-        <div style={colorStyles} />
-      </div>
+      <Grid container direction="row">
+        <Grid item>
+          <div style={swatchStyles} onClick={handleOpenColorPicker}>
+            <div style={colorStyles} />
+          </div>
+        </Grid>
+        <Grid item>
+          <TextField
+            size="small"
+            value={props.color}
+            onChange={(e) => {
+              const color = e.target.value;
+              props.onColorChange(
+                color && color.length !== 0 && color[0] === "#"
+                  ? color
+                  : `#${color}`
+              );
+            }}
+          ></TextField>
+        </Grid>
+      </Grid>
       {openColorPicker ? (
         <div style={popoverStyles}>
           <div style={coverStyles} onClick={handleCloseColorPicker} />

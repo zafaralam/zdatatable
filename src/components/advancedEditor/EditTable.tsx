@@ -193,6 +193,7 @@ export default class EditTable extends React.Component<
               </Grid>
               <Grid item xs={2}>
                 <Checkbox
+                  color="primary"
                   checked={this.props.table.showTitle}
                   onChange={(e) => {
                     this.handleShowTableTitleChange(e.target.checked);

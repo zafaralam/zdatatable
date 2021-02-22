@@ -45,6 +45,7 @@ export class TableTitleSettings {
   public fontFamily: string = VisualConstants.tableTitleSettings.fontFamily;
   public fontSize: number = VisualConstants.tableTitleSettings.fontSize;
   public fontWeight: string = VisualConstants.tableTitleSettings.fontWeight;
+  public textAlign: string = VisualConstants.tableTitleSettings.textAlign;
   public padding: number = VisualConstants.tableTitleSettings.padding;
 }
 
@@ -80,6 +81,10 @@ export class GroupingColumnSettings {
     VisualConstants.groupingColumnSettings.borderWidth;
   public borderColor: string =
     VisualConstants.groupingColumnSettings.borderColor;
+  public applyBorderToHeader: boolean =
+    VisualConstants.groupingColumnSettings.applyBorderToHeader;
+  public applyBorderToValues: boolean =
+    VisualConstants.groupingColumnSettings.applyBorderToValues;
   public headerBackgroundColor: string =
     VisualConstants.groupingColumnSettings.headerBackgroundColor;
   public headerFontColor: string =
