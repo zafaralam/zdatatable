@@ -12,24 +12,12 @@
         }
     ],
     "objects": {
-        "advancedEditing": {
-            "displayName": "Advanced Editing",
-            "description": "Advanced Editing settings contained",
+        "tableTitle": {
+            "displayName": "Table Title",
+            "description": "Formatting options for individual table",
             "properties": {
-                "visualTables": {
-                    "displayName": "Visual Tables",
-                    "type": {
-                        "text": true
-                    }
-                }
-            }
-        },
-        "circle": {
-            "displayName": "Circle",
-            "properties": {
-                "circleColor": {
-                    "displayName": "Color",
-                    "description": "The fill color of the circle.",
+                "backgroundColor": {
+                    "displayName": "Background Color",
                     "type": {
                         "fill": {
                             "solid": {
@@ -38,11 +26,432 @@
                         }
                     }
                 },
-                "circleThickness": {
-                    "displayName": "Thickness",
-                    "description": "The circle thickness.",
+                "fontColor": {
+                    "displayName": "Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "fontWeight": {
+                    "displayName": "Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                },
+                "textAlign": {
+                    "displayName": "Text Align",
+                    "type": {
+                        "formatting": {
+                            "alignment": true
+                        }
+                    }
+                },
+                "padding": {
+                    "displayName": "Padding (px)",
                     "type": {
                         "numeric": true
+                    }
+                }
+            }
+        },
+        "groupingColumn": {
+            "displayName": "Grouping Column",
+            "description": "Formatting options for the grouping header and values column",
+            "properties": {
+                "showGroupingColumn": {
+                    "displayName": "Show Grouping Column",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "width": {
+                    "displayName": "Column Width (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderWidth": {
+                    "displayName": "Border Width (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderColor": {
+                    "displayName": "Border Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "applyBorderToHeader": {
+                    "displayName": "Apply border to Header",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "applyBorderToValues": {
+                    "displayName": "Apply border to Values",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "header": {
+                    "displayName": "Header Formatting",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "headerBackgroundColor": {
+                    "displayName": "Header Background Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "headerFontColor": {
+                    "displayName": "Header Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "headerFontFamily": {
+                    "displayName": "Header Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "headerFontSize": {
+                    "displayName": "Header Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "headerFontWeight": {
+                    "displayName": "Header Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                },
+                "headerTextAlign": {
+                    "displayName": "Header Text Align",
+                    "type": {
+                        "formatting": {
+                            "alignment": true
+                        }
+                    }
+                },
+                "values": {
+                    "displayName": "Values Formatting",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "valuesBackgroundColor": {
+                    "displayName": "Values Background Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "valuesFontColor": {
+                    "displayName": "Values Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "valuesFontFamily": {
+                    "displayName": "Values Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "valuesFontSize": {
+                    "displayName": "Values Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "valuesFontWeight": {
+                    "displayName": "Values Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                },
+                "valuesTextAlign": {
+                    "displayName": "Values Text Align",
+                    "type": {
+                        "formatting": {
+                            "alignment": true
+                        }
+                    }
+                }
+            }
+        },
+        "mainMeasure": {
+            "displayName": "Main Measure",
+            "description": "Formatting options for the main measure value columns",
+            "properties": {
+                "fontColor": {
+                    "displayName": "Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "fontWeight": {
+                    "displayName": "Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "secondaryMeasure": {
+            "displayName": "Secondary Measure",
+            "description": "Formatting options for the secondary measure value columns",
+            "properties": {
+                "fontColor": {
+                    "displayName": "Text Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "formatting": {
+                            "fontSize": true
+                        }
+                    }
+                },
+                "fontWeight": {
+                    "displayName": "Font Weight",
+                    "description": "Font weight for table title",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "displayName": "Initial",
+                                "value": "initial"
+                            },
+                            {
+                                "displayName": "Normal",
+                                "value": "normal"
+                            },
+                            {
+                                "displayName": "Lighter",
+                                "value": "lighter"
+                            },
+                            {
+                                "displayName": "Bold",
+                                "value": "bold"
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "trendLine": {
+            "displayName": "Trend Line",
+            "description": "Formatting options for the trend line charts",
+            "properties": {
+                "height": {
+                    "displayName": "Height (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "width": {
+                    "displayName": "Width (px)",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "fillColor": {
+                    "displayName": "Fill Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "strokeColor": {
+                    "displayName": "Stroke Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "strokeWidth": {
+                    "displayName": "Stoke Width",
+                    "type": {
+                        "integer": true
+                    }
+                }
+            }
+        },
+        "advancedEditing": {
+            "displayName": "Advanced Editing",
+            "description": "Advanced Editing settings contained",
+            "properties": {
+                "visualTables": {
+                    "displayName": "Visual Tables",
+                    "type": {
+                        "scripting": {
+                            "source": true
+                        }
                     }
                 }
             }

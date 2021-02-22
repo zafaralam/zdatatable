@@ -4,7 +4,14 @@ import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewObjects = powerbi.DataViewObjects;
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "./enums";
-import { AdvancedEditingSettings } from "../settings";
+import {
+  AdvancedEditingSettings,
+  TableTitleSettings,
+  TrendLineSettings,
+  MainMeasureSettings,
+  SecondaryMeasureSettings,
+  GroupingColumnSettings,
+} from "../settings";
 import AdvanceEditorData from "../models/advanceEditor";
 // Visual Settings Imports here
 
@@ -25,20 +32,40 @@ export interface IVisualMainDisplayState {
   objectMetadata?: DataViewObjects;
   data: IVisualValueData; // Visual Data (mapped from data view)
   // visualTables?: IVisualTable[];
+  tableTitleSettings: TableTitleSettings;
+  mainMeasureSettings: MainMeasureSettings;
+  secondaryMeasureSettings: SecondaryMeasureSettings;
+  trendLineSettings: TrendLineSettings;
+  groupingColumnSettings: GroupingColumnSettings;
 }
 
 export interface IVisualTable {
   name?: string;
   columns: IVisualTableColumn[];
+  fullWidth: boolean;
+  showTitle: boolean;
   totalTableColumns: number;
 }
 
 export interface IVisualTableColumn {
   label: string;
   columnType: VISUAL_DISPLAY_COLUMN_TYPE;
+  isMeasure: boolean;
+  level: number;
   queryName?: string;
   dataColumnIndex?: number;
   columns?: IVisualTableColumn[];
+  labelFontSize?: number;
+  labelFontFamily?: string;
+  labelFontWeight?: string;
+  textColor?: string;
+  // applyTextColorToValues?: boolean;
+  bgColor?: string;
+  applyBgColorToValues?: boolean;
+  textAlign?: string;
+  border?: IColumnBorder;
+  padding?: IColumnPadding;
+  width?: number; // this should only be for the measure fields and not for the display only fields.
 }
 
 export interface IVisualValueData {
@@ -66,3 +93,22 @@ export interface IDataColumn {
 export interface IVisualValues {
   [key: string]: any;
 }
+
+export interface IColumnBorder {
+  left: string;
+  top: string;
+  right: string;
+  bottom: string;
+}
+
+export interface IColumnPadding {
+  left: number;
+  top: number;
+  right: number;
+  bottom: number;
+}
+
+// export interface ITableValueColumn {
+//   queryName: string;
+//   type: VISUAL_DISPLAY_COLUMN_TYPE;
+// }

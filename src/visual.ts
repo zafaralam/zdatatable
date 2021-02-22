@@ -89,6 +89,7 @@ export class Visual implements IVisual {
     this.dataColumns = [];
     // this.visualTables = [];
     this.advEditorData = new AdvanceEditorData();
+    // ! Remove this in production
     this.advEditorData.updateVisualTables(
       JSON.parse(JSON.stringify(SampleData))
     );
@@ -128,6 +129,26 @@ export class Visual implements IVisual {
         options && options.dataViews && options.dataViews[0],
         this.dataColumns
       );
+      // console.log(this.settings.advancedEditing);
+
+      // * Might need to do a bit more here
+      // Double parsing is required as the tables structure is also a string.
+      const _visualTables = JSON.parse(
+        this.settings.advancedEditing.visualTables
+      );
+
+      if (
+        _visualTables["tables"] !== undefined &&
+        _visualTables["tables"] !== "[]" &&
+        _visualTables["tables"].length !== 0
+      ) {
+        console.dir(_visualTables["tables"]);
+        this.advEditorData.updateVisualTables(
+          JSON.parse(_visualTables["tables"]) as IVisualTable[]
+        );
+      }
+
+      // console.log(typeof this.advEditorData.visualTables);
 
       let state: IVisualMainDisplayState = {
         updateOptions: options,
@@ -146,6 +167,11 @@ export class Visual implements IVisual {
           options.dataViews,
           JSON.parse(JSON.stringify(this.dataColumns))
         ),
+        tableTitleSettings: this.settings.tableTitle,
+        mainMeasureSettings: this.settings.mainMeasure,
+        secondaryMeasureSettings: this.settings.secondaryMeasure,
+        trendLineSettings: this.settings.trendLine,
+        groupingColumnSettings: this.settings.groupingColumn,
         // visualTables: this.visualTables,
       };
 
@@ -156,7 +182,7 @@ export class Visual implements IVisual {
       VisualMainDisplay.update(state);
     } catch (error) {
       this.events.renderingFailed(options, error);
-      console.log(options, error);
+      console.log(options, error, this.dataColumns);
       // TODO: Perform other actions
       // ? How to log this error to user and also gracefully exit.
     }

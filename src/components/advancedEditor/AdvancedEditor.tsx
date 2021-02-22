@@ -5,7 +5,14 @@ import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewObject = powerbi.DataViewObject;
 
 import VisualObjectInstancesToPersist = powerbi.VisualObjectInstancesToPersist;
-import { AdvancedEditingSettings } from "../../settings";
+import {
+  AdvancedEditingSettings,
+  TableTitleSettings,
+  TrendLineSettings,
+  MainMeasureSettings,
+  SecondaryMeasureSettings,
+  GroupingColumnSettings,
+} from "../../settings";
 import { IVisualData, IVisualTable } from "../../defs/main";
 import { ContentDisplay } from "./../ContentDisplay";
 import NewTable from "./NewTable";
@@ -13,7 +20,10 @@ import EditTable from "./EditTable";
 import AdvanceEditorData from "../../models/advanceEditor";
 import Button from "@material-ui/core/Button";
 import AlertDialog from "./AlertDialog";
-import { Paper, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
+import { VisualConstants } from "./../../VisualConstants";
+import { BsEyeSlash, BsEye } from "react-icons/bs";
+import { MOVE_DIRECTION } from "../../defs/enums";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -21,6 +31,11 @@ interface IAdvanceEditorProps {
   advancedEditingObjectMetadata?: DataViewObject;
   visualData: IVisualData;
   advEditorData: AdvanceEditorData;
+  tableTitleSettings?: TableTitleSettings;
+  mainMeasureSettings?: MainMeasureSettings;
+  secondaryMeasureSettings?: SecondaryMeasureSettings;
+  trendLineSettings?: TrendLineSettings;
+  groupingColumnSettings?: GroupingColumnSettings;
   // updateDisplayTables: Function;
   // visualTables: IVisualTable[];
 }
@@ -29,6 +44,7 @@ interface IAdvancedEditorState {
   isDirty: boolean;
   visualTables: IVisualTable[];
   dialog: boolean;
+  hidePreview: boolean;
 }
 
 // const initialState = {
@@ -46,6 +62,7 @@ export default class AdvanceEditor extends React.Component<
       isDirty: false,
       visualTables: props.advEditorData.visualTables,
       dialog: false,
+      hidePreview: false,
     };
 
     this.handleAddTableClick = this.handleAddTableClick.bind(this);
@@ -53,6 +70,8 @@ export default class AdvanceEditor extends React.Component<
     this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handleEditTableUpdate = this.handleEditTableUpdate.bind(this);
     this.handleRemoveTable = this.handleRemoveTable.bind(this);
+    this.handleTableMove = this.handleTableMove.bind(this);
+    this.handleDuplicationOfTable = this.handleDuplicationOfTable.bind(this);
   }
   render() {
     const {
@@ -61,7 +80,11 @@ export default class AdvanceEditor extends React.Component<
     } = this.props;
     const { isDirty, visualTables, dialog } = this.state;
     return (
-      <div className="advanced-editor">
+      <div
+        className={`advanced-editor ${
+          this.state.hidePreview ? "preview-hidden" : ""
+        }`}
+      >
         <AlertDialog
           open={dialog}
           message={
@@ -72,8 +95,31 @@ export default class AdvanceEditor extends React.Component<
             this.setState({ dialog: false });
           }}
         />
+        <div className="editor__header">
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+            style={{ margin: "4px 0" }}
+          >
+            <Grid item xs={2}>
+              <Typography variant="h6">Advanced Editor</Typography>
+            </Grid>
+            <Grid container item xs={4} justify="flex-end">
+              <Button
+                color="default"
+                onClick={(e) => {
+                  this.setState({ hidePreview: !this.state.hidePreview });
+                }}
+                startIcon={this.state.hidePreview ? <BsEye /> : <BsEyeSlash />}
+              >
+                {`${this.state.hidePreview ? "Show" : "Hide"}`} Preview
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
         <div className="editor">
-          <Typography variant="h6">Advanced Editor</Typography>
           <Typography variant="overline" color="secondary">
             {this.state.isDirty
               ? "You have unsaved changes. Please save your changes before exiting the advance editor mode."
@@ -87,6 +133,8 @@ export default class AdvanceEditor extends React.Component<
                 onEditTableUpdate={this.handleEditTableUpdate}
                 onRemoveTable={this.handleRemoveTable}
                 dataColumns={visualData.columns}
+                onTableMove={this.handleTableMove}
+                onDuplicationOfTable={this.handleDuplicationOfTable}
               />
             );
           })}
@@ -118,14 +166,58 @@ export default class AdvanceEditor extends React.Component<
           </div>
           {/* </Paper> */}
         </div>
-        {/* <hr /> */}
-        <ContentDisplay
-          host={host}
-          visualData={visualData}
-          visualTables={this.props.advEditorData.visualTables}
-        />
+        {!this.state.hidePreview ? (
+          <ContentDisplay
+            host={host}
+            visualData={visualData}
+            visualTables={this.props.advEditorData.visualTables}
+            tableTitleSettings={this.props.tableTitleSettings}
+            mainMeasureSettings={this.props.mainMeasureSettings}
+            secondaryMeasureSettings={this.props.secondaryMeasureSettings}
+            trendLineSettings={this.props.trendLineSettings}
+            groupingColumnSettings={this.props.groupingColumnSettings}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
+  }
+  private handleDuplicationOfTable(table: IVisualTable) {
+    const visualTables = this.state.visualTables.slice(
+      0,
+      this.state.visualTables.length + 1
+    );
+
+    this.setState({
+      visualTables: visualTables.concat([table]),
+      isDirty: true,
+    });
+  }
+
+  private handleTableMove(direction: MOVE_DIRECTION, tableIndex: number) {
+    if (
+      (direction === MOVE_DIRECTION.UP && tableIndex === 0) ||
+      (direction === MOVE_DIRECTION.DOWN &&
+        tableIndex === this.state.visualTables.length - 1)
+    ) {
+      return;
+    }
+
+    const toIndex =
+      direction === MOVE_DIRECTION.UP ? tableIndex - 1 : tableIndex + 1;
+    // console.log(MOVE_DIRECTION[direction].toString(), tableIndex, toIndex);
+    let visualTables = this.state.visualTables.slice(
+      0,
+      this.state.visualTables.length + 1
+    );
+    var element = visualTables[tableIndex];
+    visualTables.splice(tableIndex, 1);
+    visualTables.splice(toIndex, 0, element);
+    this.setState({
+      isDirty: true,
+      visualTables: visualTables,
+    });
   }
 
   private handleEditTableUpdate(table: IVisualTable, index: number) {
@@ -168,7 +260,13 @@ export default class AdvanceEditor extends React.Component<
 
     this.setState({
       visualTables: visualTables.concat([
-        { columns: [], name: newTableName, totalTableColumns: 0 },
+        {
+          columns: VisualConstants.visualTable.columns,
+          name: newTableName,
+          totalTableColumns: 0,
+          fullWidth: VisualConstants.visualTable.fullWidth,
+          showTitle: VisualConstants.visualTable.showTitle,
+        },
       ]),
       isDirty: true,
     });
@@ -178,11 +276,12 @@ export default class AdvanceEditor extends React.Component<
   //   e.preventDefault();
   private handleResetClick() {
     const changes = this.getNewObjectInstance();
-
+    // const today = Date.now().toLocaleString();
     this.setState({ visualTables: [], isDirty: false, dialog: false }, () => {
       changes.replace[0].properties["visualTables"] = JSON.stringify({
         tables: [],
         tableCount: 0,
+        updateDatetime: Date.now().toLocaleString(),
       });
       this.props.advEditorData.reset();
       this.props.host.persistProperties(changes);
@@ -196,8 +295,9 @@ export default class AdvanceEditor extends React.Component<
 
     this.setState({ isDirty: false }, () => {
       changes.replace[0].properties["visualTables"] = JSON.stringify({
-        tables: [],
+        tables: JSON.stringify(this.state.visualTables),
         tableCount: this.state.visualTables.length,
+        updateDatetime: Date.now().toLocaleString(),
       });
       this.props.advEditorData.updateVisualTables(
         this.state.visualTables.slice(0, this.state.visualTables.length + 1)

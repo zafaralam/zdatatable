@@ -1,5 +1,5 @@
 import * as React from "react";
-import { EDIT_COLUMNS_PARENT_TYPE } from "../../defs/enums";
+import { EDIT_COLUMNS_PARENT_TYPE, MOVE_DIRECTION } from "../../defs/enums";
 import { IDataColumn, IVisualTableColumn } from "../../defs/main";
 import EditTableColumn from "./EditTableColumn";
 
@@ -16,6 +16,7 @@ export default class EditTableColumns extends React.Component<IEditTableColumnsP
     super(props);
     this.handleVisualColumnUpdate = this.handleVisualColumnUpdate.bind(this);
     this.handleVisualColumnRemoval = this.handleVisualColumnRemoval.bind(this);
+    this.handleColumnMove = this.handleColumnMove.bind(this);
   }
 
   private handleVisualColumnUpdate(column: IVisualTableColumn, index: number) {
@@ -47,6 +48,33 @@ export default class EditTableColumns extends React.Component<IEditTableColumnsP
     }
   }
 
+  private handleColumnMove(direction: MOVE_DIRECTION, columnIndex: number) {
+    if (
+      (direction === MOVE_DIRECTION.LEFT && columnIndex === 0) ||
+      (direction === MOVE_DIRECTION.RIGHT &&
+        columnIndex === this.props.visualColumns.length - 1)
+    ) {
+      return;
+    }
+
+    const toIndex =
+      direction === MOVE_DIRECTION.LEFT ? columnIndex - 1 : columnIndex + 1;
+    console.log(MOVE_DIRECTION[direction].toString(), columnIndex, toIndex);
+    let visualColumns = this.props.visualColumns.slice(
+      0,
+      this.props.visualColumns.length + 1
+    );
+    var element = visualColumns[columnIndex];
+    visualColumns.splice(columnIndex, 1);
+    visualColumns.splice(toIndex, 0, element);
+
+    if (this.props.parentType === EDIT_COLUMNS_PARENT_TYPE.TABLE) {
+      this.props.onVisualColumnsUpdate(visualColumns);
+    } else {
+      this.props.onVisualColumnsUpdateOfColumn(visualColumns);
+    }
+  }
+
   render() {
     const tableColumns = this.props.visualColumns.map((column, cIdx) => {
       return (
@@ -56,6 +84,7 @@ export default class EditTableColumns extends React.Component<IEditTableColumnsP
           dataColumns={this.props.dataColumns}
           onVisualColumnUpdate={this.handleVisualColumnUpdate}
           onVisualColumnRemoval={this.handleVisualColumnRemoval}
+          onColumnMove={this.handleColumnMove}
         />
       );
     });
