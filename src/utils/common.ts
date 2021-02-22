@@ -169,8 +169,20 @@ export function borderGroupingColumCSSValue(
 
 export function validatePolyline(polyline: string): boolean {
   const totalPoints = polyline.match(/\d+,\d+/g).length;
+  const totalCommas = polyline.match(/,/g);
+  const totalWhiteSpaces = polyline.match(/\s/g);
+  // console.log(totalPoints, totalCommas, totalWhiteSpaces);
+  if (
+    totalPoints === undefined ||
+    totalCommas === undefined ||
+    totalWhiteSpaces === undefined ||
+    totalPoints === null ||
+    totalCommas === null ||
+    totalWhiteSpaces === null
+  )
+    return false;
   return (
-    totalPoints === polyline.match(/,/g).length &&
-    totalPoints === polyline.match(/\s/g).length + 1
+    totalPoints === totalCommas.length &&
+    totalPoints === totalWhiteSpaces.length + 1
   );
 }

@@ -2,7 +2,8 @@
 
 ## Features to implement
 
-- [] SVG points validation and apply
+- [x] SVG points validation
+- [] Apply SVG
 - [] Conditional Formatting for measure values
 - [] Add additional settings on each table
   - [x] Full Width

@@ -7,7 +7,7 @@ import {
 const defaultTextColor = "#3F3F44",
   defaultBgColor = "#fff",
   defaultBorderColor = "#83838D", //#0F0F10
-  defaultFontFamily = "Roboto, helvetica, arial, sans-serif"; //"Segoe UI";
+  defaultFontFamily = "Arial"; //"Roboto, helvetica, arial, sans-serif";
 export const VisualConstants = {
   //   visual: visual,
   dinReplacementFont: "Roboto, helvetica, arial, sans-serif", // * This is also the default font used.

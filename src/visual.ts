@@ -89,9 +89,9 @@ export class Visual implements IVisual {
     this.dataColumns = [];
     // this.visualTables = [];
     this.advEditorData = new AdvanceEditorData();
-    // this.advEditorData.updateVisualTables(
-    //   JSON.parse(JSON.stringify(SampleData))
-    // );
+    this.advEditorData.updateVisualTables(
+      JSON.parse(JSON.stringify(SampleData))
+    );
 
     this.reactRoot = React.createElement(VisualMainDisplay, {
       host: this.host,
@@ -128,8 +128,8 @@ export class Visual implements IVisual {
         options && options.dataViews && options.dataViews[0],
         this.dataColumns
       );
-      //console.log(this.settings.advancedEditing);
-
+      console.log(this.settings.advancedEditing);
+      /*
       // * Might need to do a bit more here
       // Double parsing is required as the tables structure is also a string.
       const _visualTables = JSON.parse(
@@ -138,12 +138,15 @@ export class Visual implements IVisual {
 
       if (
         _visualTables["tables"] !== undefined &&
-        _visualTables["tables"] !== "[]"
+        _visualTables["tables"] !== "[]" &&
+        _visualTables["tables"].length !== 0
       ) {
+        console.log(_visualTables);
         this.advEditorData.updateVisualTables(
           JSON.parse(_visualTables["tables"]) as IVisualTable[]
         );
       }
+      */
 
       // console.log(typeof this.advEditorData.visualTables);
 
