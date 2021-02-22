@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   EDIT_COLUMNS_PARENT_TYPE,
   VISUAL_DISPLAY_COLUMN_TYPE,
+  MOVE_DIRECTION,
 } from "../../defs/enums";
 import { IDataColumn, IVisualTableColumn } from "../../defs/main";
 import EditTableColumns from "./EditTableColumns";
@@ -12,7 +13,7 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
+  // DialogContentText,
   Typography,
   DialogTitle,
   TextField,
@@ -27,8 +28,9 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
-  FormLabel,
+  // FormLabel,
   Paper,
+  ButtonGroup,
 } from "@material-ui/core";
 
 import CellBorder from "./CellBorder";
@@ -41,6 +43,8 @@ import {
   BsTextLeft,
   BsTextCenter,
   BsTextRight,
+  BsChevronLeft,
+  BsChevronRight,
 } from "react-icons/bs";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 // import { formatPrefix } from "d3";
@@ -57,6 +61,7 @@ interface IEditTableColumnProps {
   dataColumns: IDataColumn[];
   onVisualColumnUpdate: Function;
   onVisualColumnRemoval: Function;
+  onColumnMove: Function;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -248,21 +253,55 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     handleColumnPropertyChange("labelFontWeight", _valueToSet);
   };
 
+  const handleColumnMove = (direction: MOVE_DIRECTION) => {
+    props.onColumnMove(direction, props.index);
+  };
+
   return (
     <div key={props.index} className="edit-table__column">
-      <span
-        style={{
-          maxWidth: "180px",
-          display: "inline-block",
-          fontSize: "0.85rem",
-        }}
-      >
-        {label.length === 0
-          ? columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY
-            ? "Column"
-            : "Measure"
-          : label}
-      </span>
+      <div>
+        <ButtonGroup
+          size="small"
+          variant="outlined"
+          aria-label="small outlined button group"
+        >
+          <IconButton
+            size="small"
+            title="Move column to left"
+            onClick={() => {
+              handleColumnMove(MOVE_DIRECTION.LEFT);
+            }}
+          >
+            <BsChevronLeft />
+          </IconButton>
+          <IconButton
+            size="small"
+            title="Move column to right"
+            onClick={() => {
+              handleColumnMove(MOVE_DIRECTION.RIGHT);
+            }}
+          >
+            <BsChevronRight />
+          </IconButton>
+        </ButtonGroup>
+      </div>
+      <Grid container alignItems="center" justify="space-around">
+        <Grid item>
+          <span
+            style={{
+              maxWidth: "180px",
+              display: "inline-block",
+              fontSize: "0.75rem",
+            }}
+          >
+            {label.length === 0
+              ? columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY
+                ? "Column"
+                : "Measure"
+              : label}
+          </span>
+        </Grid>
+      </Grid>
       <IconButton
         aria-label="edit"
         onClick={handleDialogOpen}

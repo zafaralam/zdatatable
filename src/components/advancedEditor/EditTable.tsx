@@ -8,17 +8,24 @@ import {
   //Card, CardContent,
   TextField,
   Checkbox,
+  ButtonGroup,
+  IconButton,
 } from "@material-ui/core";
 
 import {
   BsFillTrashFill,
   BsLayoutThreeColumns,
-  BsPlusSquare,
-  BsGear,
+  // BsPlusSquare,
+  // BsGear,
+  BsChevronDown,
+  BsChevronUp,
+  BsChevronRight,
+  BsChevronLeft,
 } from "react-icons/bs";
 import {
   EDIT_COLUMNS_PARENT_TYPE,
-  VISUAL_DISPLAY_COLUMN_TYPE,
+  // VISUAL_DISPLAY_COLUMN_TYPE,
+  MOVE_DIRECTION,
 } from "../../defs/enums";
 import { IVisualTable, IDataColumn, IVisualTableColumn } from "../../defs/main";
 import EditTableColumns from "./EditTableColumns";
@@ -30,6 +37,7 @@ interface IEditTableProps {
   dataColumns: IDataColumn[];
   onEditTableUpdate: Function;
   onRemoveTable: Function;
+  onTableMove: Function;
 }
 
 interface IEditTableState {
@@ -54,6 +62,11 @@ export default class EditTable extends React.Component<
     this.handleTableFullWidthChange = this.handleTableFullWidthChange.bind(
       this
     );
+    this.handleTableMove = this.handleTableMove.bind(this);
+  }
+
+  private handleTableMove(direction: MOVE_DIRECTION) {
+    this.props.onTableMove(direction, this.props.index);
   }
 
   private handleTableNameChange(value) {
@@ -130,18 +143,46 @@ export default class EditTable extends React.Component<
         <div className="edit-table" key={`edit-table-${this.props.index}`}>
           <div className="edit-table__table-name">
             <Grid container direction="row" alignItems="flex-end" spacing={1}>
-              <Grid item xs={4}>
-                <TextField
-                  id={`editTableName-${this.props.index}`}
-                  label="Table Name"
-                  value={this.props.table.name}
-                  onChange={(e) => {
-                    this.handleTableNameChange(e.target.value);
-                  }}
-                  size="small"
-                  fullWidth
-                  variant="standard"
-                />
+              <Grid container direction="row" item xs={6}>
+                <Grid item xs={1}>
+                  <ButtonGroup
+                    orientation="vertical"
+                    size="small"
+                    variant="outlined"
+                    aria-label="small outlined button group"
+                  >
+                    <IconButton
+                      title="Move table above"
+                      onClick={() => {
+                        this.handleTableMove(MOVE_DIRECTION.UP);
+                      }}
+                    >
+                      <BsChevronUp />
+                    </IconButton>
+
+                    <IconButton
+                      title="Move table down"
+                      onClick={() => {
+                        this.handleTableMove(MOVE_DIRECTION.DOWN);
+                      }}
+                    >
+                      <BsChevronDown />
+                    </IconButton>
+                  </ButtonGroup>
+                </Grid>
+                <Grid item xs={11}>
+                  <TextField
+                    id={`editTableName-${this.props.index}`}
+                    label="Table Name"
+                    value={this.props.table.name}
+                    onChange={(e) => {
+                      this.handleTableNameChange(e.target.value);
+                    }}
+                    size="small"
+                    fullWidth
+                    variant="standard"
+                  />
+                </Grid>
               </Grid>
               <Grid item xs={2}>
                 <Checkbox
@@ -153,11 +194,11 @@ export default class EditTable extends React.Component<
                 />
                 <span> Show Title?</span>
               </Grid>
-              <Grid item xs={2}>
-                {/* // * Removing for now 
+              {/* <Grid item xs={2}> */}
+              {/* // * Removing for now 
                   // ? Would need to think of a way of doing this when using with width
                 */}
-                {/* <Checkbox
+              {/* <Checkbox
                   checked={this.props.table.fullWidth}
                   onChange={(e) => {
                     this.handleTableFullWidthChange(e.target.checked);
@@ -165,21 +206,29 @@ export default class EditTable extends React.Component<
                   inputProps={{ "aria-label": "primary checkbox" }}
                 />
                 <span>Make table full width?</span> */}
-              </Grid>
-              <Grid container item xs={2} justify="flex-end">
+              {/* </Grid> */}
+              <Grid
+                container
+                direction="row"
+                item
+                xs={4}
+                spacing={1}
+                justify="flex-end"
+                alignItems="center"
+              >
                 <Button
                   color="primary"
                   onClick={this.handleAddColumn}
                   startIcon={<BsLayoutThreeColumns />}
+                  title="Add a base column to the table"
                 >
                   Add Base Column
                 </Button>
-              </Grid>
-              <Grid container item xs={2} justify="flex-end">
                 <Button
                   style={{ color: "#a50d0d" }}
                   onClick={this.handleRemoveTable}
                   startIcon={<BsFillTrashFill />}
+                  title="Remove table from visual"
                 >
                   Remove Table
                 </Button>

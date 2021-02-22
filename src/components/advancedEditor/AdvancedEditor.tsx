@@ -23,6 +23,7 @@ import AlertDialog from "./AlertDialog";
 import { Grid, Typography } from "@material-ui/core";
 import { VisualConstants } from "./../../VisualConstants";
 import { BsEyeSlash, BsEye } from "react-icons/bs";
+import { MOVE_DIRECTION } from "../../defs/enums";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -69,6 +70,7 @@ export default class AdvanceEditor extends React.Component<
     this.handleSaveClick = this.handleSaveClick.bind(this);
     this.handleEditTableUpdate = this.handleEditTableUpdate.bind(this);
     this.handleRemoveTable = this.handleRemoveTable.bind(this);
+    this.handleTableMove = this.handleTableMove.bind(this);
   }
   render() {
     const {
@@ -130,6 +132,7 @@ export default class AdvanceEditor extends React.Component<
                 onEditTableUpdate={this.handleEditTableUpdate}
                 onRemoveTable={this.handleRemoveTable}
                 dataColumns={visualData.columns}
+                onTableMove={this.handleTableMove}
               />
             );
           })}
@@ -177,6 +180,31 @@ export default class AdvanceEditor extends React.Component<
         )}
       </div>
     );
+  }
+
+  private handleTableMove(direction: MOVE_DIRECTION, tableIndex: number) {
+    if (
+      (direction === MOVE_DIRECTION.UP && tableIndex === 0) ||
+      (direction === MOVE_DIRECTION.DOWN &&
+        tableIndex === this.state.visualTables.length - 1)
+    ) {
+      return;
+    }
+
+    const toIndex =
+      direction === MOVE_DIRECTION.UP ? tableIndex - 1 : tableIndex + 1;
+    // console.log(MOVE_DIRECTION[direction].toString(), tableIndex, toIndex);
+    let visualTables = this.state.visualTables.slice(
+      0,
+      this.state.visualTables.length + 1
+    );
+    var element = visualTables[tableIndex];
+    visualTables.splice(tableIndex, 1);
+    visualTables.splice(toIndex, 0, element);
+    this.setState({
+      isDirty: true,
+      visualTables: visualTables,
+    });
   }
 
   private handleEditTableUpdate(table: IVisualTable, index: number) {

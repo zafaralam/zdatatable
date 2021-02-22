@@ -9,3 +9,10 @@ export enum EDIT_COLUMNS_PARENT_TYPE {
   TABLE,
   COLUMN,
 }
+
+export enum MOVE_DIRECTION {
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+}
