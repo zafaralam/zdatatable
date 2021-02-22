@@ -71,6 +71,7 @@ export default class AdvanceEditor extends React.Component<
     this.handleEditTableUpdate = this.handleEditTableUpdate.bind(this);
     this.handleRemoveTable = this.handleRemoveTable.bind(this);
     this.handleTableMove = this.handleTableMove.bind(this);
+    this.handleDuplicationOfTable = this.handleDuplicationOfTable.bind(this);
   }
   render() {
     const {
@@ -133,6 +134,7 @@ export default class AdvanceEditor extends React.Component<
                 onRemoveTable={this.handleRemoveTable}
                 dataColumns={visualData.columns}
                 onTableMove={this.handleTableMove}
+                onDuplicationOfTable={this.handleDuplicationOfTable}
               />
             );
           })}
@@ -180,6 +182,17 @@ export default class AdvanceEditor extends React.Component<
         )}
       </div>
     );
+  }
+  private handleDuplicationOfTable(table: IVisualTable) {
+    const visualTables = this.state.visualTables.slice(
+      0,
+      this.state.visualTables.length + 1
+    );
+
+    this.setState({
+      visualTables: visualTables.concat([table]),
+      isDirty: true,
+    });
   }
 
   private handleTableMove(direction: MOVE_DIRECTION, tableIndex: number) {

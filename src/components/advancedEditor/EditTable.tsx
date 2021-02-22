@@ -19,8 +19,7 @@ import {
   // BsGear,
   BsChevronDown,
   BsChevronUp,
-  BsChevronRight,
-  BsChevronLeft,
+  BsFiles,
 } from "react-icons/bs";
 import {
   EDIT_COLUMNS_PARENT_TYPE,
@@ -38,6 +37,7 @@ interface IEditTableProps {
   onEditTableUpdate: Function;
   onRemoveTable: Function;
   onTableMove: Function;
+  onDuplicationOfTable: Function;
 }
 
 interface IEditTableState {
@@ -63,6 +63,13 @@ export default class EditTable extends React.Component<
       this
     );
     this.handleTableMove = this.handleTableMove.bind(this);
+    this.handleDuplicationOfTable = this.handleDuplicationOfTable.bind(this);
+  }
+
+  private handleDuplicationOfTable() {
+    this.props.onDuplicationOfTable(
+      JSON.parse(JSON.stringify(this.props.table))
+    );
   }
 
   private handleTableMove(direction: MOVE_DIRECTION) {
@@ -223,6 +230,14 @@ export default class EditTable extends React.Component<
                   title="Add a base column to the table"
                 >
                   Add Base Column
+                </Button>
+                <Button
+                  color="primary"
+                  onClick={this.handleDuplicationOfTable}
+                  startIcon={<BsFiles />}
+                  title="Duplicate table as a new copy"
+                >
+                  Duplicate Table
                 </Button>
                 <Button
                   style={{ color: "#a50d0d" }}
