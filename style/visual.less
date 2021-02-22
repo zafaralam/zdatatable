@@ -100,9 +100,25 @@
   grid-template-rows: 50% auto;
   cursor: default;
 
+  &.preview-hidden {
+    grid-template-rows: 100%;
+  }
+
+  .editor__header {
+    padding: 10px 0px;
+    z-index: 20;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+
   .editor {
     min-height: 300px;
     overflow-y: auto;
+    margin-top: 68px;
+    // position: relative;
+
     .editor__bottom-panel {
       margin-top: 0.5rem;
       display: grid;

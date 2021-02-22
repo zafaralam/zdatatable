@@ -156,12 +156,25 @@ function visualTable(props: IVisualTableProps) {
   return (
     <div key={tableIndex}>
       <table className="display-table">
-        {props.visualTable.showTitle === true ? (
-          <caption style={tableTitleStyles}>{table.name}</caption>
-        ) : (
-          ""
-        )}
         <thead>
+          {props.visualTable.showTitle === true ? (
+            <tr>
+              <th
+                colSpan={
+                  tableValueColumns.length +
+                    (groupingColumnSettings?.showGroupingColumn &&
+                    groupingColumn !== undefined
+                      ? 1
+                      : 0) || 0
+                }
+                style={tableTitleStyles}
+              >
+                {props.visualTable?.name || "Table name not specified"}
+              </th>
+            </tr>
+          ) : (
+            ""
+          )}
           {[...Array(tableHeaderMaxDepth)].map((_, i) => {
             return (
               <tr
@@ -459,7 +472,7 @@ function CellValueDisplay(
         rowValue[visualTableColumn.queryName] === undefined ||
         rowValue[visualTableColumn.queryName] === null ||
         (rowValue[visualTableColumn.queryName] as string) === "" ? (
-        ""
+        <div style={{ minHeight: `${trendLineSettings.height}px` }}></div>
       ) : (
         <span style={measureStyles}>
           {valueFormatter.format(

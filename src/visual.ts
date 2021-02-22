@@ -89,6 +89,7 @@ export class Visual implements IVisual {
     this.dataColumns = [];
     // this.visualTables = [];
     this.advEditorData = new AdvanceEditorData();
+    // ! Remove this in production
     this.advEditorData.updateVisualTables(
       JSON.parse(JSON.stringify(SampleData))
     );
@@ -128,8 +129,8 @@ export class Visual implements IVisual {
         options && options.dataViews && options.dataViews[0],
         this.dataColumns
       );
-      console.log(this.settings.advancedEditing);
-      /*
+      // console.log(this.settings.advancedEditing);
+
       // * Might need to do a bit more here
       // Double parsing is required as the tables structure is also a string.
       const _visualTables = JSON.parse(
@@ -146,7 +147,6 @@ export class Visual implements IVisual {
           JSON.parse(_visualTables["tables"]) as IVisualTable[]
         );
       }
-      */
 
       // console.log(typeof this.advEditorData.visualTables);
 

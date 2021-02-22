@@ -20,8 +20,9 @@ import EditTable from "./EditTable";
 import AdvanceEditorData from "../../models/advanceEditor";
 import Button from "@material-ui/core/Button";
 import AlertDialog from "./AlertDialog";
-import { Paper, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { VisualConstants } from "./../../VisualConstants";
+import { BsEyeSlash, BsEye } from "react-icons/bs";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -42,6 +43,7 @@ interface IAdvancedEditorState {
   isDirty: boolean;
   visualTables: IVisualTable[];
   dialog: boolean;
+  hidePreview: boolean;
 }
 
 // const initialState = {
@@ -59,6 +61,7 @@ export default class AdvanceEditor extends React.Component<
       isDirty: false,
       visualTables: props.advEditorData.visualTables,
       dialog: false,
+      hidePreview: false,
     };
 
     this.handleAddTableClick = this.handleAddTableClick.bind(this);
@@ -74,7 +77,11 @@ export default class AdvanceEditor extends React.Component<
     } = this.props;
     const { isDirty, visualTables, dialog } = this.state;
     return (
-      <div className="advanced-editor">
+      <div
+        className={`advanced-editor ${
+          this.state.hidePreview ? "preview-hidden" : ""
+        }`}
+      >
         <AlertDialog
           open={dialog}
           message={
@@ -85,8 +92,31 @@ export default class AdvanceEditor extends React.Component<
             this.setState({ dialog: false });
           }}
         />
+        <div className="editor__header">
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justify="space-between"
+            style={{ margin: "4px 0" }}
+          >
+            <Grid item xs={2}>
+              <Typography variant="h6">Advanced Editor</Typography>
+            </Grid>
+            <Grid container item xs={4} justify="flex-end">
+              <Button
+                color="primary"
+                onClick={(e) => {
+                  this.setState({ hidePreview: !this.state.hidePreview });
+                }}
+                startIcon={this.state.hidePreview ? <BsEye /> : <BsEyeSlash />}
+              >
+                {`${this.state.hidePreview ? "Show" : "Hide"}`} Preview
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
         <div className="editor">
-          <Typography variant="h6">Advanced Editor</Typography>
           <Typography variant="overline" color="secondary">
             {this.state.isDirty
               ? "You have unsaved changes. Please save your changes before exiting the advance editor mode."
@@ -131,17 +161,20 @@ export default class AdvanceEditor extends React.Component<
           </div>
           {/* </Paper> */}
         </div>
-        {/* <hr /> */}
-        <ContentDisplay
-          host={host}
-          visualData={visualData}
-          visualTables={this.props.advEditorData.visualTables}
-          tableTitleSettings={this.props.tableTitleSettings}
-          mainMeasureSettings={this.props.mainMeasureSettings}
-          secondaryMeasureSettings={this.props.secondaryMeasureSettings}
-          trendLineSettings={this.props.trendLineSettings}
-          groupingColumnSettings={this.props.groupingColumnSettings}
-        />
+        {!this.state.hidePreview ? (
+          <ContentDisplay
+            host={host}
+            visualData={visualData}
+            visualTables={this.props.advEditorData.visualTables}
+            tableTitleSettings={this.props.tableTitleSettings}
+            mainMeasureSettings={this.props.mainMeasureSettings}
+            secondaryMeasureSettings={this.props.secondaryMeasureSettings}
+            trendLineSettings={this.props.trendLineSettings}
+            groupingColumnSettings={this.props.groupingColumnSettings}
+          />
+        ) : (
+          ""
+        )}
       </div>
     );
   }
