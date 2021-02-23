@@ -90,9 +90,9 @@ export class Visual implements IVisual {
     // this.visualTables = [];
     this.advEditorData = new AdvanceEditorData();
     // ! Remove this in production
-    this.advEditorData.updateVisualTables(
-      JSON.parse(JSON.stringify(SampleData))
-    );
+    // this.advEditorData.updateVisualTables(
+    //   JSON.parse(JSON.stringify(SampleData))
+    // );
 
     this.reactRoot = React.createElement(VisualMainDisplay, {
       host: this.host,
@@ -142,7 +142,7 @@ export class Visual implements IVisual {
         _visualTables["tables"] !== "[]" &&
         _visualTables["tables"].length !== 0
       ) {
-        console.dir(_visualTables["tables"]);
+        // console.dir(_visualTables["tables"]);
         this.advEditorData.updateVisualTables(
           JSON.parse(_visualTables["tables"]) as IVisualTable[]
         );

@@ -22,8 +22,9 @@ import Button from "@material-ui/core/Button";
 import AlertDialog from "./AlertDialog";
 import { Grid, Typography } from "@material-ui/core";
 import { VisualConstants } from "./../../VisualConstants";
-import { BsEyeSlash, BsEye } from "react-icons/bs";
+import { BsEyeSlash, BsEye, BsPencilSquare } from "react-icons/bs";
 import { MOVE_DIRECTION } from "../../defs/enums";
+import JSONEditor from "./JSONEditor";
 interface IAdvanceEditorProps {
   host: IVisualHost;
   localizationManager: ILocalizationManager;
@@ -45,6 +46,7 @@ interface IAdvancedEditorState {
   visualTables: IVisualTable[];
   dialog: boolean;
   hidePreview: boolean;
+  jsonEditorOpen: boolean;
 }
 
 // const initialState = {
@@ -63,6 +65,7 @@ export default class AdvanceEditor extends React.Component<
       visualTables: props.advEditorData.visualTables,
       dialog: false,
       hidePreview: false,
+      jsonEditorOpen: false,
     };
 
     this.handleAddTableClick = this.handleAddTableClick.bind(this);
@@ -72,6 +75,7 @@ export default class AdvanceEditor extends React.Component<
     this.handleRemoveTable = this.handleRemoveTable.bind(this);
     this.handleTableMove = this.handleTableMove.bind(this);
     this.handleDuplicationOfTable = this.handleDuplicationOfTable.bind(this);
+    this.handleJsonUpdate = this.handleJsonUpdate.bind(this);
   }
   render() {
     const {
@@ -82,7 +86,9 @@ export default class AdvanceEditor extends React.Component<
     return (
       <div
         className={`advanced-editor ${
-          this.state.hidePreview ? "preview-hidden" : ""
+          this.state.hidePreview || this.state.jsonEditorOpen
+            ? "preview-hidden"
+            : ""
         }`}
       >
         <AlertDialog
@@ -108,6 +114,18 @@ export default class AdvanceEditor extends React.Component<
             </Grid>
             <Grid container item xs={4} justify="flex-end">
               <Button
+                color="primary"
+                startIcon={<BsPencilSquare />}
+                onClick={() => {
+                  this.setState({
+                    hidePreview: true,
+                    jsonEditorOpen: !this.state.jsonEditorOpen,
+                  });
+                }}
+              >
+                {`${this.state.jsonEditorOpen ? "Close" : "Open"}`} JSON Editor
+              </Button>
+              <Button
                 color="default"
                 onClick={(e) => {
                   this.setState({ hidePreview: !this.state.hidePreview });
@@ -125,20 +143,29 @@ export default class AdvanceEditor extends React.Component<
               ? "You have unsaved changes. Please save your changes before exiting the advance editor mode."
               : ""}
           </Typography>
-          {visualTables.map((table, tIdx) => {
-            return (
-              <EditTable
-                index={tIdx}
-                table={table}
-                onEditTableUpdate={this.handleEditTableUpdate}
-                onRemoveTable={this.handleRemoveTable}
-                dataColumns={visualData.columns}
-                onTableMove={this.handleTableMove}
-                onDuplicationOfTable={this.handleDuplicationOfTable}
-              />
-            );
-          })}
-          {/* <Paper> */}
+          {this.state.jsonEditorOpen ? (
+            <JSONEditor
+              visualTables={this.state.visualTables.slice(
+                0,
+                this.state.visualTables.length + 1
+              )}
+              onJsonUpdates={this.handleJsonUpdate}
+            />
+          ) : (
+            this.state.visualTables.map((table, tIdx) => {
+              return (
+                <EditTable
+                  index={tIdx}
+                  table={table}
+                  onEditTableUpdate={this.handleEditTableUpdate}
+                  onRemoveTable={this.handleRemoveTable}
+                  dataColumns={visualData.columns}
+                  onTableMove={this.handleTableMove}
+                  onDuplicationOfTable={this.handleDuplicationOfTable}
+                />
+              );
+            })
+          )}
           <div className="editor__bottom-panel">
             <NewTable onAddTable={this.handleAddTableClick} />
             <div className="editor__actions">
@@ -164,7 +191,6 @@ export default class AdvanceEditor extends React.Component<
               </Button>
             </div>
           </div>
-          {/* </Paper> */}
         </div>
         {!this.state.hidePreview ? (
           <ContentDisplay
@@ -285,6 +311,14 @@ export default class AdvanceEditor extends React.Component<
       });
       this.props.advEditorData.reset();
       this.props.host.persistProperties(changes);
+    });
+  }
+
+  private handleJsonUpdate(visualTables: IVisualTable[]) {
+    console.log(visualTables);
+    this.setState({
+      isDirty: true,
+      visualTables: visualTables,
     });
   }
 
