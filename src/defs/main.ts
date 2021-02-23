@@ -44,7 +44,7 @@ export interface IVisualTable {
   columns: IVisualTableColumn[];
   fullWidth: boolean;
   showTitle: boolean;
-  totalTableColumns: number;
+  totalTableColumns?: number;
 }
 
 export interface IVisualTableColumn {

@@ -352,6 +352,12 @@ function CellValueDisplay(
   secondaryMeasureSettings: SecondaryMeasureSettings,
   trendLineSettings: TrendLineSettings
 ) {
+  // console.log(
+  //   mainMeasureSettings?.fontFamily,
+  //   fontFamilyCSSValue(
+  //     mainMeasureSettings?.fontFamily || VisualConstants.dinReplacementFont
+  //   )
+  // );
   const measureStyles: React.CSSProperties = {
     // display: "inline-block",
     // width: "100%", // * DO NOT REMOVE THIS FORM CELL.
