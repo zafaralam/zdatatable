@@ -315,7 +315,6 @@ export default class AdvanceEditor extends React.Component<
   }
 
   private handleJsonUpdate(visualTables: IVisualTable[]) {
-    console.log(visualTables);
     this.setState({
       isDirty: true,
       visualTables: visualTables,

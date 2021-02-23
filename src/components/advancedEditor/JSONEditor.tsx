@@ -6,10 +6,11 @@ import "ace-builds/src-noconflict/theme-github";
 
 import { IVisualTable } from "./../../defs/main";
 import { Button, Typography, Grid } from "@material-ui/core";
-
+import AdvanceEditorData from "../../models/advanceEditor";
 interface IJSONEditorProps {
   visualTables: IVisualTable[];
   onJsonUpdates: Function;
+  //   advEditorData: AdvanceEditorData;
 }
 
 export default function JSONEditor(props: IJSONEditorProps) {
@@ -23,9 +24,13 @@ export default function JSONEditor(props: IJSONEditorProps) {
   };
   const applyChanges = () => {
     try {
-      const tables: IVisualTable[] = JSON.parse(jsonText);
-      props.onJsonUpdates(tables);
-      setHasError(false);
+      const parsedData = JSON.parse(jsonText);
+      if (parsedData.tables) {
+        props.onJsonUpdates(parsedData.tables);
+        setHasError(false);
+      } else {
+        setHasError(true);
+      }
     } catch (error) {
       setHasError(true);
       console.log("Json is not correct.");
@@ -47,7 +52,6 @@ export default function JSONEditor(props: IJSONEditorProps) {
           theme="github"
           value={jsonText}
           name="jsonEditor"
-          readOnly
           onChange={handleChange}
           showPrintMargin={false}
           editorProps={{ $blockScrolling: true }}
@@ -63,9 +67,9 @@ export default function JSONEditor(props: IJSONEditorProps) {
         xs={1}
       >
         <Grid item>
-          {/* <Button color="primary" onClick={applyChanges} variant="contained">
+          <Button color="primary" onClick={applyChanges} variant="contained">
             Apply Changes
-          </Button> */}
+          </Button>
         </Grid>
       </Grid>
     </Grid>

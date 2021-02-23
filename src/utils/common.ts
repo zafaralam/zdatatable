@@ -155,7 +155,7 @@ export function textAlignCSSValue(textAlign: string) {
 export function fontFamilyCSSValue(fontFamily: string) {
   if (fontFamily.indexOf("wf_standard-font") !== -1) {
     return VisualConstants.dinReplacementFont;
-  } else fontFamily;
+  } else return fontFamily;
 }
 
 export function borderGroupingColumCSSValue(
