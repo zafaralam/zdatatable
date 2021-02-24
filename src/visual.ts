@@ -28,6 +28,7 @@
 import "core-js/stable";
 import "./../style/visual.less";
 import powerbi from "powerbi-visuals-api";
+import VisualObjectInstanceEnumeration = powerbi.VisualObjectInstanceEnumeration;
 import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;
 import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisual = powerbi.extensibility.visual.IVisual;
@@ -43,6 +44,10 @@ import ViewMode = powerbi.ViewMode;
 import EditMode = powerbi.EditMode;
 import * as React from "react";
 import * as ReactDom from "react-dom";
+import { dataViewWildcard } from "powerbi-visuals-utils-dataviewutils";
+import VisualEnumerationInstanceKinds = powerbi.VisualEnumerationInstanceKinds;
+import { ColorHelper } from "powerbi-visuals-utils-colorutils";
+import IColorPalette = powerbi.extensibility.IColorPalette;
 // import { CircleCard, initialState } from "./circleCardComponent";
 import {
   VisualMainDisplay,
@@ -73,6 +78,9 @@ export class Visual implements IVisual {
   private dataColumns: IDataColumn[];
   // private visualTables: IVisualTable[];
   private advEditorData: AdvanceEditorData;
+  private selectionManager: powerbi.extensibility.ISelectionManager;
+  private colorPalette: IColorPalette;
+  private colorHelper: ColorHelper;
 
   //     private textNode: Text;
   //   private updateCount: number;
@@ -85,6 +93,9 @@ export class Visual implements IVisual {
     this.host = options.host;
     this.localizationManager = this.host.createLocalizationManager();
     this.events = this.host.eventService;
+    this.selectionManager = this.host.createSelectionManager();
+
+    this.colorPalette = this.host.colorPalette;
 
     this.dataColumns = [];
     // this.visualTables = [];
@@ -115,11 +126,13 @@ export class Visual implements IVisual {
     try {
       // console.log(this.advEditorData.visualTables);
       this.events.renderingStarted(options);
-
+      // console.log(options);
       // const dataView: DataView = options.dataViews[0];
       this.settings = Visual.parseSettings(
         options && options.dataViews && options.dataViews[0]
       );
+
+      console.log(this.settings.mainMeasure);
 
       this.viewport = options.viewport;
       const { width, height } = this.viewport;
@@ -127,7 +140,8 @@ export class Visual implements IVisual {
       // console.log(this.dataColumns);
       this.dataColumns = parseDataModelColumns(
         options && options.dataViews && options.dataViews[0],
-        this.dataColumns
+        this.dataColumns,
+        this.colorPalette
       );
       // console.log(this.settings.advancedEditing);
 
@@ -213,4 +227,108 @@ export class Visual implements IVisual {
       options
     );
   }
+
+  // public enumerateObjectInstances(
+  //   options: EnumerateVisualObjectInstancesOptions
+  // ): VisualObjectInstanceEnumeration {
+  //   let objectName = options.objectName;
+  //   let objectEnumeration: VisualObjectInstance[] = [];
+
+  //   if (!this.dataColumns) {
+  //     return objectEnumeration;
+  //   }
+
+  //   switch (objectName) {
+  //     case "mainMeasure":
+  //       for (let dataColumn of this.dataColumns) {
+  //         objectEnumeration.push({
+  //           objectName: objectName,
+  //           displayName: dataColumn.displayName,
+  //           properties: {
+  //             fontColor: {
+  //               solid: {
+  //                 color: dataColumn.color,
+  //               },
+  //             },
+  //           },
+  //           propertyInstanceKind: {
+  //             fontColor: VisualEnumerationInstanceKinds.ConstantOrRule,
+  //           },
+  //           // altConstantValueSelector: barDataPoint.selectionId.getSelector(),
+  //           // selector: dataViewWildcard.createDataViewWildcardSelector(
+  //           //   dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals
+  //           // ),
+  //           selector: {
+  //             metadata: dataColumn.queryName,
+  //           },
+  //         });
+  //       }
+  //       break;
+  //   }
+
+  //   return objectEnumeration;
+  // }
+
+  //   public enumerateObjectInstances(
+  //     options: EnumerateVisualObjectInstancesOptions
+  //   ): VisualObjectInstanceEnumeration {
+  //     const instanceEnumeration: VisualObjectInstanceEnumeration = VisualSettings.enumerateObjectInstances(
+  //       this.settings || VisualSettings.getDefault(),
+  //       options
+  //     );
+
+  //     if (options.objectName === "mainMeasure") {
+  //       this.dataColumns.forEach((item, idx) => {
+  //         // console.log(item.queryName, item.color);
+  //         if (item.content === true) {
+  //           // containerIdx =
+  //           //   enumerationObject.containers.push({
+  //           //     displayName: item.displayName,
+  //           //   }) - 1;
+  //           const instance = {
+  //             objectName: options.objectName,
+  //             displayName: item.displayName,
+  //             properties: {
+  //               fontColor: {
+  //                 solid: {
+  //                   color: item.color || "#000",
+  //                 },
+  //               },
+  //             },
+  //             propertyInstanceKind: {
+  //               fontColor: VisualEnumerationInstanceKinds.ConstantOrRule,
+  //             },
+  //             selector: {
+  //               metadata: item.queryName,
+  //             },
+  //             // selector: dataViewWildcard.createDataViewWildcardSelector(
+  //             //   dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals
+  //             // ),
+  //           };
+
+  //           if (
+  //             (instanceEnumeration as VisualObjectInstanceEnumerationObject)
+  //               .instances
+  //           ) {
+  //             (instanceEnumeration as VisualObjectInstanceEnumerationObject).instances.push(
+  //               instance
+  //             );
+  //           } else {
+  //             (instanceEnumeration as VisualObjectInstance[]).push(instance);
+  //           }
+
+  //           // console.log(instance);
+  //         }
+  //       });
+  //     }
+
+  //     // return (
+  //     //   (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances ||
+  //     //   []
+  //     // );
+  //     return (
+  //       (instanceEnumeration as VisualObjectInstanceEnumerationObject)
+  //         .instances || []
+  //     );
+  //   }
 }

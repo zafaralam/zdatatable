@@ -21,6 +21,7 @@ import {
   fontFamilyCSSValue,
   borderGroupingColumCSSValue,
   validatePolyline,
+  removeRowsWithNoData,
 } from "./../utils/common";
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "./../defs/enums";
 import {
@@ -163,6 +164,19 @@ function visualTable(props: IVisualTableProps) {
   // * Used to display values in the table
   const tableValueColumns = getTableValueColumns(table);
   const tableHeaderMaxDepth = getMaxTableHederDepth(table);
+
+  const filteredVisualValues = removeRowsWithNoData(
+    visualData.values,
+    tableValueColumns
+  ).sort(function (a, b) {
+    if (a[groupingColumn.queryName] < b[groupingColumn.queryName]) {
+      return -1;
+    }
+    if (b[groupingColumn.queryName] < a[groupingColumn.queryName]) {
+      return 1;
+    }
+    return 0;
+  });
 
   // console.log(tableHeaderMaxDepth);
   return (
@@ -310,34 +324,40 @@ function visualTable(props: IVisualTableProps) {
           })}
         </thead>
         <tbody>
-          {visualData.values.map((row) => {
-            return (
-              <tr>
-                {groupingColumnSettings?.showGroupingColumn &&
-                groupingColumn !== undefined ? (
-                  <td
-                    className="grouping-column__value"
-                    style={groupingColumnValuesStyles}
-                  >
-                    {row[groupingColumn?.queryName]}
-                  </td>
-                ) : (
-                  ""
-                )}
+          {filteredVisualValues.length === 0 ? (
+            <tr className="no-data__row">
+              <td className="no-data__cell">No Data Available</td>
+            </tr>
+          ) : (
+            filteredVisualValues.map((row) => {
+              return (
+                <tr>
+                  {groupingColumnSettings?.showGroupingColumn &&
+                  groupingColumn !== undefined ? (
+                    <td
+                      className="grouping-column__value"
+                      style={groupingColumnValuesStyles}
+                    >
+                      {row[groupingColumn?.queryName]}
+                    </td>
+                  ) : (
+                    ""
+                  )}
 
-                {tableValueColumns.map((col, i) => {
-                  return CellValueDisplay(
-                    col,
-                    visualData.columns,
-                    row,
-                    mainMeasureSettings,
-                    secondaryMeasureSettings,
-                    trendLineSettings
-                  );
-                })}
-              </tr>
-            );
-          })}
+                  {tableValueColumns.map((col, i) => {
+                    return CellValueDisplay(
+                      col,
+                      visualData.columns,
+                      row,
+                      mainMeasureSettings,
+                      secondaryMeasureSettings,
+                      trendLineSettings
+                    );
+                  })}
+                </tr>
+              );
+            })
+          )}
         </tbody>
       </table>
     </div>

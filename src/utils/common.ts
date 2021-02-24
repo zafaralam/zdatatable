@@ -3,14 +3,54 @@ import { BsColumns } from "react-icons/bs";
 import {
   IVisualTable,
   IVisualTableColumn,
+  IVisualValues,
   //   ITableValueColumn,
 } from "../defs/main";
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "./../defs/enums";
 import { VisualConstants } from "./../VisualConstants";
 
+export function removeRowsWithNoData(
+  visualValues: IVisualValues[],
+  visualTableColumns: IVisualTableColumn[]
+): IVisualValues[] {
+  if (
+    visualTableColumns &&
+    visualTableColumns.length !== 0 &&
+    visualValues &&
+    visualValues.length !== 0
+  ) {
+    const columns = visualTableColumns.filter(
+      (col) => col?.queryName && col.queryName.length !== 0
+    );
+    const values = visualValues.filter((values) => {
+      const rowValues = columns.map((col) => values[col.queryName]);
+      if (
+        rowValues.every((element) => element === undefined || element === null)
+      )
+        return false;
+      return true;
+    });
+    // console.log(columns);
+    // console.log(values);
+
+    return values;
+  }
+  return [];
+}
+
 export function getTableValueColumns(
   table: IVisualTable
 ): IVisualTableColumn[] {
+  function flattenValueColumns(r: any, a: IVisualTableColumn) {
+    if (a.columns && a.columns.length !== 0) {
+      return a.columns.reduce(flattenValueColumns, r);
+    }
+
+    //   r.push({ queryName: a.queryName, columnType: a.columnType });
+    r.push(a);
+    return r;
+  }
+
   return table.columns.reduce(flattenValueColumns, []);
 }
 
@@ -114,16 +154,6 @@ function flattenColumnCount(r: any, a: IVisualTableColumn) {
   return r + 1;
 }
 
-function flattenValueColumns(r: any, a: IVisualTableColumn) {
-  if (a.columns && a.columns.length !== 0) {
-    return a.columns.reduce(flattenValueColumns, r);
-  }
-
-  //   r.push({ queryName: a.queryName, columnType: a.columnType });
-  r.push(a);
-  return r;
-}
-
 export function fontWeightCSSValue(fontWeight: string) {
   switch (fontWeight) {
     case "normal":
@@ -169,7 +199,7 @@ export function borderGroupingColumCSSValue(
 }
 
 export function validatePolyline(polyline: string): boolean {
-  const totalPoints = polyline.match(/\d+,\d+/g).length;
+  const totalPoints = polyline.match(/\d+,\d+/g);
   const totalCommas = polyline.match(/,/g);
   const totalWhiteSpaces = polyline.match(/\s/g);
   // console.log(totalPoints, totalCommas, totalWhiteSpaces);
@@ -183,7 +213,7 @@ export function validatePolyline(polyline: string): boolean {
   )
     return false;
   return (
-    totalPoints === totalCommas.length &&
-    totalPoints === totalWhiteSpaces.length + 1
+    totalPoints.length === totalCommas.length &&
+    totalPoints.length === totalWhiteSpaces.length + 1
   );
 }
