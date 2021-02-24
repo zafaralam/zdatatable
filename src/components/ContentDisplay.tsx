@@ -22,6 +22,7 @@ import {
   borderGroupingColumCSSValue,
   validatePolyline,
   removeRowsWithNoData,
+  getConditionalFormattingColor,
 } from "./../utils/common";
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "./../defs/enums";
 import {
@@ -32,6 +33,7 @@ import {
   GroupingColumnSettings,
 } from "../settings";
 import { VisualConstants } from "../VisualConstants";
+import Debugger from "../debug/Debugger";
 interface IContentDisplayProps {
   host: IVisualHost;
   visualData: IVisualData;
@@ -168,7 +170,10 @@ function visualTable(props: IVisualTableProps) {
   const filteredVisualValues = removeRowsWithNoData(
     visualData.values,
     tableValueColumns
-  ).sort(function (a, b) {
+  );
+  /** added sorting by default to the capabilities.json file.
+    *
+    .sort(function (a, b) {
     if (a[groupingColumn.queryName] < b[groupingColumn.queryName]) {
       return -1;
     }
@@ -176,7 +181,7 @@ function visualTable(props: IVisualTableProps) {
       return 1;
     }
     return 0;
-  });
+  });*/
 
   // console.log(tableHeaderMaxDepth);
   return (
@@ -378,11 +383,23 @@ function CellValueDisplay(
   //     mainMeasureSettings?.fontFamily || VisualConstants.dinReplacementFont
   //   )
   // );
+  const dataColumn = dataColumns.find(
+    (c) => c.queryName === visualTableColumn.queryName
+  );
+
+  // if (visualTableColumn?.conditionalFormattingRules)
+  //   Debugger.LOG(
+  //     visualTableColumn.queryName,
+  //     visualTableColumn?.conditionalFormattingRules
+  //   );
   const measureStyles: React.CSSProperties = {
     // display: "inline-block",
     // width: "100%", // * DO NOT REMOVE THIS FORM CELL.
     // textAlign: "center",
-
+    color: getConditionalFormattingColor(
+      visualTableColumn?.conditionalFormattingRules,
+      rowValue[visualTableColumn.queryName]
+    ),
     ...(visualTableColumn.columnType ===
     VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
       ? {
@@ -480,6 +497,7 @@ function CellValueDisplay(
   // Testing only
   const points = rowValue[visualTableColumn.queryName];
   //"-26,0 -13,18 0,18 11,0 24,18 37,18 112,18 124,0 137,18 150,18 162,18";
+
   const cellDisplay = (
     <td style={tdStyles}>
       {visualTableColumn.columnType ===
@@ -515,8 +533,7 @@ function CellValueDisplay(
         <span style={measureStyles}>
           {valueFormatter.format(
             rowValue[visualTableColumn.queryName],
-            dataColumns.find((c) => c.queryName === visualTableColumn.queryName)
-              .format
+            dataColumn.format
           )}
         </span>
       )}

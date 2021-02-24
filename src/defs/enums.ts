@@ -16,3 +16,17 @@ export enum MOVE_DIRECTION {
   LEFT,
   RIGHT,
 }
+
+export enum GtConditionOptions {
+  Gt,
+  GtEq,
+  Is,
+  Blank,
+  // Lt,
+  // LtEq
+}
+
+export enum LtConditionOptions {
+  Lt,
+  LtEq,
+}

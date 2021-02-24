@@ -286,11 +286,11 @@
                 }
             }
         },
-        "mainMeasure": {
-            "displayName": "Main Measure",
-            "description": "Formatting options for the main measure value columns",
+        "dataColors": {
+            "displayName": "Data Colors",
+            "description": "Colors set for each measure",
             "properties": {
-                "fontColor": {
+                "textColor": {
                     "displayName": "Text Color",
                     "type": {
                         "fill": {
@@ -299,7 +299,13 @@
                             }
                         }
                     }
-                },
+                }
+            }
+        },
+        "mainMeasure": {
+            "displayName": "Main Measure",
+            "description": "Formatting options for the main measure value columns",
+            "properties": {
                 "fontFamily": {
                     "displayName": "Font Family",
                     "type": {
@@ -346,16 +352,6 @@
             "displayName": "Secondary Measure",
             "description": "Formatting options for the secondary measure value columns",
             "properties": {
-                "fontColor": {
-                    "displayName": "Text Color",
-                    "type": {
-                        "fill": {
-                            "solid": {
-                                "color": true
-                            }
-                        }
-                    }
-                },
                 "fontFamily": {
                     "displayName": "Font Family",
                     "type": {
@@ -488,5 +484,8 @@
         }
     ],
     "advancedEditModeSupport": 2,
-    "suppressDefaultTitle": true
+    "suppressDefaultTitle": true,
+    "sorting": {
+        "default": {}
+    }
 }
