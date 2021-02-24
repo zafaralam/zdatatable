@@ -155,6 +155,7 @@ export default class AdvanceEditor extends React.Component<
             this.state.visualTables.map((table, tIdx) => {
               return (
                 <EditTable
+                  key={tIdx}
                   index={tIdx}
                   table={table}
                   onEditTableUpdate={this.handleEditTableUpdate}
