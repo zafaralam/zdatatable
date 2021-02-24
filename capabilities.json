@@ -459,6 +459,13 @@
     },
     "dataViewMappings": [
         {
+            "conditions": [
+                {
+                    "grouping": {
+                        "max": 1
+                    }
+                }
+            ],
             "table": {
                 "rows": {
                     "select": [

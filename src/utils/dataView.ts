@@ -6,6 +6,8 @@ import {
   IVisualValueData,
   IVisualValues,
 } from "./../defs/main";
+import IColorPalette = powerbi.extensibility.IColorPalette;
+// import ISelectionId = powerbi.visuals.ISelectionId;
 
 /**
  *
@@ -89,7 +91,8 @@ function getVisualDataValues(
 
 export function parseDataModelColumns(
   dataView: DataView,
-  dataColumns: IDataColumn[]
+  dataColumns: IDataColumn[],
+  colorPalette: IColorPalette
 ): IDataColumn[] {
   // if the data view does not have any columns then just remove all columns
   if (dataView.metadata.columns.length === 0) return [];
@@ -97,7 +100,7 @@ export function parseDataModelColumns(
   // if the data columns not present then just return the columns from the data view
   if (dataColumns === undefined || dataColumns.length === 0)
     return dataView.metadata.columns.map((item) => {
-      return parseDataViewColumn(item);
+      return parseDataViewColumn(item, colorPalette);
     });
 
   let _dataColumns: IDataColumn[] = JSON.parse(JSON.stringify(dataColumns));
@@ -123,6 +126,7 @@ export function parseDataModelColumns(
         item.roles["grouping"] === undefined ? false : item.roles["grouping"];
       _dataColumns[_idx]["content"] =
         item.roles["content"] === undefined ? false : item.roles["content"];
+      _dataColumns[_idx]["color"] = colorPalette.getColor(item.queryName).value;
     });
 
   // add data columns that are new in the data view
@@ -131,7 +135,7 @@ export function parseDataModelColumns(
       return !_dataColumns.some((t) => t.queryName === x.queryName);
     })
     .forEach((item) => {
-      _dataColumns.push(parseDataViewColumn(item));
+      _dataColumns.push(parseDataViewColumn(item, colorPalette));
     });
 
   return _dataColumns.sort((a, b) => a.index - b.index);
@@ -145,8 +149,14 @@ export function parseDataModelColumns(
  * @param item
  */
 function parseDataViewColumn(
-  item: powerbi.DataViewMetadataColumn
+  item: powerbi.DataViewMetadataColumn,
+  // host: powerbi.extensibility.visual.IVisualHost,
+  colorPalette: IColorPalette
 ): IDataColumn {
+  // const selectionId: ISelectionId = host
+  //   .createSelectionIdBuilder()
+  //   .withCategory(category, i)
+  //   .createSelectionId();
   return {
     index: item.index,
     displayName: item.displayName,
@@ -156,5 +166,6 @@ function parseDataViewColumn(
       item.roles["grouping"] === undefined ? false : item.roles["grouping"],
     content:
       item.roles["content"] === undefined ? false : item.roles["content"],
+    color: colorPalette.getColor(item.queryName).value,
   };
 }

@@ -50,7 +50,7 @@ export class TableTitleSettings {
 }
 
 export class MainMeasureSettings {
-  public fontColor: string = VisualConstants.mainMeasureSettings.fontColor;
+  // public fontColor: string = VisualConstants.mainMeasureSettings.fontColor;
   public fontFamily: string = VisualConstants.mainMeasureSettings.fontFamily;
   public fontSize: number = VisualConstants.mainMeasureSettings.fontSize;
   public fontWeight: string = VisualConstants.mainMeasureSettings.fontWeight;

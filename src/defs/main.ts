@@ -88,6 +88,7 @@ export interface IDataColumn {
   format?: string;
   grouping: boolean;
   content: boolean;
+  color?: string;
 }
 
 export interface IVisualValues {
