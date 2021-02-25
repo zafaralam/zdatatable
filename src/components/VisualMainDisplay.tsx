@@ -16,7 +16,7 @@ export const initialState: IVisualMainDisplayState = {
   isEditMode: false,
   canAdvanceEdit: false,
   advancedEditing: defaultSettings["advancedEditing"],
-  data: processDataView([], []),
+  data: processDataView([], [], null),
   tableTitleSettings: defaultSettings["tableTileSettings"],
 
   mainMeasureSettings: defaultSettings["mainMeasureSettings"],
@@ -88,6 +88,7 @@ export class VisualMainDisplay extends React.Component<
             trendLineSettings={trendLineSettings}
             groupingColumnSettings={groupingColumnSettings}
             tablesSettings={tablesSettings}
+            selectionManager={this.props.selectionManager}
             // updateDisplayTables={this.props.updateDisplayTables}
             // visualTables={this.state.visualTables}
           />
@@ -106,6 +107,7 @@ export class VisualMainDisplay extends React.Component<
             trendLineSettings={trendLineSettings}
             groupingColumnSettings={groupingColumnSettings}
             tablesSettings={tablesSettings}
+            selectionManager={this.props.selectionManager}
           />
         );
       }

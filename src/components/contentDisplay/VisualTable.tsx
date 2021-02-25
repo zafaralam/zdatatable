@@ -2,7 +2,7 @@ import * as React from "react";
 import powerbi from "powerbi-visuals-api";
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 
-import { IVisualData, IVisualTable } from "./../../defs/main";
+import { IVisualData, IVisualTable, IVisualValues } from "./../../defs/main";
 
 import {
   getTableValueColumns,
@@ -39,6 +39,7 @@ interface IVisualTableProps {
   trendLineSettings?: TrendLineSettings;
   groupingColumnSettings: GroupingColumnSettings;
   tablesSettings: TablesSettings;
+  selectionManager: powerbi.extensibility.ISelectionManager;
 }
 
 export default function VisualTable(props: IVisualTableProps) {
@@ -171,6 +172,12 @@ export default function VisualTable(props: IVisualTableProps) {
   // console.log(tableHeaderMaxDepth);
   const tableStyles: React.CSSProperties = {
     border: `${tablesSettings.borderWidth}px solid ${tablesSettings.borderColor}`,
+  };
+
+  const handleDataRowClick = (row: IVisualValues, index: number) => {
+    if (row["rowInternalPowerBiSelectionId"]) {
+      props.selectionManager.select(row["rowInternalPowerBiSelectionId"]);
+    }
   };
   return (
     <div key={tableIndex}>
@@ -325,7 +332,19 @@ export default function VisualTable(props: IVisualTableProps) {
           ) : (
             filteredVisualValues.map((row, rIdx) => {
               return (
-                <tr key="rIdx">
+                <tr
+                  key={rIdx}
+                  onClick={() => {
+                    handleDataRowClick(row, rIdx);
+                  }}
+                  onContextMenu={(e) => {
+                    props.selectionManager.showContextMenu(
+                      row["rowInternalPowerBiSelectionId"],
+                      { x: e.clientX, y: e.clientY }
+                    );
+                    e.preventDefault();
+                  }}
+                >
                   {groupingColumnSettings?.showGroupingColumn &&
                   groupingColumn !== undefined ? (
                     <td

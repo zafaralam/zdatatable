@@ -113,6 +113,7 @@ export class Visual implements IVisual {
       host: this.host,
       localizationManager: this.localizationManager,
       advEditorData: this.advEditorData,
+      selectionManager: this.selectionManager,
       // updateDisplayTables: this.updateVisualTables,
     });
 
@@ -184,7 +185,8 @@ export class Visual implements IVisual {
             options.dataViews[0].metadata.objects,
           data: processDataView(
             options.dataViews,
-            JSON.parse(JSON.stringify(this.dataColumns))
+            JSON.parse(JSON.stringify(this.dataColumns)),
+            this.host
           ),
           tableTitleSettings: this.settings.tableTitle,
           mainMeasureSettings: this.settings.mainMeasure,

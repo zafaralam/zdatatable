@@ -28,6 +28,7 @@ export interface IVisualMainDisplayProps {
   localizationManager: ILocalizationManager;
   // updateDisplayTables: Function;
   advEditorData: AdvanceEditorData;
+  selectionManager: powerbi.extensibility.ISelectionManager;
 }
 
 export interface IVisualMainDisplayState {
@@ -130,3 +131,13 @@ export interface IConditionalFormattingRule {
   ltValue: number;
   color: string;
 }
+
+// export interface IHostSettingsAndServices {
+//   tablesSettings: TablesSettings,
+//   tableTitleSettings: TableTitleSettings,
+//   mainMeasureSettings: MainMeasureSettings,
+//   secondaryMeasureSettings: SecondaryMeasureSettings,
+//   trendLineSettings: TrendLineSettings,
+//   groupingColumnSettings: GroupingColumnSettings,
+
+// }
