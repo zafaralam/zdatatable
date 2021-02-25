@@ -8,13 +8,16 @@ import {
   TextField,
   Typography,
   IconButton,
+  ButtonGroup,
+  Paper,
 } from "@material-ui/core";
 import { IConditionalFormattingRule } from "./../../defs/main";
 import { GtConditionOptions, LtConditionOptions } from "./../../defs/enums";
 import ColorPicker from "./ColorPicker";
-import { BsFillTrashFill } from "react-icons/bs";
+import { BsFillTrashFill, BsArrowUp, BsArrowDown } from "react-icons/bs";
 import Debugger from "../../debug/Debugger";
 import { VisualConstants } from "../../VisualConstants";
+import { MOVE_DIRECTION } from "../../defs/enums";
 
 interface ICFRulesProps {
   rules: IConditionalFormattingRule[];
@@ -66,18 +69,38 @@ export default function CFRules(props: ICFRulesProps) {
     onRulesUpdate(_rules);
   };
 
+  const handleRuleMove = (direction: MOVE_DIRECTION, ruleIndex: number) => {
+    if (
+      (direction === MOVE_DIRECTION.UP && ruleIndex === 0) ||
+      (direction === MOVE_DIRECTION.DOWN && ruleIndex === rules.length - 1)
+    ) {
+      return;
+    }
+
+    const toIndex =
+      direction === MOVE_DIRECTION.UP ? ruleIndex - 1 : ruleIndex + 1;
+
+    let _rules = rules.slice(0, rules.length + 1);
+    const element = _rules[ruleIndex];
+    _rules.splice(ruleIndex, 1);
+    _rules.splice(toIndex, 0, element);
+
+    onRulesUpdate(_rules);
+  };
+
   return (
     <div>
       {rules && rules.length !== 0 ? (
         rules.map((rule, idx) => {
           return (
             <CFRule
-              key={idx}
+              key={`cfRule_${idx}`}
               rule={rule}
               index={idx}
               onRuleUpdate={handleRuleUpdate}
               onRulePropertyUpdate={handleRulePropertyChange}
               onRuleRemove={handleRemoveRule}
+              onRuleMove={handleRuleMove}
             />
           );
         })
@@ -106,6 +129,7 @@ interface ICFRuleProps {
   onRuleUpdate: Function;
   onRulePropertyUpdate: Function;
   onRuleRemove: Function;
+  onRuleMove(MOVE_DIRECTION, number): void;
 }
 
 function CFRule(props: ICFRuleProps) {
@@ -115,6 +139,7 @@ function CFRule(props: ICFRuleProps) {
     onRuleUpdate,
     onRulePropertyUpdate,
     onRuleRemove,
+    onRuleMove,
   } = props;
   const hideLtOptions = !(
     rule.gtOption === GtConditionOptions.Gt ||
@@ -156,99 +181,146 @@ function CFRule(props: ICFRuleProps) {
     onRuleUpdate(index, _rule);
   };
 
+  const handleRuleMove = (direction: MOVE_DIRECTION) => {
+    onRuleMove(direction, index);
+  };
+
   return (
-    <Grid container spacing={1} direction="row" alignItems="center">
-      <Grid item xs={1}>
-        If Value
-      </Grid>
-      <Grid item xs={2}>
-        <Select value={rule.gtOption} fullWidth onChange={handleGtOptionChange}>
-          <MenuItem value={GtConditionOptions.Gt}>is greater than</MenuItem>
-          <MenuItem value={GtConditionOptions.GtEq}>
-            is greater than or equal To
-          </MenuItem>
-          <MenuItem value={GtConditionOptions.Is}>is</MenuItem>
-          <MenuItem value={GtConditionOptions.Blank}>is blank</MenuItem>
-        </Select>
-      </Grid>
-      {!hideGtValueInput ? (
-        <Grid item xs={1}>
-          <TextField
-            size="small"
-            placeholder="Minimum"
-            type="number"
-            fullWidth
-            value={rule.gtValue}
-            onChange={(e) => {
-              onRulePropertyUpdate(index, "gtValue", e.target.value);
-            }}
-          />
-        </Grid>
-      ) : (
-        ""
-      )}
-      {!hideLtOptions ? (
-        <Grid item xs={1} style={{ textAlign: "center" }}>
-          and
-        </Grid>
-      ) : (
-        ""
-      )}
-      {!hideLtOptions ? (
-        <Grid item xs={2}>
-          <Select
-            value={rule.ltOption}
-            fullWidth
-            onChange={handleLtOptionChange}
-          >
-            <MenuItem value={LtConditionOptions.Lt}>is less than</MenuItem>
-            <MenuItem value={LtConditionOptions.LtEq}>
-              is less than or equal To
-            </MenuItem>
-          </Select>
-        </Grid>
-      ) : (
-        ""
-      )}
-      {!hideLtOptions ? (
-        <Grid item xs={1}>
-          <TextField
-            size="small"
-            placeholder="Maximum"
-            type="number"
-            fullWidth
-            value={rule.ltValue}
-            onChange={(e) => {
-              onRulePropertyUpdate(index, "ltValue", e.target.value);
-            }}
-          />
-        </Grid>
-      ) : (
-        ""
-      )}
-      <Grid item xs={1} style={{ textAlign: "center" }}>
-        then
-      </Grid>
-      <Grid item xs={2}>
-        <ColorPicker
-          color={rule.color}
-          onColorChange={(color) => {
-            onRulePropertyUpdate(index, "color", color || "#000");
-          }}
-        />
-      </Grid>
-      <Grid item xs={1}>
-        <IconButton
-          title="Remove Rule"
-          size="small"
-          style={{ color: "#a50d0d" }}
-          onClick={() => {
-            onRuleRemove(index);
-          }}
+    <Paper
+      variant="outlined"
+      style={{ padding: "6px 4px", marginBottom: "2px" }}
+    >
+      <Grid container direction="row" alignItems="center">
+        <Grid
+          container
+          item
+          xs={11}
+          spacing={1}
+          direction="row"
+          alignItems="center"
         >
-          <BsFillTrashFill />
-        </IconButton>
+          <Grid container direction="row" item xs={1}>
+            <span>If Value</span>
+          </Grid>
+          <Grid item xs={2}>
+            <Select
+              value={rule.gtOption}
+              fullWidth
+              onChange={handleGtOptionChange}
+            >
+              <MenuItem value={GtConditionOptions.Gt}>is greater than</MenuItem>
+              <MenuItem value={GtConditionOptions.GtEq}>
+                is greater than or equal To
+              </MenuItem>
+              <MenuItem value={GtConditionOptions.Is}>is</MenuItem>
+              <MenuItem value={GtConditionOptions.Blank}>is blank</MenuItem>
+            </Select>
+          </Grid>
+          {!hideGtValueInput ? (
+            <Grid item xs={1}>
+              <TextField
+                size="small"
+                placeholder="Minimum"
+                type="number"
+                fullWidth
+                value={rule.gtValue}
+                onChange={(e) => {
+                  onRulePropertyUpdate(index, "gtValue", e.target.value);
+                }}
+              />
+            </Grid>
+          ) : (
+            ""
+          )}
+          {!hideLtOptions ? (
+            <Grid item xs={1} style={{ textAlign: "center" }}>
+              and
+            </Grid>
+          ) : (
+            ""
+          )}
+          {!hideLtOptions ? (
+            <Grid item xs={2}>
+              <Select
+                value={rule.ltOption}
+                fullWidth
+                onChange={handleLtOptionChange}
+              >
+                <MenuItem value={LtConditionOptions.Lt}>is less than</MenuItem>
+                <MenuItem value={LtConditionOptions.LtEq}>
+                  is less than or equal To
+                </MenuItem>
+              </Select>
+            </Grid>
+          ) : (
+            ""
+          )}
+          {!hideLtOptions ? (
+            <Grid item xs={1}>
+              <TextField
+                size="small"
+                placeholder="Maximum"
+                type="number"
+                fullWidth
+                value={rule.ltValue}
+                onChange={(e) => {
+                  onRulePropertyUpdate(index, "ltValue", e.target.value);
+                }}
+              />
+            </Grid>
+          ) : (
+            ""
+          )}
+          <Grid item xs={1} style={{ textAlign: "center" }}>
+            then
+          </Grid>
+          <Grid item xs={2}>
+            <ColorPicker
+              color={rule.color}
+              onColorChange={(color) => {
+                onRulePropertyUpdate(index, "color", color || "#000");
+              }}
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton
+              title="Remove Rule"
+              size="small"
+              style={{ color: "#a50d0d" }}
+              onClick={() => {
+                onRuleRemove(index);
+              }}
+            >
+              <BsFillTrashFill />
+            </IconButton>
+          </Grid>
+        </Grid>
+        <Grid item xs={1}>
+          <ButtonGroup
+            size="small"
+            variant="contained"
+            aria-label="move conditional formatting rules controls"
+          >
+            <IconButton
+              title="Move rule above"
+              onClick={() => {
+                handleRuleMove(MOVE_DIRECTION.UP);
+              }}
+            >
+              <BsArrowUp />
+            </IconButton>
+
+            <IconButton
+              title="Move rule down"
+              onClick={() => {
+                handleRuleMove(MOVE_DIRECTION.DOWN);
+              }}
+            >
+              <BsArrowDown />
+            </IconButton>
+          </ButtonGroup>
+        </Grid>
       </Grid>
-    </Grid>
+    </Paper>
   );
 }
