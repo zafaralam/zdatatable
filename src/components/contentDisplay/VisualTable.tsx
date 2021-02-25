@@ -23,6 +23,7 @@ import {
   MainMeasureSettings,
   SecondaryMeasureSettings,
   GroupingColumnSettings,
+  TablesSettings,
 } from "./../../settings";
 import { VisualConstants } from "./../../VisualConstants";
 import Debugger from "./../../debug/Debugger";
@@ -37,6 +38,7 @@ interface IVisualTableProps {
   secondaryMeasureSettings?: SecondaryMeasureSettings;
   trendLineSettings?: TrendLineSettings;
   groupingColumnSettings: GroupingColumnSettings;
+  tablesSettings: TablesSettings;
 }
 
 export default function VisualTable(props: IVisualTableProps) {
@@ -49,6 +51,7 @@ export default function VisualTable(props: IVisualTableProps) {
     secondaryMeasureSettings,
     trendLineSettings,
     groupingColumnSettings,
+    tablesSettings,
   } = props;
 
   const tableTitleStyles: React.CSSProperties = {
@@ -150,10 +153,9 @@ export default function VisualTable(props: IVisualTableProps) {
   const tableValueColumns = getTableValueColumns(table);
   const tableHeaderMaxDepth = getMaxTableHederDepth(table);
 
-  const filteredVisualValues = removeRowsWithNoData(
-    visualData.values,
-    tableValueColumns
-  );
+  const filteredVisualValues = tablesSettings.filterEmptyRows
+    ? removeRowsWithNoData(visualData.values, tableValueColumns)
+    : visualData.values;
   /** added sorting by default to the capabilities.json file.
     *
     .sort(function (a, b) {
@@ -167,9 +169,12 @@ export default function VisualTable(props: IVisualTableProps) {
   });*/
 
   // console.log(tableHeaderMaxDepth);
+  const tableStyles: React.CSSProperties = {
+    border: `${tablesSettings.borderWidth}px solid ${tablesSettings.borderColor}`,
+  };
   return (
     <div key={tableIndex}>
-      <table className="display-table">
+      <table className="display-table" style={tableStyles}>
         <thead>
           {props.visualTable.showTitle === true ? (
             <tr>
@@ -315,7 +320,7 @@ export default function VisualTable(props: IVisualTableProps) {
         <tbody>
           {filteredVisualValues.length === 0 ? (
             <tr className="no-data__row">
-              <td className="no-data__cell">No Data Available</td>
+              <td className="no-data__cell">{tablesSettings.noDataMessage}</td>
             </tr>
           ) : (
             filteredVisualValues.map((row, rIdx) => {

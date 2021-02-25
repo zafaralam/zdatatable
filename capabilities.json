@@ -12,9 +12,53 @@
         }
     ],
     "objects": {
+        "tables": {
+            "displayName": "Tables",
+            "description": "Common settings for all tables in the visual",
+            "properties": {
+                "spaceBetweenTables": {
+                    "displayName": "Space between tables (px)",
+                    "description": "Defines the amount of space between tables in the visual. Will not apply to last table",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderWidth": {
+                    "displayName": "Border Width (px)",
+                    "description": "Border thickness applied. If you do not want a border for the tables set value to zero",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "borderColor": {
+                    "displayName": "Border Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "filterEmptyRows": {
+                    "displayName": "Filter Empty Rows",
+                    "description": "Enables filtering of rows in the tables when there is no data available for a given grouping value.",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "noDataMessage": {
+                    "displayName": "Empty Table Message",
+                    "description": "Message to be displayed when a table does not have any rows.",
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        },
         "tableTitle": {
             "displayName": "Table Title",
-            "description": "Formatting options for individual table",
+            "description": "Formatting options for all table titles if table title is set to show.",
             "properties": {
                 "backgroundColor": {
                     "displayName": "Background Color",

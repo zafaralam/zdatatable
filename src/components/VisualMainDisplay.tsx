@@ -23,6 +23,7 @@ export const initialState: IVisualMainDisplayState = {
   secondaryMeasureSettings: defaultSettings["secondaryMeasureSettings"],
   trendLineSettings: defaultSettings["trendLineSettings"],
   groupingColumnSettings: defaultSettings["groupingColumnSettings"],
+  tablesSettings: defaultSettings["tablesSettings"],
   // visualTables: [],
 };
 
@@ -68,6 +69,7 @@ export class VisualMainDisplay extends React.Component<
       secondaryMeasureSettings,
       trendLineSettings,
       groupingColumnSettings,
+      tablesSettings,
     } = this.state;
 
     switch (true) {
@@ -85,6 +87,7 @@ export class VisualMainDisplay extends React.Component<
             secondaryMeasureSettings={secondaryMeasureSettings}
             trendLineSettings={trendLineSettings}
             groupingColumnSettings={groupingColumnSettings}
+            tablesSettings={tablesSettings}
             // updateDisplayTables={this.props.updateDisplayTables}
             // visualTables={this.state.visualTables}
           />
@@ -102,12 +105,41 @@ export class VisualMainDisplay extends React.Component<
             secondaryMeasureSettings={secondaryMeasureSettings}
             trendLineSettings={trendLineSettings}
             groupingColumnSettings={groupingColumnSettings}
+            tablesSettings={tablesSettings}
           />
         );
       }
 
       default:
-        return <div className="empty">Nothing to display</div>;
+        return (
+          <div className="starter-message">
+            <h4>z-DataTable</h4>
+            <div>
+              <p>Thanks for using this visual and providing your support!</p>
+              <p>To get started follow the below steps:</p>
+
+              <ul>
+                <li>
+                  <em>-</em> Add a grouping column to the "Grouping" well from
+                  your data model
+                </li>
+                <li>
+                  <em>-</em> Add measure from your data model to the "Content"
+                  well
+                </li>
+
+                <li>
+                  <em>-</em> Click the "..." dots (More Options) when the visual
+                  is selected and then select "Edit" from the pop-menu.
+                </li>
+                <li>
+                  <em>-</em> Once in the advance editor. Start by adding tables
+                  and columns to tables.
+                </li>
+              </ul>
+            </div>
+          </div>
+        );
     }
   }
 

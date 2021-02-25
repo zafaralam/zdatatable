@@ -129,70 +129,80 @@ export class Visual implements IVisual {
     try {
       this.events.renderingStarted(options);
 
-      // const dataView: DataView = options.dataViews[0];
-      this.settings = Visual.parseSettings(
-        options && options.dataViews && options.dataViews[0]
-      );
-
-      this.viewport = options.viewport;
-      // const { width, height } = this.viewport;
-      // const size = Math.min(width, height);
-
-      // if (options.type === powerbi.VisualUpdateType.All) {
-      this.dataColumns = parseDataModelColumns(
-        options && options.dataViews && options.dataViews[0],
-        this.host
-      );
-      // } else {
-      //   console.log(options);
-      // }
-
-      // * Might need to do a bit more here
-      // Double parsing is required as the tables structure is also a string.
-      const _visualTables = JSON.parse(
-        this.settings.advancedEditing.visualTables
-      );
-
       if (
-        _visualTables["tables"] !== undefined &&
-        _visualTables["tables"] !== "[]" &&
-        _visualTables["tables"].length !== 0
+        options.dataViews &&
+        options.dataViews[0] &&
+        options.dataViews[0].metadata &&
+        options.dataViews[0].metadata.objects
       ) {
-        this.advEditorData.updateVisualTables(
-          JSON.parse(_visualTables["tables"]) as IVisualTable[]
+        // const dataView: DataView = options.dataViews[0];
+        this.settings = Visual.parseSettings(
+          options && options.dataViews && options.dataViews[0]
         );
+
+        this.viewport = options.viewport;
+        // const { width, height } = this.viewport;
+        // const size = Math.min(width, height);
+
+        // if (options.type === powerbi.VisualUpdateType.All) {
+        this.dataColumns = parseDataModelColumns(
+          options && options.dataViews && options.dataViews[0],
+          this.host
+        );
+        // } else {
+        //   console.log(options);
+        // }
+
+        // * Might need to do a bit more here
+        // Double parsing is required as the tables structure is also a string.
+        const _visualTables = JSON.parse(
+          this.settings.advancedEditing.visualTables
+        );
+
+        if (
+          _visualTables["tables"] !== undefined &&
+          _visualTables["tables"] !== "[]" &&
+          _visualTables["tables"].length !== 0
+        ) {
+          this.advEditorData.updateVisualTables(
+            JSON.parse(_visualTables["tables"]) as IVisualTable[]
+          );
+        }
+
+        let state: IVisualMainDisplayState = {
+          updateOptions: options,
+          canAdvanceEdit:
+            options.viewMode === ViewMode.Edit && !options.isInFocus,
+          isEditMode:
+            options.viewMode === ViewMode.Edit &&
+            options.editMode === EditMode.Advanced &&
+            options.isInFocus,
+          advancedEditing: this.settings.advancedEditing,
+          objectMetadata:
+            options.dataViews[0] &&
+            options.dataViews[0].metadata &&
+            options.dataViews[0].metadata.objects,
+          data: processDataView(
+            options.dataViews,
+            JSON.parse(JSON.stringify(this.dataColumns))
+          ),
+          tableTitleSettings: this.settings.tableTitle,
+          mainMeasureSettings: this.settings.mainMeasure,
+          secondaryMeasureSettings: this.settings.secondaryMeasure,
+          trendLineSettings: this.settings.trendLine,
+          groupingColumnSettings: this.settings.groupingColumn,
+          tablesSettings: this.settings.tables,
+          // visualTables: this.visualTables,
+        };
+
+        // console.log(width, height);
+
+        // console.log("State", state);
+
+        VisualMainDisplay.update(state);
       }
 
-      let state: IVisualMainDisplayState = {
-        updateOptions: options,
-        canAdvanceEdit:
-          options.viewMode === ViewMode.Edit && !options.isInFocus,
-        isEditMode:
-          options.viewMode === ViewMode.Edit &&
-          options.editMode === EditMode.Advanced &&
-          options.isInFocus,
-        advancedEditing: this.settings.advancedEditing,
-        objectMetadata:
-          options.dataViews[0] &&
-          options.dataViews[0].metadata &&
-          options.dataViews[0].metadata.objects,
-        data: processDataView(
-          options.dataViews,
-          JSON.parse(JSON.stringify(this.dataColumns))
-        ),
-        tableTitleSettings: this.settings.tableTitle,
-        mainMeasureSettings: this.settings.mainMeasure,
-        secondaryMeasureSettings: this.settings.secondaryMeasure,
-        trendLineSettings: this.settings.trendLine,
-        groupingColumnSettings: this.settings.groupingColumn,
-        // visualTables: this.visualTables,
-      };
-
-      // console.log(width, height);
-
-      // console.log("State", state);
-
-      VisualMainDisplay.update(state);
+      this.events.renderingFinished(options);
     } catch (error) {
       this.events.renderingFailed(options, error);
       Debugger.LOG(options, error, this.dataColumns);

@@ -13,6 +13,13 @@ export const VisualConstants = {
   debug: true, // switch of in production release.
   dinReplacementFont: "Roboto, helvetica, arial, sans-serif", // * This is also the default font used.
   defaultTextColor,
+  tables: {
+    spaceBetweenTables: 16,
+    borderWidth: 0,
+    borderColor: defaultBorderColor,
+    filterEmptyRows: true,
+    noDataMessage: "No Data Available",
+  },
   visualTable: {
     name: "",
     columns: [],

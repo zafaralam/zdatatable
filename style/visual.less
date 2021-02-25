@@ -27,67 +27,6 @@
   // border: 2px solid #555555;
 }
 
-// input[type="text"] {
-//   min-height: 2rem;
-//   line-height: 1.5rem;
-//   font-size: 1.1rem;
-//   width: auto;
-//   cursor: text;
-// }
-
-// button {
-//   cursor: pointer;
-//   min-height: 2rem;
-//   text-transform: uppercase;
-//   text-align: center;
-//   letter-spacing: 0.05rem;
-//   word-spacing: 0.2rem;
-//   font-size: 0.75rem;
-//   font-weight: 600;
-//   border: none;
-//   background: rgb(208, 209, 211);
-//   padding: 10px 8px;
-
-//   &:disabled {
-//     cursor: not-allowed;
-//     background: rgb(216, 216, 218);
-//     color: rgb(75, 74, 74);
-//   }
-// }
-
-// .primary-btn {
-//   color: white;
-//   background: #212e5f;
-
-//   &:disabled {
-//     background: #181d2c;
-//   }
-// }
-
-// .icon-btn {
-//   background: none;
-//   display: inline-flex;
-//   border: none; //1px solid red;
-//   min-height: 2rem;
-//   // flex-direction: row;
-//   align-items: center;
-//   justify-content: center;
-//   font-size: 1.25rem;
-// }
-
-// .card {
-//   /* Add shadows to create the "card" effect */
-//   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.13);
-//   transition: 0.3s;
-//   padding: 8px 10px;
-//   margin: 6px;
-
-//   /* On mouse-over, add a deeper shadow */
-//   &:hover {
-//     box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.13);
-//   }
-// }
-
 .main-container {
   cursor: default;
 }
@@ -206,7 +145,7 @@
   transform: scale(1);
   transform-origin: 0% 0% 0px;
   border-collapse: collapse;
-  margin-bottom: 16px;
+  // margin-bottom: 16px;
   font-family: Roboto, helvetica, arial, sans-serif;
   th,
   td,
@@ -260,5 +199,35 @@
     padding: 0px;
     // border: 1px solid black;
     display: block;
+  }
+}
+
+.starter-message {
+  height: 400px;
+  min-width: 200px;
+  overflow: auto;
+  color: #3e3b4a;
+
+  h4 {
+    background: rgb(213, 221, 247);
+
+    padding: 6px 8px;
+  }
+  p {
+    font-size: 0.9rem;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    // list-style-type: circle;
+    li {
+      margin-left: 4px;
+      margin-bottom: 4px;
+      font-size: 0.85rem;
+      em {
+        font-weight: bold;
+      }
+    }
   }
 }

@@ -116,8 +116,17 @@ export class GroupingColumnSettings {
   // public header: boolean = true;
   // public values: boolean = true;
 }
+
+export class TablesSettings {
+  spaceBetweenTables: number = VisualConstants.tables.spaceBetweenTables;
+  borderWidth: number = VisualConstants.tables.borderWidth;
+  borderColor: string = VisualConstants.tables.borderColor;
+  filterEmptyRows: boolean = VisualConstants.tables.filterEmptyRows;
+  noDataMessage: string = VisualConstants.tables.noDataMessage;
+}
 export class VisualSettings extends DataViewObjectsParser {
   // public circle: CircleSettings = new CircleSettings();
+  public tables: TablesSettings = new TablesSettings();
   public advancedEditing: AdvancedEditingSettings = new AdvancedEditingSettings();
   public tableTitle: TableTitleSettings = new TableTitleSettings();
   public mainMeasure: MainMeasureSettings = new MainMeasureSettings();

@@ -15,6 +15,7 @@ import {
   MainMeasureSettings,
   SecondaryMeasureSettings,
   GroupingColumnSettings,
+  TablesSettings,
 } from "../settings";
 import AdvanceEditorData from "../models/advanceEditor";
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
@@ -42,6 +43,7 @@ export interface IVisualMainDisplayState {
   secondaryMeasureSettings: SecondaryMeasureSettings;
   trendLineSettings: TrendLineSettings;
   groupingColumnSettings: GroupingColumnSettings;
+  tablesSettings: TablesSettings;
 }
 
 export interface IVisualTable {

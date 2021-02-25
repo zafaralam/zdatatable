@@ -3,12 +3,12 @@
 ## Features to implement
 
 - [x] SVG points validation
-- [] Apply SVG
-- [] Conditional Formatting for measure values
+- [x] Apply SVG
+- [x] Conditional Formatting for measure values (Done through the advanced editor for each column)
 - [] Add additional settings on each table
-  - [x] Full Width
+  - [x] Full Width (Does not get used for the moment)
   - [x] Show TItle
-- [] Modify settings for columns
+- [x] Modify settings for columns
   - [x] Border
   - [x] Padding
   - [x] Width

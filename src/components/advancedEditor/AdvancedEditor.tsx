@@ -12,6 +12,7 @@ import {
   MainMeasureSettings,
   SecondaryMeasureSettings,
   GroupingColumnSettings,
+  TablesSettings,
 } from "../../settings";
 import { IVisualData, IVisualTable } from "../../defs/main";
 import { ContentDisplay } from "./../ContentDisplay";
@@ -37,6 +38,7 @@ interface IAdvanceEditorProps {
   secondaryMeasureSettings?: SecondaryMeasureSettings;
   trendLineSettings?: TrendLineSettings;
   groupingColumnSettings?: GroupingColumnSettings;
+  tablesSettings?: TablesSettings;
   // updateDisplayTables: Function;
   // visualTables: IVisualTable[];
 }
@@ -207,6 +209,7 @@ export default class AdvanceEditor extends React.Component<
             secondaryMeasureSettings={this.props.secondaryMeasureSettings}
             trendLineSettings={this.props.trendLineSettings}
             groupingColumnSettings={this.props.groupingColumnSettings}
+            tablesSettings={this.props.tablesSettings}
           />
         ) : (
           ""
