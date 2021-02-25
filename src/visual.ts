@@ -65,6 +65,10 @@ import {
 import { SingleTable as SampleData } from "./models/visualTablesSamples";
 
 import AdvanceEditorData from "./models/advanceEditor";
+import Debugger from "./debug/Debugger";
+/**
+ * Main Visual class
+ */
 export class Visual implements IVisual {
   private target: HTMLElement;
   private host: IVisualHost;
@@ -121,29 +125,27 @@ export class Visual implements IVisual {
   // }
 
   public update(options: VisualUpdateOptions) {
-    // console.log("Visual update", options);
     // if (options.dataViews && options.dataViews[0]) {
     try {
-      // console.log(this.advEditorData.visualTables);
       this.events.renderingStarted(options);
-      // console.log(options);
+
       // const dataView: DataView = options.dataViews[0];
       this.settings = Visual.parseSettings(
         options && options.dataViews && options.dataViews[0]
       );
 
-      console.log(this.settings.mainMeasure);
-
       this.viewport = options.viewport;
-      const { width, height } = this.viewport;
+      // const { width, height } = this.viewport;
       // const size = Math.min(width, height);
-      // console.log(this.dataColumns);
+
+      // if (options.type === powerbi.VisualUpdateType.All) {
       this.dataColumns = parseDataModelColumns(
         options && options.dataViews && options.dataViews[0],
-        this.dataColumns,
-        this.colorPalette
+        this.host
       );
-      // console.log(this.settings.advancedEditing);
+      // } else {
+      //   console.log(options);
+      // }
 
       // * Might need to do a bit more here
       // Double parsing is required as the tables structure is also a string.
@@ -156,13 +158,10 @@ export class Visual implements IVisual {
         _visualTables["tables"] !== "[]" &&
         _visualTables["tables"].length !== 0
       ) {
-        // console.dir(_visualTables["tables"]);
         this.advEditorData.updateVisualTables(
           JSON.parse(_visualTables["tables"]) as IVisualTable[]
         );
       }
-
-      // console.log(typeof this.advEditorData.visualTables);
 
       let state: IVisualMainDisplayState = {
         updateOptions: options,
@@ -196,7 +195,7 @@ export class Visual implements IVisual {
       VisualMainDisplay.update(state);
     } catch (error) {
       this.events.renderingFailed(options, error);
-      console.log(options, error, this.dataColumns);
+      Debugger.LOG(options, error, this.dataColumns);
       // TODO: Perform other actions
       // ? How to log this error to user and also gracefully exit.
     }
@@ -210,14 +209,20 @@ export class Visual implements IVisual {
   //   VisualMainDisplay.update(initialState);
   // }
 
+  /**
+   *
+   * @param dataView
+   */
   private static parseSettings(dataView: DataView): VisualSettings {
+    // let objects = dataView && dataView.metadata && dataView.metadata.objects;
+    // console.log(objects);
     return <VisualSettings>VisualSettings.parse(dataView);
   }
 
   /**
    * This function gets called for each of the objects defined in the capabilities files and allows you to select which of the
    * objects and properties you want to expose to the users in the property pane.
-   *
+   * @param options
    */
   public enumerateObjectInstances(
     options: EnumerateVisualObjectInstancesOptions
@@ -228,107 +233,77 @@ export class Visual implements IVisual {
     );
   }
 
-  // public enumerateObjectInstances(
-  //   options: EnumerateVisualObjectInstancesOptions
-  // ): VisualObjectInstanceEnumeration {
-  //   let objectName = options.objectName;
-  //   let objectEnumeration: VisualObjectInstance[] = [];
+  /**
+   * The function below has been commented out for now as the functionality required cannot be
+   * achieved using the standard api provided form powerbi visuals.
+   * @param options
+   */
+  /*
+  public enumerateObjectInstances(
+    options: EnumerateVisualObjectInstancesOptions
+  ): VisualObjectInstanceEnumeration {
+    // const instanceEnumeration: VisualObjectInstanceEnumeration = VisualSettings.enumerateObjectInstances(
+    //   this.settings || VisualSettings.getDefault(),
+    //   options
+    // );
 
-  //   if (!this.dataColumns) {
-  //     return objectEnumeration;
-  //   }
+    let instances = (<VisualObjectInstanceEnumerationObject>(
+        VisualSettings.enumerateObjectInstances(
+          this.settings || VisualSettings.getDefault(),
+          options
+        )
+      )).instances,
+      objectName = options.objectName,
+      enumerationObject: VisualObjectInstanceEnumerationObject = {
+        containers: [],
+        instances: instances,
+      };
 
-  //   switch (objectName) {
-  //     case "mainMeasure":
-  //       for (let dataColumn of this.dataColumns) {
-  //         objectEnumeration.push({
-  //           objectName: objectName,
-  //           displayName: dataColumn.displayName,
-  //           properties: {
-  //             fontColor: {
-  //               solid: {
-  //                 color: dataColumn.color,
-  //               },
-  //             },
-  //           },
-  //           propertyInstanceKind: {
-  //             fontColor: VisualEnumerationInstanceKinds.ConstantOrRule,
-  //           },
-  //           // altConstantValueSelector: barDataPoint.selectionId.getSelector(),
-  //           // selector: dataViewWildcard.createDataViewWildcardSelector(
-  //           //   dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals
-  //           // ),
-  //           selector: {
-  //             metadata: dataColumn.queryName,
-  //           },
-  //         });
-  //       }
-  //       break;
-  //   }
+    if (options.objectName === "dataColors") {
+      enumerationObject.instances = [];
 
-  //   return objectEnumeration;
-  // }
+      this.dataColumns.forEach((item, idx) => {
+        // console.log(item.queryName, item.color);
 
-  //   public enumerateObjectInstances(
-  //     options: EnumerateVisualObjectInstancesOptions
-  //   ): VisualObjectInstanceEnumeration {
-  //     const instanceEnumeration: VisualObjectInstanceEnumeration = VisualSettings.enumerateObjectInstances(
-  //       this.settings || VisualSettings.getDefault(),
-  //       options
-  //     );
+        if (item.content) {
+          let displayName = item.metadata.displayName,
+            containerIdx =
+              enumerationObject.containers.push({ displayName: displayName }) -
+              1;
 
-  //     if (options.objectName === "mainMeasure") {
-  //       this.dataColumns.forEach((item, idx) => {
-  //         // console.log(item.queryName, item.color);
-  //         if (item.content === true) {
-  //           // containerIdx =
-  //           //   enumerationObject.containers.push({
-  //           //     displayName: item.displayName,
-  //           //   }) - 1;
-  //           const instance = {
-  //             objectName: options.objectName,
-  //             displayName: item.displayName,
-  //             properties: {
-  //               fontColor: {
-  //                 solid: {
-  //                   color: item.color || "#000",
-  //                 },
-  //               },
-  //             },
-  //             propertyInstanceKind: {
-  //               fontColor: VisualEnumerationInstanceKinds.ConstantOrRule,
-  //             },
-  //             selector: {
-  //               metadata: item.queryName,
-  //             },
-  //             // selector: dataViewWildcard.createDataViewWildcardSelector(
-  //             //   dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals
-  //             // ),
-  //           };
+          const instance = {
+            objectName: objectName,
+            displayName: "Text Color",
+            properties: {
+              textColor: {
+                solid: {
+                  color: item.color,
+                },
+              },
+            },
+            propertyInstanceKind: {
+              fontColor: VisualEnumerationInstanceKinds.ConstantOrRule,
+            },
+            selector: {
+              metadata: item.metadata.queryName,
+            },
+            containerIdx: containerIdx,
+            // selector: dataViewWildcard.createDataViewWildcardSelector(
+            //   dataViewWildcard.DataViewWildcardMatchingOption.InstancesAndTotals
+            // ),
+          };
 
-  //           if (
-  //             (instanceEnumeration as VisualObjectInstanceEnumerationObject)
-  //               .instances
-  //           ) {
-  //             (instanceEnumeration as VisualObjectInstanceEnumerationObject).instances.push(
-  //               instance
-  //             );
-  //           } else {
-  //             (instanceEnumeration as VisualObjectInstance[]).push(instance);
-  //           }
+          enumerationObject.instances.push(instance);
+        }
+        // console.log(instance);
+      });
+    }
 
-  //           // console.log(instance);
-  //         }
-  //       });
-  //     }
-
-  //     // return (
-  //     //   (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances ||
-  //     //   []
-  //     // );
-  //     return (
-  //       (instanceEnumeration as VisualObjectInstanceEnumerationObject)
-  //         .instances || []
-  //     );
-  //   }
+    // return (
+    //   (<VisualObjectInstanceEnumerationObject>instanceEnumeration).instances ||
+    //   []
+    // );
+    return enumerationObject;
+  }
+  */
 }

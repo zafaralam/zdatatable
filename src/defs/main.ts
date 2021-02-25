@@ -3,7 +3,11 @@ import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 import ILocalizationManager = powerbi.extensibility.ILocalizationManager;
 import DataViewObjects = powerbi.DataViewObjects;
-import { VISUAL_DISPLAY_COLUMN_TYPE } from "./enums";
+import {
+  VISUAL_DISPLAY_COLUMN_TYPE,
+  GtConditionOptions,
+  LtConditionOptions,
+} from "./enums";
 import {
   AdvancedEditingSettings,
   TableTitleSettings,
@@ -13,6 +17,7 @@ import {
   GroupingColumnSettings,
 } from "../settings";
 import AdvanceEditorData from "../models/advanceEditor";
+import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 // Visual Settings Imports here
 
 export interface IVisualMainDisplayProps {
@@ -66,6 +71,8 @@ export interface IVisualTableColumn {
   border?: IColumnBorder;
   padding?: IColumnPadding;
   width?: number; // this should only be for the measure fields and not for the display only fields.
+  applyConditionalFormatting?: boolean;
+  conditionalFormattingRules?: IConditionalFormattingRule[];
 }
 
 export interface IVisualValueData {
@@ -84,11 +91,11 @@ export interface IDataColumn {
   index: number;
   displayName: string;
   queryName: string;
-  label?: string;
   format?: string;
   grouping: boolean;
   content: boolean;
-  color?: string;
+  color: string;
+  metadata: DataViewMetadataColumn;
 }
 
 export interface IVisualValues {
@@ -113,3 +120,11 @@ export interface IColumnPadding {
 //   queryName: string;
 //   type: VISUAL_DISPLAY_COLUMN_TYPE;
 // }
+
+export interface IConditionalFormattingRule {
+  gtOption: GtConditionOptions;
+  ltOption: LtConditionOptions;
+  gtValue: number;
+  ltValue: number;
+  color: string;
+}

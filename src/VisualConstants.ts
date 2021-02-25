@@ -4,13 +4,15 @@ import {
   EDIT_COLUMNS_PARENT_TYPE,
 } from "./defs/enums";
 
-const defaultTextColor = "#3F3F44",
+const defaultTextColor = "#3E3B4A",
   defaultBgColor = "#fff",
   defaultBorderColor = "#83838D", //#0F0F10
   defaultFontFamily = "Arial"; //"Roboto, helvetica, arial, sans-serif";
 export const VisualConstants = {
   //   visual: visual,
+  debug: true, // switch of in production release.
   dinReplacementFont: "Roboto, helvetica, arial, sans-serif", // * This is also the default font used.
+  defaultTextColor,
   visualTable: {
     name: "",
     columns: [],
@@ -46,6 +48,8 @@ export const VisualConstants = {
       right: 2,
       bottom: 4,
     },
+    applyConditionalFormatting: false,
+    conditionalFormattingRules: [],
   },
   baseColumnBgColor: "#5F6162",
   baseColumnTextColor: "#fff",

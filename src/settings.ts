@@ -57,7 +57,7 @@ export class MainMeasureSettings {
 }
 
 export class SecondaryMeasureSettings {
-  public fontColor: string = VisualConstants.secondaryMeasureSettings.fontColor;
+  // public fontColor: string = VisualConstants.secondaryMeasureSettings.fontColor;
   public fontFamily: string =
     VisualConstants.secondaryMeasureSettings.fontFamily;
   public fontSize: number = VisualConstants.secondaryMeasureSettings.fontSize;
@@ -72,6 +72,10 @@ export class TrendLineSettings {
   public strokeColor: string = VisualConstants.trendLineSettings.strokeColor;
   public strokeWidth: number = VisualConstants.trendLineSettings.strokeWidth;
 }
+
+// export class DataColorsSettings {
+//   public textColor: string = null;
+// }
 
 export class GroupingColumnSettings {
   public showGroupingColumn: boolean =
@@ -120,4 +124,5 @@ export class VisualSettings extends DataViewObjectsParser {
   public secondaryMeasure: SecondaryMeasureSettings = new SecondaryMeasureSettings();
   public trendLine: TrendLineSettings = new TrendLineSettings();
   public groupingColumn: GroupingColumnSettings = new GroupingColumnSettings();
+  // public dataColors: DataColorsSettings = new DataColorsSettings();
 }

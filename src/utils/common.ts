@@ -5,9 +5,17 @@ import {
   IVisualTableColumn,
   IVisualValues,
   //   ITableValueColumn,
+  IConditionalFormattingRule,
 } from "../defs/main";
-import { VISUAL_DISPLAY_COLUMN_TYPE } from "./../defs/enums";
+import {
+  VISUAL_DISPLAY_COLUMN_TYPE,
+  LtConditionOptions,
+  GtConditionOptions,
+} from "./../defs/enums";
 import { VisualConstants } from "./../VisualConstants";
+import powerbi from "powerbi-visuals-api";
+import PrimitiveValue = powerbi.PrimitiveValue;
+import Debugger from "../debug/Debugger";
 
 export function removeRowsWithNoData(
   visualValues: IVisualValues[],
@@ -216,4 +224,91 @@ export function validatePolyline(polyline: string): boolean {
     totalPoints.length === totalCommas.length &&
     totalPoints.length === totalWhiteSpaces.length + 1
   );
+}
+
+/**
+ * Returns a color based on the conditional formatting rules passed.
+ * TODO: Need to write tests for this function
+ * @param rules
+ * @param dataValue
+ */
+export function getConditionalFormattingColor(
+  rules: IConditionalFormattingRule[],
+  dataValue: PrimitiveValue
+): string {
+  let color = VisualConstants.defaultTextColor; // default color if no conditional formatting is applied
+  if (dataValue === undefined || rules === undefined) return color;
+  // Debugger.START("Conditional Formatting");
+  rules.forEach((rule: IConditionalFormattingRule, index: number) => {
+    // Just ensuring that the rule.gtValue was entered and if not
+    // then the rule would be skipped.
+    switch (rule.gtOption) {
+      /**
+       * Perform check for each combination of "Greater Than"
+       */
+      case GtConditionOptions.Gt:
+        if (rule.ltOption === LtConditionOptions.Lt && rule.ltValue) {
+          if (dataValue > rule.gtValue && dataValue < rule.ltValue) {
+            color = rule.color;
+          }
+        } else if (rule.ltOption === LtConditionOptions.LtEq && rule.ltValue) {
+          if (dataValue > rule.gtValue && dataValue <= rule.ltValue) {
+            color = rule.color;
+          }
+        } //if (rule.ltOption === NaN)
+        else {
+          if (rule.gtValue && dataValue > rule.gtValue) {
+            color = rule.color;
+          }
+        }
+        break;
+
+      /**
+       * Perform check for each combination of "Greater Than and Equal Too"
+       */
+      case GtConditionOptions.GtEq:
+        // Debugger.LOG("GtCondition.GtEq");
+        if (rule.ltOption === LtConditionOptions.Lt && rule.ltValue) {
+          if (dataValue >= rule.gtValue && dataValue < rule.ltValue) {
+            color = rule.color;
+          }
+        } else if (rule.ltOption === LtConditionOptions.LtEq && rule.ltValue) {
+          if (dataValue >= rule.gtValue && dataValue <= rule.ltValue) {
+            color = rule.color;
+          }
+        } //if (rule.ltOption === NaN)
+        else {
+          if (dataValue >= rule.gtValue) {
+            color = rule.color;
+          }
+        }
+        break;
+
+      /**
+       * Perform check for "Is" or Equal
+       */
+      case GtConditionOptions.Is:
+        // Debugger.LOG("GtCondition.Is");
+        if (dataValue == rule.gtValue) {
+          color = rule.color;
+        }
+        break;
+
+      /**
+       * Perform check for Blank
+       */
+      case GtConditionOptions.Blank:
+        // Debugger.LOG("GtCondition.Blank");
+        if (dataValue === NaN) {
+          color = rule.color;
+        }
+        break;
+      default:
+        break;
+    }
+  });
+
+  // Debugger.END();
+
+  return color;
 }

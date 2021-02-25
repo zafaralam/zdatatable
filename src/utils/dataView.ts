@@ -8,7 +8,7 @@ import {
 } from "./../defs/main";
 import IColorPalette = powerbi.extensibility.IColorPalette;
 // import ISelectionId = powerbi.visuals.ISelectionId;
-
+import DataViewHelper from "./DataViewHelper";
 /**
  *
  * @param dataViews
@@ -91,55 +91,54 @@ function getVisualDataValues(
 
 export function parseDataModelColumns(
   dataView: DataView,
-  dataColumns: IDataColumn[],
-  colorPalette: IColorPalette
+  host: powerbi.extensibility.visual.IVisualHost
+
+  // colorPalette: IColorPalette
 ): IDataColumn[] {
-  // if the data view does not have any columns then just remove all columns
+  // if the data view does not have any columns then just return empty array
   if (dataView.metadata.columns.length === 0) return [];
 
-  // if the data columns not present then just return the columns from the data view
-  if (dataColumns === undefined || dataColumns.length === 0)
-    return dataView.metadata.columns.map((item) => {
-      return parseDataViewColumn(item, colorPalette);
-    });
+  const _dataColumns: IDataColumn[] = dataView.metadata.columns.map(
+    (item, index) => {
+      // let defaultColour: powerbi.Fill = getDefaultFillColour(item, host);
+      host.colorPalette["colorIndex"] = index + 1;
+      const _column = {
+        index: item.index,
+        displayName: item.displayName,
+        queryName: item.queryName,
+        format: item.format,
+        grouping:
+          item.roles["grouping"] === undefined ? false : item.roles["grouping"],
+        content:
+          item.roles["content"] === undefined ? false : item.roles["content"],
+        color: DataViewHelper.GET_METADATA_OBJECT_VALUE<powerbi.Fill>(
+          item,
+          "dataColors",
+          "textColor",
+          { solid: { color: "#000" } }
+          //defaultColour
+        ).solid.color,
+        metadata: item,
+      };
 
-  let _dataColumns: IDataColumn[] = JSON.parse(JSON.stringify(dataColumns));
-
-  // Remove columns that are not in the data view anymore
-  _dataColumns = _dataColumns.filter((x) => {
-    return dataView.metadata.columns.some((t) => t.queryName === x.queryName);
-  });
-
-  // if a data column exists then just override some information
-  dataView.metadata.columns
-    .filter((x) => {
-      return _dataColumns.some((t) => t.queryName === x.queryName);
-    })
-    .forEach((item) => {
-      const _idx = _dataColumns.findIndex(
-        (t) => t.queryName === item.queryName
-      );
-      _dataColumns[_idx]["index"] = item.index;
-      _dataColumns[_idx]["displayName"] = item.displayName;
-      _dataColumns[_idx]["format"] = item.format;
-      _dataColumns[_idx]["grouping"] =
-        item.roles["grouping"] === undefined ? false : item.roles["grouping"];
-      _dataColumns[_idx]["content"] =
-        item.roles["content"] === undefined ? false : item.roles["content"];
-      _dataColumns[_idx]["color"] = colorPalette.getColor(item.queryName).value;
-    });
-
-  // add data columns that are new in the data view
-  dataView.metadata.columns
-    .filter((x) => {
-      return !_dataColumns.some((t) => t.queryName === x.queryName);
-    })
-    .forEach((item) => {
-      _dataColumns.push(parseDataViewColumn(item, colorPalette));
-    });
+      return _column;
+    }
+  );
 
   return _dataColumns.sort((a, b) => a.index - b.index);
 }
+
+function getDefaultFillColour(
+  measure: powerbi.DataViewMetadataColumn,
+  host: powerbi.extensibility.visual.IVisualHost
+): powerbi.Fill {
+  return {
+    solid: {
+      color: host.colorPalette.getColor(`${measure.displayName}`).value,
+    },
+  };
+}
+
 /**
  *
  * Parses the dataView column to a internal interface.
@@ -148,24 +147,14 @@ export function parseDataModelColumns(
  *
  * @param item
  */
-function parseDataViewColumn(
-  item: powerbi.DataViewMetadataColumn,
-  // host: powerbi.extensibility.visual.IVisualHost,
-  colorPalette: IColorPalette
-): IDataColumn {
-  // const selectionId: ISelectionId = host
-  //   .createSelectionIdBuilder()
-  //   .withCategory(category, i)
-  //   .createSelectionId();
-  return {
-    index: item.index,
-    displayName: item.displayName,
-    queryName: item.queryName,
-    format: item.format,
-    grouping:
-      item.roles["grouping"] === undefined ? false : item.roles["grouping"],
-    content:
-      item.roles["content"] === undefined ? false : item.roles["content"],
-    color: colorPalette.getColor(item.queryName).value,
-  };
-}
+// function parseDataViewColumn(
+//   item: powerbi.DataViewMetadataColumn,
+//   host: powerbi.extensibility.visual.IVisualHost,
+//   // colorPalette: IColorPalette
+// ): IDataColumn {
+//   // const selectionId: ISelectionId = host
+//   //   .createSelectionIdBuilder()
+//   //   .withCategory(category, i)
+//   //   .createSelectionId();
+
+// }

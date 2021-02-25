@@ -4,7 +4,11 @@ import {
   VISUAL_DISPLAY_COLUMN_TYPE,
   MOVE_DIRECTION,
 } from "../../defs/enums";
-import { IDataColumn, IVisualTableColumn } from "../../defs/main";
+import {
+  IConditionalFormattingRule,
+  IDataColumn,
+  IVisualTableColumn,
+} from "../../defs/main";
 import EditTableColumns from "./EditTableColumns";
 import ColorPicker from "./ColorPicker";
 import {
@@ -31,10 +35,13 @@ import {
   // FormLabel,
   Paper,
   ButtonGroup,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
 
 import CellBorder from "./CellBorder";
-
+import TabPanel from "./TabPanel";
+import CFRules from "./CFRules";
 import {
   BsFillTrashFill,
   //   BsPlusSquare,
@@ -91,16 +98,23 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     labelFontFamily,
     labelFontSize,
     labelFontWeight,
+    applyConditionalFormatting,
+    conditionalFormattingRules,
   } = props.column;
   const hasColumns = columns && columns.length !== 0,
     columnsAllowed = columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY,
     dataColumnSet = queryName && queryName.length !== 0;
   const [dialog, setDialog] = React.useState(false);
+  const [tabValue, setTabValue] = React.useState(0);
+  const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setTabValue(newValue);
+  };
   const handleDialogOpen = () => {
     setDialog(true);
   };
   const handleDialogClose = () => {
     setDialog(false);
+    setTabValue(0); // reset the tab to the basic one
   };
   const handleAddVisualColumn = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -203,6 +217,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     /**
      * * Extra protection in case a user does change the column type
      */
+
     if (_valueToSet === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY) {
       _column.queryName = "";
       _column.dataColumnIndex = null;
@@ -214,6 +229,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       // _column["applyTextColorToValues"] = false;
       _column["labelFontSize"] =
         VisualConstants.visualTableColumn.labelFontSize;
+      _column["applyConditionalFormatting"] = false;
     } else {
       // for a non-display only column a user cannot add sub column and should be a measure column
       _column["columns"] = [];
@@ -255,6 +271,12 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
 
   const handleColumnMove = (direction: MOVE_DIRECTION) => {
     props.onColumnMove(direction, props.index);
+  };
+
+  const handleCFRulesUpdate = (rules: IConditionalFormattingRule[]) => {
+    if (rules) {
+      handleColumnPropertyChange("conditionalFormattingRules", rules);
+    }
   };
 
   return (
@@ -325,7 +347,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
         open={dialog}
         onClose={handleDialogClose}
         disableBackdropClick
-        maxWidth="md"
+        maxWidth="lg"
         fullWidth
       >
         <DialogTitle>
@@ -346,525 +368,564 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
             </Grid>
           </Grid>
         </DialogTitle>
-        <DialogContent style={{ minHeight: "450px" }}>
-          <div>
-            <FormControl className={classes.formControl} fullWidth>
-              <TextField
-                autoFocus
-                margin="dense"
-                fullWidth
-                label="Column Name (Label to display)"
-                value={label}
-                onChange={(e) => {
-                  handleColumnPropertyChange("label", e.target.value);
-                }}
-              />
-            </FormControl>
-          </div>
-          <div style={{ marginTop: "8px" }}>
-            <FormControl
-              className={classes.formControl}
-              component="fieldset"
-              fullWidth
-            >
-              <Grid container direction="row" alignItems="center" spacing={1}>
-                <Grid item xs={2}>
-                  <Typography variant="body1">Column Type</Typography>
-                </Grid>
-                <Grid container item xs={10}>
-                  <RadioGroup
-                    row
-                    aria-label="position"
-                    name="position"
-                    value={columnType}
-                    onChange={handleColumnTypeChange}
-                    defaultValue={VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY}
-                  >
-                    <FormControlLabel
-                      value={VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY}
-                      control={<Radio color="primary" />}
-                      label="Display Only"
-                    />
-                    <FormControlLabel
-                      value={VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN}
-                      control={<Radio color="primary" />}
-                      label="Main Measure"
-                    />
-                    <FormControlLabel
-                      value={VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY}
-                      control={<Radio color="primary" />}
-                      label="Secondary Measure"
-                    />
-                    <FormControlLabel
-                      value={VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART}
-                      control={<Radio color="primary" />}
-                      label="Trend Chart"
-                    />
-                  </RadioGroup>
-                </Grid>
-              </Grid>
-            </FormControl>
-          </div>
-          {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+        <DialogContent style={{ minHeight: "720px" }}>
+          <Tabs
+            onChange={handleTabChange}
+            value={tabValue}
+            indicatorColor="primary"
+          >
+            <Tab label="Basic" />
+
+            <Tab
+              label="Conditional Formatting"
+              disabled={
+                columnType !== VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN &&
+                columnType !==
+                  VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY
+              }
+            />
+          </Tabs>
+          <TabPanel value={tabValue} index={0}>
             <div>
               <FormControl className={classes.formControl} fullWidth>
-                <InputLabel id="select-measure-label">
-                  Measure to display
-                </InputLabel>
-                <Select
-                  labelId="select-measure-label"
-                  value={queryName}
-                  onChange={handleMeasureSelectionChange}
+                <TextField
+                  autoFocus
+                  margin="dense"
                   fullWidth
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {props.dataColumns
-                    .filter((i) => i.content === true)
-                    .map((dc, mIdx) => {
-                      return (
-                        <MenuItem key={mIdx} value={dc.queryName}>
-                          {dc.displayName}
-                        </MenuItem>
-                      );
-                    })}
-                </Select>
+                  label="Column Name (Label to display)"
+                  value={label}
+                  onChange={(e) => {
+                    handleColumnPropertyChange("label", e.target.value);
+                  }}
+                />
               </FormControl>
             </div>
-          ) : (
-            ""
-          )}
+            <div style={{ marginTop: "8px" }}>
+              <FormControl
+                className={classes.formControl}
+                component="fieldset"
+                fullWidth
+              >
+                <Grid container direction="row" alignItems="center" spacing={1}>
+                  <Grid item xs={2}>
+                    <Typography variant="body1">Column Type</Typography>
+                  </Grid>
+                  <Grid container item xs={10}>
+                    <RadioGroup
+                      row
+                      aria-label="position"
+                      name="position"
+                      value={columnType}
+                      onChange={handleColumnTypeChange}
+                      defaultValue={VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY}
+                    >
+                      <FormControlLabel
+                        value={VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY}
+                        control={<Radio color="primary" />}
+                        label="Display Only"
+                      />
+                      <FormControlLabel
+                        value={VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN}
+                        control={<Radio color="primary" />}
+                        label="Main Measure"
+                      />
+                      <FormControlLabel
+                        value={
+                          VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY
+                        }
+                        control={<Radio color="primary" />}
+                        label="Secondary Measure"
+                      />
+                      <FormControlLabel
+                        value={VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART}
+                        control={<Radio color="primary" />}
+                        label="Trend Chart"
+                      />
+                    </RadioGroup>
+                  </Grid>
+                </Grid>
+              </FormControl>
+            </div>
+            {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+              <div>
+                <FormControl className={classes.formControl} fullWidth>
+                  <InputLabel id="select-measure-label">
+                    Measure to display
+                  </InputLabel>
+                  <Select
+                    labelId="select-measure-label"
+                    value={queryName}
+                    onChange={handleMeasureSelectionChange}
+                    fullWidth
+                  >
+                    <MenuItem value="">
+                      <em>None</em>
+                    </MenuItem>
+                    {props.dataColumns
+                      .filter((i) => i.content === true)
+                      .map((dc, mIdx) => {
+                        return (
+                          <MenuItem key={mIdx} value={dc.queryName}>
+                            {dc.displayName}
+                          </MenuItem>
+                        );
+                      })}
+                  </Select>
+                </FormControl>
+              </div>
+            ) : (
+              ""
+            )}
 
-          <div>
-            <FormControl className={classes.formControl} fullWidth>
-              <Grid container direction="row" spacing={1} alignItems="center">
-                <Grid item xs={2}>
-                  <Typography variant="body1">Background Color</Typography>
+            <div>
+              <FormControl className={classes.formControl} fullWidth>
+                <Grid container direction="row" spacing={1} alignItems="center">
+                  <Grid item xs={2}>
+                    <Typography variant="body1">Background Color</Typography>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <ColorPicker
+                      color={
+                        props.column.bgColor != undefined
+                          ? props.column.bgColor
+                          : VisualConstants.visualTableColumn.bgColor
+                      }
+                      onColorChange={(color) => {
+                        handleColumnPropertyChange("bgColor", color);
+                      }}
+                    />
+                  </Grid>
+                  {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
+                  label.length !== 0 ? (
+                    <Grid
+                      container
+                      item
+                      xs={6}
+                      direction="row"
+                      alignItems="center"
+                    >
+                      <Grid item xs={1}>
+                        <Checkbox
+                          checked={
+                            props.column.applyBgColorToValues === undefined
+                              ? false
+                              : props.column.applyBgColorToValues
+                          }
+                          onChange={(e) => {
+                            handleColumnPropertyChange(
+                              "applyBgColorToValues",
+                              e.target.checked
+                            );
+                          }}
+                          color="primary"
+                        />
+                      </Grid>
+                      <Grid item xs={8}>
+                        <Typography variant="body1">
+                          Apply Background Color to Values
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    ""
+                  )}
                 </Grid>
-                <Grid item xs={1}>
-                  <ColorPicker
-                    color={
-                      props.column.bgColor != undefined
-                        ? props.column.bgColor
-                        : VisualConstants.visualTableColumn.bgColor
-                    }
-                    onColorChange={(color) => {
-                      handleColumnPropertyChange("bgColor", color);
-                    }}
-                  />
-                </Grid>
-                {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
-                label.length !== 0 ? (
+              </FormControl>
+            </div>
+            {(columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
+              label.length !== 0) ||
+            columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+              <div>
+                <FormControl className={classes.formControl} fullWidth>
                   <Grid
                     container
-                    item
-                    xs={6}
                     direction="row"
+                    spacing={1}
                     alignItems="center"
                   >
+                    <Grid item xs={2}>
+                      <Typography variant="body1">Text Color</Typography>
+                    </Grid>
                     <Grid item xs={1}>
-                      <Checkbox
-                        checked={
-                          props.column.applyBgColorToValues === undefined
-                            ? false
-                            : props.column.applyBgColorToValues
+                      <ColorPicker
+                        color={
+                          props.column.textColor === undefined
+                            ? VisualConstants.visualTableColumn.textColor
+                            : props.column.textColor
                         }
-                        onChange={(e) => {
-                          handleColumnPropertyChange(
-                            "applyBgColorToValues",
-                            e.target.checked
-                          );
+                        onColorChange={(color) => {
+                          handleColumnPropertyChange("textColor", color);
                         }}
-                        color="primary"
                       />
                     </Grid>
-                    <Grid item xs={8}>
-                      <Typography variant="body1">
-                        Apply Background Color to Values
-                      </Typography>
+                  </Grid>
+                </FormControl>
+              </div>
+            ) : (
+              ""
+            )}
+            <div>
+              <Grid
+                container
+                direction="row"
+                spacing={1}
+                justify="space-between"
+              >
+                {(columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
+                  label.length !== 0) ||
+                columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+                  <Grid
+                    container
+                    direction="row"
+                    item
+                    xs={10}
+                    spacing={1}
+                    alignItems="center"
+                  >
+                    <Grid item xs={4}>
+                      <FormControl className={classes.formControl} fullWidth>
+                        <InputLabel id="select-measure-label">
+                          Label Font Family
+                        </InputLabel>
+                        <Select
+                          labelId="select-measure-label"
+                          value={
+                            labelFontFamily ||
+                            VisualConstants.visualTableColumn.labelFontFamily
+                          }
+                          onChange={handleLabelFontFamilyChange}
+                          fullWidth
+                        >
+                          {FontFamilies.map((dc, mIdx) => {
+                            return (
+                              <MenuItem key={mIdx} value={dc.value}>
+                                {dc.displayName}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <FormControl className={classes.formControl} fullWidth>
+                        <InputLabel id="select-measure-label">
+                          Label Font Weight
+                        </InputLabel>
+                        <Select
+                          labelId="select-measure-label"
+                          value={
+                            labelFontWeight ||
+                            VisualConstants.visualTableColumn.labelFontWeight
+                          }
+                          onChange={handleLabelFontWeightChange}
+                          fullWidth
+                        >
+                          {FontWeights.map((dc, mIdx) => {
+                            return (
+                              <MenuItem key={mIdx} value={dc.value}>
+                                {dc.displayName}
+                              </MenuItem>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <FormControl className={classes.formControl} fullWidth>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          label="Label Font Size"
+                          type="number"
+                          value={
+                            labelFontSize === undefined
+                              ? VisualConstants.visualTableColumn.labelFontSize
+                              : labelFontSize
+                          }
+                          InputProps={{
+                            endAdornment: (
+                              <InputAdornment position="start">
+                                pt
+                              </InputAdornment>
+                            ),
+                          }}
+                          onChange={(e) => {
+                            handleColumnPropertyChange(
+                              "labelFontSize",
+                              e.target.value
+                            );
+                          }}
+                        />
+                      </FormControl>
                     </Grid>
                   </Grid>
                 ) : (
                   ""
                 )}
-              </Grid>
-            </FormControl>
-          </div>
-          {(columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
-            label.length !== 0) ||
-          columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
-            <div>
-              <FormControl className={classes.formControl} fullWidth>
-                <Grid container direction="row" spacing={1} alignItems="center">
+                {props.column.isMeasure === true &&
+                columnType !== VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART ? (
                   <Grid item xs={2}>
-                    <Typography variant="body1">Text Color</Typography>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <ColorPicker
-                      color={
-                        props.column.textColor === undefined
-                          ? VisualConstants.visualTableColumn.textColor
-                          : props.column.textColor
-                      }
-                      onColorChange={(color) => {
-                        handleColumnPropertyChange("textColor", color);
-                      }}
-                    />
-                  </Grid>
-                </Grid>
-              </FormControl>
-            </div>
-          ) : (
-            ""
-          )}
-          <div>
-            <Grid container direction="row" spacing={1} justify="space-between">
-              {(columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
-                label.length !== 0) ||
-              columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
-                <Grid
-                  container
-                  direction="row"
-                  item
-                  xs={10}
-                  spacing={1}
-                  alignItems="center"
-                >
-                  <Grid item xs={4}>
-                    <FormControl className={classes.formControl} fullWidth>
-                      <InputLabel id="select-measure-label">
-                        Label Font Family
-                      </InputLabel>
-                      <Select
-                        labelId="select-measure-label"
-                        value={
-                          labelFontFamily ||
-                          VisualConstants.visualTableColumn.labelFontFamily
-                        }
-                        onChange={handleLabelFontFamilyChange}
-                        fullWidth
-                      >
-                        {FontFamilies.map((dc, mIdx) => {
-                          return (
-                            <MenuItem key={mIdx} value={dc.value}>
-                              {dc.displayName}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4}>
-                    <FormControl className={classes.formControl} fullWidth>
-                      <InputLabel id="select-measure-label">
-                        Label Font Weight
-                      </InputLabel>
-                      <Select
-                        labelId="select-measure-label"
-                        value={
-                          labelFontWeight ||
-                          VisualConstants.visualTableColumn.labelFontWeight
-                        }
-                        onChange={handleLabelFontWeightChange}
-                        fullWidth
-                      >
-                        {FontWeights.map((dc, mIdx) => {
-                          return (
-                            <MenuItem key={mIdx} value={dc.value}>
-                              {dc.displayName}
-                            </MenuItem>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={4}>
                     <FormControl className={classes.formControl} fullWidth>
                       <TextField
                         autoFocus
                         margin="dense"
-                        label="Label Font Size"
+                        label="Cell Width"
                         type="number"
                         value={
-                          labelFontSize === undefined
-                            ? VisualConstants.visualTableColumn.labelFontSize
-                            : labelFontSize
+                          props.column.width === undefined
+                            ? columnType ===
+                              VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
+                              ? VisualConstants.mainMeasureCellWidth
+                              : VisualConstants.secondaryMeasureCellWidth
+                            : props.column.width
                         }
                         InputProps={{
                           endAdornment: (
-                            <InputAdornment position="start">pt</InputAdornment>
+                            <InputAdornment position="start">px</InputAdornment>
                           ),
                         }}
                         onChange={(e) => {
                           handleColumnPropertyChange(
-                            "labelFontSize",
-                            e.target.value
+                            "width",
+                            parseInt(e.target.value)
                           );
                         }}
                       />
                     </FormControl>
                   </Grid>
-                </Grid>
-              ) : (
-                ""
-              )}
-              {props.column.isMeasure === true &&
-              columnType !== VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART ? (
-                <Grid item xs={2}>
-                  <FormControl className={classes.formControl} fullWidth>
-                    <TextField
-                      autoFocus
-                      margin="dense"
-                      label="Cell Width"
-                      type="number"
-                      value={
-                        props.column.width === undefined
-                          ? columnType ===
-                            VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
-                            ? VisualConstants.mainMeasureCellWidth
-                            : VisualConstants.secondaryMeasureCellWidth
-                          : props.column.width
-                      }
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="start">px</InputAdornment>
-                        ),
-                      }}
-                      onChange={(e) => {
-                        handleColumnPropertyChange(
-                          "width",
-                          parseInt(e.target.value)
-                        );
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-              ) : (
-                ""
-              )}
-            </Grid>
-          </div>
-          <div style={{ marginTop: "8px" }}>
-            <FormControl className={classes.formControl} fullWidth>
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={2}>
-                  <Typography variant="body1">Text Align</Typography>
-                </Grid>
-                <Grid item xs={1}>
-                  <Button
-                    variant={
-                      textAlign !== undefined && textAlign === "left"
-                        ? "contained"
-                        : "text"
-                    }
-                    onClick={() => {
-                      handleColumnPropertyChange("textAlign", "left");
-                    }}
-                    startIcon={<BsTextLeft />}
-                  ></Button>
-                </Grid>
-                <Grid item xs={1}>
-                  <Button
-                    variant={
-                      textAlign === undefined || textAlign === "center"
-                        ? "contained"
-                        : "text"
-                    }
-                    onClick={() => {
-                      handleColumnPropertyChange("textAlign", "center");
-                    }}
-                    startIcon={<BsTextCenter />}
-                  ></Button>
-                </Grid>
-                <Grid item xs={1}>
-                  <Button
-                    variant={
-                      textAlign !== undefined && textAlign === "right"
-                        ? "contained"
-                        : "text"
-                    }
-                    onClick={() => {
-                      handleColumnPropertyChange("textAlign", "right");
-                    }}
-                    endIcon={<BsTextRight />}
-                  ></Button>
-                </Grid>
+                ) : (
+                  ""
+                )}
               </Grid>
-            </FormControl>
-          </div>
-          <div style={{ marginTop: "8px" }}>
-            <FormControl className={classes.formControl} fullWidth>
-              <Grid container direction="row" alignItems="center" spacing={1}>
-                <Grid item xs={2}>
-                  <Typography variant="body1">Padding (px)</Typography>
-                </Grid>
-                <Grid container item spacing={2} xs={8}>
-                  <Grid item xs={2}>
-                    <TextField
-                      margin="dense"
-                      size="small"
-                      label="All"
-                      type="number"
-                      value={
-                        padding?.left !== padding?.bottom &&
-                        padding?.left !== padding?.right &&
-                        padding?.left !== padding?.top
-                          ? null
-                          : padding?.left
-                      }
-                      onChange={(e) => {
-                        handlePaddingChange(
-                          "all",
-                          parseInt(e.target.value) || 0
-                        );
-                      }}
-                    ></TextField>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      margin="dense"
-                      size="small"
-                      label="Left"
-                      type="number"
-                      value={padding?.left || 0}
-                      onChange={(e) => {
-                        handlePaddingChange(
-                          "left",
-                          parseInt(e.target.value) || 0
-                        );
-                      }}
-                    ></TextField>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      margin="dense"
-                      size="small"
-                      label="Top"
-                      type="number"
-                      value={padding?.top || 0}
-                      onChange={(e) => {
-                        handlePaddingChange(
-                          "top",
-                          parseInt(e.target.value) || 0
-                        );
-                      }}
-                    ></TextField>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      margin="dense"
-                      size="small"
-                      label="Right"
-                      type="number"
-                      value={padding?.right || 0}
-                      onChange={(e) => {
-                        handlePaddingChange(
-                          "right",
-                          parseInt(e.target.value) || 0
-                        );
-                      }}
-                    ></TextField>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <TextField
-                      margin="dense"
-                      size="small"
-                      label="Bottom"
-                      type="number"
-                      value={padding?.bottom || 0}
-                      onChange={(e) => {
-                        handlePaddingChange(
-                          "bottom",
-                          parseInt(e.target.value) || 0
-                        );
-                      }}
-                    ></TextField>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </FormControl>
-          </div>
-          <div style={{ marginTop: "8px" }}>
-            <Paper variant="outlined">
+            </div>
+            <div style={{ marginTop: "8px" }}>
               <FormControl className={classes.formControl} fullWidth>
-                <Grid container direction="row">
+                <Grid container direction="row" alignItems="center">
                   <Grid item xs={2}>
-                    <Typography variant="body1">Border</Typography>
+                    <Typography variant="body1">Text Align</Typography>
                   </Grid>
-                  <Grid item xs={8}>
-                    <CellBorder
-                      border={border?.left}
-                      side="all"
-                      onBorderUpdate={handleBorderChange}
-                    />
+                  <Grid item xs={1}>
+                    <Button
+                      variant={
+                        textAlign !== undefined && textAlign === "left"
+                          ? "contained"
+                          : "text"
+                      }
+                      onClick={() => {
+                        handleColumnPropertyChange("textAlign", "left");
+                      }}
+                      startIcon={<BsTextLeft />}
+                    ></Button>
                   </Grid>
-                </Grid>
-                <Grid container direction="row">
-                  <Grid item xs={6}>
-                    <CellBorder
-                      border={border?.left}
-                      side="left"
-                      onBorderUpdate={handleBorderChange}
-                    />
+                  <Grid item xs={1}>
+                    <Button
+                      variant={
+                        textAlign === undefined || textAlign === "center"
+                          ? "contained"
+                          : "text"
+                      }
+                      onClick={() => {
+                        handleColumnPropertyChange("textAlign", "center");
+                      }}
+                      startIcon={<BsTextCenter />}
+                    ></Button>
                   </Grid>
-                  <Grid item xs={6}>
-                    <CellBorder
-                      border={border?.top}
-                      side="top"
-                      onBorderUpdate={handleBorderChange}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container direction="row">
-                  <Grid item xs={6}>
-                    <CellBorder
-                      border={border?.bottom}
-                      side="bottom"
-                      onBorderUpdate={handleBorderChange}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <CellBorder
-                      border={border?.right}
-                      side="right"
-                      onBorderUpdate={handleBorderChange}
-                    />
+                  <Grid item xs={1}>
+                    <Button
+                      variant={
+                        textAlign !== undefined && textAlign === "right"
+                          ? "contained"
+                          : "text"
+                      }
+                      onClick={() => {
+                        handleColumnPropertyChange("textAlign", "right");
+                      }}
+                      endIcon={<BsTextRight />}
+                    ></Button>
                   </Grid>
                 </Grid>
               </FormControl>
-            </Paper>
-          </div>
+            </div>
+            <div style={{ marginTop: "8px" }}>
+              <FormControl className={classes.formControl} fullWidth>
+                <Grid container direction="row" alignItems="center" spacing={1}>
+                  <Grid item xs={2}>
+                    <Typography variant="body1">Padding (px)</Typography>
+                  </Grid>
+                  <Grid container item spacing={2} xs={8}>
+                    <Grid item xs={2}>
+                      <TextField
+                        margin="dense"
+                        size="small"
+                        label="All"
+                        type="number"
+                        value={
+                          padding?.left !== padding?.bottom &&
+                          padding?.left !== padding?.right &&
+                          padding?.left !== padding?.top
+                            ? null
+                            : padding?.left
+                        }
+                        onChange={(e) => {
+                          handlePaddingChange(
+                            "all",
+                            parseInt(e.target.value) || 0
+                          );
+                        }}
+                      ></TextField>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        margin="dense"
+                        size="small"
+                        label="Left"
+                        type="number"
+                        value={padding?.left || 0}
+                        onChange={(e) => {
+                          handlePaddingChange(
+                            "left",
+                            parseInt(e.target.value) || 0
+                          );
+                        }}
+                      ></TextField>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        margin="dense"
+                        size="small"
+                        label="Top"
+                        type="number"
+                        value={padding?.top || 0}
+                        onChange={(e) => {
+                          handlePaddingChange(
+                            "top",
+                            parseInt(e.target.value) || 0
+                          );
+                        }}
+                      ></TextField>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        margin="dense"
+                        size="small"
+                        label="Right"
+                        type="number"
+                        value={padding?.right || 0}
+                        onChange={(e) => {
+                          handlePaddingChange(
+                            "right",
+                            parseInt(e.target.value) || 0
+                          );
+                        }}
+                      ></TextField>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <TextField
+                        margin="dense"
+                        size="small"
+                        label="Bottom"
+                        type="number"
+                        value={padding?.bottom || 0}
+                        onChange={(e) => {
+                          handlePaddingChange(
+                            "bottom",
+                            parseInt(e.target.value) || 0
+                          );
+                        }}
+                      ></TextField>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </FormControl>
+            </div>
+            <div style={{ marginTop: "8px" }}>
+              <Paper variant="outlined">
+                <FormControl className={classes.formControl} fullWidth>
+                  <Grid container direction="row">
+                    <Grid item xs={2}>
+                      <Typography variant="body1">Border</Typography>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <CellBorder
+                        border={border?.left}
+                        side="all"
+                        onBorderUpdate={handleBorderChange}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container direction="row">
+                    <Grid item xs={6}>
+                      <CellBorder
+                        border={border?.left}
+                        side="left"
+                        onBorderUpdate={handleBorderChange}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <CellBorder
+                        border={border?.top}
+                        side="top"
+                        onBorderUpdate={handleBorderChange}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container direction="row">
+                    <Grid item xs={6}>
+                      <CellBorder
+                        border={border?.bottom}
+                        side="bottom"
+                        onBorderUpdate={handleBorderChange}
+                      />
+                    </Grid>
+                    <Grid item xs={6}>
+                      <CellBorder
+                        border={border?.right}
+                        side="right"
+                        onBorderUpdate={handleBorderChange}
+                      />
+                    </Grid>
+                  </Grid>
+                </FormControl>
+              </Paper>
+            </div>
 
-          {columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
-            <Grid
-              container
-              alignItems="baseline"
-              spacing={2}
-              style={{ marginTop: "8px" }}
-            >
-              {/* <Grid item>
+            {columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+              <Grid
+                container
+                alignItems="baseline"
+                spacing={2}
+                style={{ marginTop: "8px" }}
+              >
+                {/* <Grid item>
                 <Typography variant="body1" gutterBottom>
                   Sub columns: {columns && columns.length}
                 </Typography>
               </Grid> */}
-              {level < 3 ? (
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    onClick={handleAddVisualColumn}
-                    startIcon={<BsLayoutThreeColumns />}
-                  >
-                    Add Sub Column
-                  </Button>
-                </Grid>
-              ) : (
-                ""
-              )}
-            </Grid>
-          ) : (
-            ""
-          )}
+                {level < 3 ? (
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      onClick={handleAddVisualColumn}
+                      startIcon={<BsLayoutThreeColumns />}
+                    >
+                      Add Sub Column
+                    </Button>
+                  </Grid>
+                ) : (
+                  ""
+                )}
+              </Grid>
+            ) : (
+              ""
+            )}
+          </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            <CFRules
+              rules={conditionalFormattingRules}
+              measureQueryName={queryName}
+              onRulesUpdate={handleCFRulesUpdate}
+            />
+          </TabPanel>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose}>Close</Button>

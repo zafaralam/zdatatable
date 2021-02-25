@@ -138,9 +138,13 @@ export default class AdvanceEditor extends React.Component<
           </Grid>
         </div>
         <div className="editor">
-          <Typography variant="overline" color="secondary">
+          <Typography
+            variant="subtitle2"
+            style={{ textTransform: "uppercase" }}
+            color="secondary"
+          >
             {this.state.isDirty
-              ? "You have unsaved changes. Please save your changes before exiting the advance editor mode."
+              ? "You have unsaved changes. Please save your changes before exiting the advanced editor mode."
               : ""}
           </Typography>
           {this.state.jsonEditorOpen ? (
@@ -155,6 +159,7 @@ export default class AdvanceEditor extends React.Component<
             this.state.visualTables.map((table, tIdx) => {
               return (
                 <EditTable
+                  key={tIdx}
                   index={tIdx}
                   table={table}
                   onEditTableUpdate={this.handleEditTableUpdate}
@@ -237,7 +242,7 @@ export default class AdvanceEditor extends React.Component<
       0,
       this.state.visualTables.length + 1
     );
-    var element = visualTables[tableIndex];
+    const element = visualTables[tableIndex];
     visualTables.splice(tableIndex, 1);
     visualTables.splice(toIndex, 0, element);
     this.setState({

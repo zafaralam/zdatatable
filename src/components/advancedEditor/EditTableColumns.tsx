@@ -79,6 +79,7 @@ export default class EditTableColumns extends React.Component<IEditTableColumnsP
     const tableColumns = this.props.visualColumns.map((column, cIdx) => {
       return (
         <EditTableColumn
+          key={cIdx}
           column={column}
           index={cIdx}
           dataColumns={this.props.dataColumns}
