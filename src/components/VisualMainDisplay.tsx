@@ -80,7 +80,7 @@ export class VisualMainDisplay extends React.Component<
             localizationManager={this.props.localizationManager}
             advancedEditing={advancedEditing}
             advancedEditingObjectMetadata={objectMetadata?.advancedEditing}
-            visualData={data.visualData}
+            visualData={data.visualData || { columns: [], values: [] }}
             advEditorData={this.props.advEditorData}
             tableTitleSettings={tableTitleSettings}
             mainMeasureSettings={mainMeasureSettings}
@@ -98,7 +98,7 @@ export class VisualMainDisplay extends React.Component<
         return (
           <ContentDisplay
             host={this.props.host}
-            visualData={data.visualData}
+            visualData={data.visualData || { columns: [], values: [] }}
             visualTables={this.props.advEditorData.visualTables}
             tableTitleSettings={tableTitleSettings}
             mainMeasureSettings={mainMeasureSettings}
