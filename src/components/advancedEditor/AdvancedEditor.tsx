@@ -39,6 +39,7 @@ interface IAdvanceEditorProps {
   trendLineSettings?: TrendLineSettings;
   groupingColumnSettings?: GroupingColumnSettings;
   tablesSettings?: TablesSettings;
+  selectionManager: powerbi.extensibility.ISelectionManager;
   // updateDisplayTables: Function;
   // visualTables: IVisualTable[];
 }
@@ -210,6 +211,7 @@ export default class AdvanceEditor extends React.Component<
             trendLineSettings={this.props.trendLineSettings}
             groupingColumnSettings={this.props.groupingColumnSettings}
             tablesSettings={this.props.tablesSettings}
+            selectionManager={this.props.selectionManager}
           />
         ) : (
           ""

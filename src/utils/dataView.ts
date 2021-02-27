@@ -9,6 +9,8 @@ import {
 import IColorPalette = powerbi.extensibility.IColorPalette;
 // import ISelectionId = powerbi.visuals.ISelectionId;
 import DataViewHelper from "./DataViewHelper";
+import IVisualHost = powerbi.extensibility.visual.IVisualHost;
+import ISelectionId = powerbi.visuals.ISelectionId;
 /**
  *
  * @param dataViews
@@ -16,7 +18,8 @@ import DataViewHelper from "./DataViewHelper";
  */
 export function processDataView(
   dataViews: DataView[],
-  dataColumns: IDataColumn[]
+  dataColumns: IDataColumn[],
+  host: IVisualHost
 ): IVisualValueData {
   try {
     const hasBasicDataView =
@@ -35,7 +38,9 @@ export function processDataView(
       rows = hasBasicDataView && dataViews[0].table.rows,
       isDataViewValid = hasBasicDataView && hasValues,
       hasData = isDataViewValid && rows.length > 0,
-      visualData = hasData ? getVisualData(dataViews[0], dataColumns) : null;
+      visualData = hasData
+        ? getVisualData(dataViews[0], dataColumns, host)
+        : null;
     return {
       isDataViewValid: isDataViewValid,
       hasData: hasData,
@@ -52,11 +57,12 @@ export function processDataView(
 
 function getVisualData(
   dataView: DataView,
-  dataColumns: IDataColumn[]
+  dataColumns: IDataColumn[],
+  host: IVisualHost
 ): IVisualData {
   // * Don't need to do regenerate columns as the data columns will already be identified in the main visual update.
   //const columns = parseDataModelColumns(dataView, dataColumns),
-  const values = getVisualDataValues(dataView.table, dataColumns);
+  const values = getVisualDataValues(dataView.table, dataColumns, host);
   return {
     columns: dataColumns,
     values,
@@ -65,10 +71,16 @@ function getVisualData(
 
 function getVisualDataValues(
   table: powerbi.DataViewTable,
-  columns: IDataColumn[]
+  columns: IDataColumn[],
+  host: IVisualHost
 ): IVisualValues[] {
-  return table.rows.map((r) => {
+  return table.rows.map((r, ri) => {
     let row: IVisualValues = {};
+    const selectionId: ISelectionId = host
+      .createSelectionIdBuilder()
+      .withTable(table, ri)
+      .createSelectionId();
+    row["rowInternalPowerBiSelectionId"] = selectionId;
     r.forEach((c, ci) => {
       const col = columns[ci];
       if (col) {

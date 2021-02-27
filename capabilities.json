@@ -11,6 +11,11 @@
             "kind": "GroupingOrMeasure"
         }
     ],
+    "drilldown": {
+        "roles": [
+            "grouping"
+        ]
+    },
     "objects": {
         "tables": {
             "displayName": "Tables",

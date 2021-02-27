@@ -2,7 +2,7 @@ import * as React from "react";
 import powerbi from "powerbi-visuals-api";
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
 
-import { IVisualData, IVisualTable } from "./../../defs/main";
+import { IVisualData, IVisualTable, IVisualValues } from "./../../defs/main";
 
 import {
   getTableValueColumns,
@@ -39,6 +39,7 @@ interface IVisualTableProps {
   trendLineSettings?: TrendLineSettings;
   groupingColumnSettings: GroupingColumnSettings;
   tablesSettings: TablesSettings;
+  selectionManager: powerbi.extensibility.ISelectionManager;
 }
 
 export default function VisualTable(props: IVisualTableProps) {
@@ -171,6 +172,33 @@ export default function VisualTable(props: IVisualTableProps) {
   // console.log(tableHeaderMaxDepth);
   const tableStyles: React.CSSProperties = {
     border: `${tablesSettings.borderWidth}px solid ${tablesSettings.borderColor}`,
+  };
+
+  /**
+   * Removing for now as selection might not be required.
+   */
+  // const handleDataRowClick = (row: IVisualValues, index: number) => {
+  //   if (row["rowInternalPowerBiSelectionId"]) {
+  //     props.selectionManager.select(row["rowInternalPowerBiSelectionId"]);
+  //   }
+  // };
+
+  /**
+   * Handles the context menu click for a data row.
+   * @param e
+   * @param row
+   * @param index
+   */
+  const handleDataRowContextClick = (
+    e: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
+    row: IVisualValues,
+    index: number
+  ) => {
+    props.selectionManager.showContextMenu(
+      row["rowInternalPowerBiSelectionId"],
+      { x: e.clientX, y: e.clientY }
+    );
+    e.preventDefault();
   };
   return (
     <div key={tableIndex}>
@@ -319,13 +347,21 @@ export default function VisualTable(props: IVisualTableProps) {
         </thead>
         <tbody>
           {filteredVisualValues.length === 0 ? (
-            <tr className="no-data__row">
-              <td className="no-data__cell">{tablesSettings.noDataMessage}</td>
+            <tr className="data-row__empty">
+              <td className="data-cell__empty">
+                {tablesSettings.noDataMessage}
+              </td>
             </tr>
           ) : (
             filteredVisualValues.map((row, rIdx) => {
               return (
-                <tr key="rIdx">
+                <tr
+                  key={rIdx}
+                  onContextMenu={(e) => {
+                    handleDataRowContextClick(e, row, rIdx);
+                  }}
+                  className="data-row"
+                >
                   {groupingColumnSettings?.showGroupingColumn &&
                   groupingColumn !== undefined ? (
                     <td

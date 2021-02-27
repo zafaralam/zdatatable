@@ -8,23 +8,7 @@ import {
 } from "../defs/main";
 import powerbi from "powerbi-visuals-api";
 import IVisualHost = powerbi.extensibility.visual.IVisualHost;
-// import { valueFormatter } from "powerbi-visuals-utils-formattingutils";
-// // import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-// import {
-//   getTableValueColumns,
-//   getColumnSpan,
-//   getMaxTableHederDepth,
-//   getTableHeaderAtLevel,
-//   getHeaderColumnWidth,
-//   fontWeightCSSValue,
-//   textAlignCSSValue,
-//   fontFamilyCSSValue,
-//   borderGroupingColumCSSValue,
-//   validatePolyline,
-//   removeRowsWithNoData,
-//   getConditionalFormattingColor,
-// } from "./../utils/common";
-// import { VISUAL_DISPLAY_COLUMN_TYPE } from "./../defs/enums";
+
 import {
   TableTitleSettings,
   TrendLineSettings,
@@ -46,6 +30,7 @@ interface IContentDisplayProps {
   trendLineSettings?: TrendLineSettings;
   groupingColumnSettings?: GroupingColumnSettings;
   tablesSettings?: TablesSettings;
+  selectionManager: powerbi.extensibility.ISelectionManager;
 }
 
 export function ContentDisplay(props: IContentDisplayProps) {
@@ -79,6 +64,7 @@ export function ContentDisplay(props: IContentDisplayProps) {
                 trendLineSettings={props.trendLineSettings}
                 groupingColumnSettings={props.groupingColumnSettings}
                 tablesSettings={props.tablesSettings}
+                selectionManager={props.selectionManager}
               />
             </div>
           );
