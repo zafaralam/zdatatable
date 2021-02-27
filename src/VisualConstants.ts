@@ -10,7 +10,7 @@ const defaultTextColor = "#3E3B4A",
   defaultFontFamily = "Arial"; //"Roboto, helvetica, arial, sans-serif";
 export const VisualConstants = {
   //   visual: visual,
-  debug: true, // switch of in production release.
+  debug: false, // switch of in production release.
   dinReplacementFont: "Roboto, helvetica, arial, sans-serif", // * This is also the default font used.
   defaultTextColor,
   tables: {
