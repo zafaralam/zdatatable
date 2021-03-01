@@ -160,3 +160,4 @@ $RECYCLE.BIN/
 **/**/.tmp
 webpack.statistics.*.html
 dist/**/**
+**/**/*.mp4
