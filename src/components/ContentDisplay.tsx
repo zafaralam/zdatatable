@@ -35,6 +35,7 @@ interface IContentDisplayProps {
 
 export function ContentDisplay(props: IContentDisplayProps) {
   //   const scrollbars = { autoUpdate: true };
+  // console.log(props.visualTables, props.visualData);
 
   if (
     props.visualData !== undefined &&

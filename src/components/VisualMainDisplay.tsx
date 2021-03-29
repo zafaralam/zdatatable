@@ -1,9 +1,11 @@
-import { timeHours } from "d3";
+// import { timeHours } from "d3";
 import * as React from "react";
+import Debugger from "../debug/Debugger";
 import { VisualSettings } from "../settings";
 import {
   IVisualMainDisplayProps,
   IVisualMainDisplayState,
+  IVisualValueData,
 } from "./../defs/main";
 import { processDataView } from "./../utils/dataView";
 import AdvanceEditor from "./advancedEditor/AdvancedEditor";
@@ -32,6 +34,7 @@ export class VisualMainDisplay extends React.Component<
   IVisualMainDisplayState
 > {
   private static updateCallback: (data: object) => void = null;
+  private static updateDataCallback: (data: object) => void = null;
   public state: IVisualMainDisplayState = initialState;
 
   constructor(props: any) {
@@ -45,15 +48,28 @@ export class VisualMainDisplay extends React.Component<
     ): void => {
       this.setState(newState);
     };
+
+    VisualMainDisplay.updateDataCallback = (
+      newData: IVisualValueData
+    ): void => {
+      this.setState({ data: newData });
+    };
   }
 
   public componentWillUnmount() {
     VisualMainDisplay.updateCallback = null;
+    VisualMainDisplay.updateDataCallback = null;
   }
 
   public static update(newState: IVisualMainDisplayState) {
     if (typeof VisualMainDisplay.updateCallback === "function") {
       VisualMainDisplay.updateCallback(newState);
+    }
+  }
+
+  public static updateData(newData: IVisualValueData) {
+    if (typeof VisualMainDisplay.updateDataCallback === "function") {
+      VisualMainDisplay.updateDataCallback(newData);
     }
   }
 
@@ -70,6 +86,7 @@ export class VisualMainDisplay extends React.Component<
       trendLineSettings,
       groupingColumnSettings,
       tablesSettings,
+      canAdvanceEdit,
     } = this.state;
 
     switch (true) {
@@ -111,8 +128,7 @@ export class VisualMainDisplay extends React.Component<
           />
         );
       }
-
-      default:
+      case canAdvanceEdit && !data.isDataViewValid: {
         return (
           <div className="starter-message">
             <h4>z-DataTable</h4>
@@ -142,15 +158,20 @@ export class VisualMainDisplay extends React.Component<
             </div>
           </div>
         );
+      }
+      default:
+        return "Loading....";
     }
   }
 
   render() {
     const { updateOptions } = this.state;
+    Debugger.LOG(this.state);
     const style: React.CSSProperties = {
       width: updateOptions && updateOptions.viewport.width,
       height: updateOptions && updateOptions.viewport.height,
     };
+
     return (
       <div className="main-container" style={style}>
         {this.conditionalRendering()}

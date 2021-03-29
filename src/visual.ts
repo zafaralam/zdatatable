@@ -127,6 +127,7 @@ export class Visual implements IVisual {
 
   public update(options: VisualUpdateOptions) {
     // if (options.dataViews && options.dataViews[0]) {
+    Debugger.LOG(options);
     try {
       this.events.renderingStarted(options);
 
@@ -134,9 +135,11 @@ export class Visual implements IVisual {
         options.dataViews &&
         options.dataViews[0] &&
         options.dataViews[0].metadata &&
-        options.dataViews[0].metadata.objects
+        options.dataViews[0].metadata.columns
+        // &&        options.dataViews[0].metadata.objects
       ) {
         // const dataView: DataView = options.dataViews[0];
+
         this.settings = Visual.parseSettings(
           options && options.dataViews && options.dataViews[0]
         );
@@ -156,6 +159,7 @@ export class Visual implements IVisual {
 
         // * Might need to do a bit more here
         // Double parsing is required as the tables structure is also a string.
+        // console.log(this.settings.advancedEditing.visualTables);
         const _visualTables = JSON.parse(
           this.settings.advancedEditing.visualTables
         );
@@ -202,6 +206,9 @@ export class Visual implements IVisual {
         // console.log("State", state);
 
         VisualMainDisplay.update(state);
+      } else {
+        Debugger.LOG("options object is not valid");
+        VisualMainDisplay.updateData(processDataView([], [], null));
       }
 
       this.events.renderingFinished(options);
