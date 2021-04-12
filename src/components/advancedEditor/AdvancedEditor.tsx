@@ -91,6 +91,7 @@ export default class AdvancedEditor extends React.Component<
       visualData,
     } = this.props;
     const { isDirty, visualTables, dialog } = this.state;
+    // const previewButtonIcon = this.state.hidePreview ? <BsEye /> : <BsEyeSlash />;
     return (
       <div
         className={`advanced-editor ${
@@ -107,42 +108,20 @@ export default class AdvancedEditor extends React.Component<
           handleAgree={this.handleResetClick}
           handleDisagree={this.handleDisagree}
         />
-        <div className="editor__header">
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justify="space-between"
-            style={{ margin: "4px 0" }}
-          >
-            <Grid item xs={2}>
-              <Typography variant="h6">Advanced Editor</Typography>
-            </Grid>
-            <Grid container item xs={4} justify="flex-end">
-              <Button
-                color="primary"
-                startIcon={<BsPencilSquare />}
-                onClick={this.toggleJsonEditor}
-              >
-                {`${this.state.jsonEditorOpen ? "Close" : "Open"}`} JSON Editor
-              </Button>
-              <Button
-                color="default"
-                onClick={this.togglePreview}
-                startIcon={this.state.hidePreview ? <BsEye /> : <BsEyeSlash />}
-              >
-                {`${this.state.hidePreview ? "Show" : "Hide"}`} Preview
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
+        <EditorHeader
+          hidePreview={this.state.hidePreview}
+          jsonEditorOpen={this.state.jsonEditorOpen}
+          handleTogglePreview={this.togglePreview}
+          handleToggleJsonEditor={this.toggleJsonEditor}
+        />
+
         <div className="editor">
           <Typography
             variant="subtitle2"
             style={{ textTransform: "uppercase" }}
             color="secondary"
           >
-            {this.state.isDirty
+            {isDirty
               ? "You have unsaved changes. Please save your changes before exiting the advanced editor mode."
               : ""}
           </Typography>
@@ -172,29 +151,15 @@ export default class AdvancedEditor extends React.Component<
           )}
           <div className="editor__bottom-panel">
             <NewTable onAddTable={this.handleAddTableClick} />
-            <div className="editor__actions">
-              <Button
-                variant="contained"
-                disabled={visualTables.length === 0}
-                onClick={this.handleResetVisualClick}
-                title="Reset changes to visual"
-              >
-                Reset
-              </Button>
-
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={!isDirty}
-                onClick={this.handleSaveClick}
-                title="Save Changes"
-              >
-                Save Changes
-              </Button>
-            </div>
+            <EditorActions
+              totalVisualTables={visualTables.length}
+              handleResetVisualClick={this.handleResetVisualClick}
+              isDirty={isDirty}
+              handleSaveClick={this.handleSaveClick}
+            />
           </div>
         </div>
-        {!this.state.hidePreview ? (
+        {!this.state.hidePreview && (
           <ContentDisplay
             host={host}
             visualData={visualData}
@@ -207,8 +172,6 @@ export default class AdvancedEditor extends React.Component<
             tablesSettings={this.props.tablesSettings}
             selectionManager={this.props.selectionManager}
           />
-        ) : (
-          ""
         )}
       </div>
     );
@@ -375,3 +338,91 @@ export default class AdvancedEditor extends React.Component<
     };
   }
 }
+
+const EditorActions = (props: {
+  totalVisualTables: number;
+  isDirty: Boolean;
+  handleResetVisualClick: Function;
+  handleSaveClick: Function;
+}) => {
+  const disableResetButton = props.totalVisualTables === 0;
+  const handleResetClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    props.handleResetVisualClick();
+  };
+  const handleSaveClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    props.handleSaveClick(e);
+  };
+  return (
+    <div className="editor__actions">
+      <Button
+        variant="contained"
+        disabled={disableResetButton}
+        onClick={handleResetClick}
+        title="Reset changes to visual"
+      >
+        Reset
+      </Button>
+
+      <Button
+        variant="contained"
+        color="primary"
+        disabled={!props.isDirty}
+        onClick={handleSaveClick}
+        title="Save Changes"
+      >
+        Save Changes
+      </Button>
+    </div>
+  );
+};
+
+const EditorHeader = (props: {
+  hidePreview: Boolean;
+  jsonEditorOpen: Boolean;
+  handleTogglePreview: Function;
+  handleToggleJsonEditor: Function;
+}) => {
+  const previewButtonIcon = props.hidePreview ? <BsEye /> : <BsEyeSlash />;
+  const handleTogglePreview = () => {
+    props.handleTogglePreview();
+  };
+  const handleToggleJsonEditor = () => {
+    props.handleToggleJsonEditor();
+  };
+  return (
+    <div className="editor__header">
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justify="space-between"
+        style={{ margin: "4px 0" }}
+      >
+        <Grid item xs={2}>
+          <Typography variant="h6">Advanced Editor</Typography>
+        </Grid>
+        <Grid container item xs={4} justify="flex-end">
+          <Button
+            color="primary"
+            startIcon={<BsPencilSquare />}
+            onClick={handleToggleJsonEditor}
+          >
+            {`${props.jsonEditorOpen ? "Close" : "Open"}`} JSON Editor
+          </Button>
+          <Button
+            color="default"
+            onClick={handleTogglePreview}
+            startIcon={previewButtonIcon}
+          >
+            {`${props.hidePreview ? "Show" : "Hide"}`} Preview
+          </Button>
+        </Grid>
+      </Grid>
+    </div>
+  );
+};

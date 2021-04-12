@@ -28,20 +28,6 @@ interface ICFRulesProps {
 // export default function CFRules(props: ICFRulesProps) {
 const CFRules = (props: ICFRulesProps) => {
   const { rules, onRulesUpdate } = props;
-
-  const handleAddRule = () => {
-    const rule: IConditionalFormattingRule = {
-      color: VisualConstants.defaultTextColor,
-      gtOption: GtConditionOptions.GtEq,
-      ltOption: LtConditionOptions.Lt,
-      gtValue: null,
-      ltValue: null,
-    };
-
-    const _rules = rules ? rules.slice(0, rules.length + 1) : [];
-
-    onRulesUpdate(_rules.concat([rule]));
-  };
   const handleRemoveRule = (index: number) => {
     if (rules.length === 1) {
       onRulesUpdate([]);
@@ -113,14 +99,8 @@ const CFRules = (props: ICFRulesProps) => {
       ) : (
         <Typography>{_displayMessage}</Typography>
       )}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handleAddRule}
-        style={{ marginTop: "2rem" }}
-      >
-        Add Rule
-      </Button>
+
+      <AddRuleButton rules={rules} onRulesUpdate={onRulesUpdate} />
     </div>
   );
 };
@@ -134,7 +114,7 @@ interface ICFRuleProps {
   onRuleMove(MOVE_DIRECTION, number): void;
 }
 
-function CFRule(props: ICFRuleProps) {
+const CFRule = (props: ICFRuleProps) => {
   const {
     rule,
     index,
@@ -183,8 +163,30 @@ function CFRule(props: ICFRuleProps) {
     onRuleUpdate(index, _rule);
   };
 
-  const handleRuleMove = (direction: MOVE_DIRECTION) => {
-    onRuleMove(direction, index);
+  const handleRuleMoveUp = () => {
+    onRuleMove(MOVE_DIRECTION.UP, index);
+  };
+
+  const handleRuleMoveDown = () => {
+    onRuleMove(MOVE_DIRECTION.DOWN, index);
+  };
+
+  const handleColorChange = (color: any) => {
+    onRulePropertyUpdate(index, "color", color || "#000");
+  };
+
+  const handleGtValueChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as any;
+    onRulePropertyUpdate(index, "gtValue", _valueToSet);
+  };
+
+  const handleLtValueChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as any;
+    onRulePropertyUpdate(index, "ltValue", _valueToSet);
   };
 
   return (
@@ -218,7 +220,7 @@ function CFRule(props: ICFRuleProps) {
               <MenuItem value={GtConditionOptions.Blank}>is blank</MenuItem>
             </Select>
           </Grid>
-          {!hideGtValueInput ? (
+          {!hideGtValueInput && (
             <Grid item xs={1}>
               <TextField
                 size="small"
@@ -226,22 +228,16 @@ function CFRule(props: ICFRuleProps) {
                 type="number"
                 fullWidth
                 value={rule.gtValue}
-                onChange={(e) => {
-                  onRulePropertyUpdate(index, "gtValue", e.target.value);
-                }}
+                onChange={handleGtValueChange}
               />
             </Grid>
-          ) : (
-            ""
           )}
-          {!hideLtOptions ? (
+          {!hideLtOptions && (
             <Grid item xs={1} style={{ textAlign: "center" }}>
               and
             </Grid>
-          ) : (
-            ""
           )}
-          {!hideLtOptions ? (
+          {!hideLtOptions && (
             <Grid item xs={2}>
               <Select
                 value={rule.ltOption}
@@ -254,10 +250,8 @@ function CFRule(props: ICFRuleProps) {
                 </MenuItem>
               </Select>
             </Grid>
-          ) : (
-            ""
           )}
-          {!hideLtOptions ? (
+          {!hideLtOptions && (
             <Grid item xs={1}>
               <TextField
                 size="small"
@@ -265,36 +259,18 @@ function CFRule(props: ICFRuleProps) {
                 type="number"
                 fullWidth
                 value={rule.ltValue}
-                onChange={(e) => {
-                  onRulePropertyUpdate(index, "ltValue", e.target.value);
-                }}
+                onChange={handleLtValueChange}
               />
             </Grid>
-          ) : (
-            ""
           )}
           <Grid item xs={1} style={{ textAlign: "center" }}>
             then
           </Grid>
           <Grid item xs={2}>
-            <ColorPicker
-              color={rule.color}
-              onColorChange={(color) => {
-                onRulePropertyUpdate(index, "color", color || "#000");
-              }}
-            />
+            <ColorPicker color={rule.color} onColorChange={handleColorChange} />
           </Grid>
           <Grid item xs={1}>
-            <IconButton
-              title="Remove Rule"
-              size="small"
-              style={{ color: "#a50d0d" }}
-              onClick={() => {
-                onRuleRemove(index);
-              }}
-            >
-              <BsFillTrashFill />
-            </IconButton>
+            <RemoveRuleButton index={index} onClick={onRuleRemove} />
           </Grid>
         </Grid>
         <Grid item xs={1}>
@@ -303,21 +279,11 @@ function CFRule(props: ICFRuleProps) {
             variant="contained"
             aria-label="move conditional formatting rules controls"
           >
-            <IconButton
-              title="Move rule above"
-              onClick={() => {
-                handleRuleMove(MOVE_DIRECTION.UP);
-              }}
-            >
+            <IconButton title="Move rule above" onClick={handleRuleMoveUp}>
               <BsArrowUp />
             </IconButton>
 
-            <IconButton
-              title="Move rule down"
-              onClick={() => {
-                handleRuleMove(MOVE_DIRECTION.DOWN);
-              }}
-            >
+            <IconButton title="Move rule down" onClick={handleRuleMoveDown}>
               <BsArrowDown />
             </IconButton>
           </ButtonGroup>
@@ -325,6 +291,53 @@ function CFRule(props: ICFRuleProps) {
       </Grid>
     </Paper>
   );
-}
+};
+
+const RemoveRuleButton = (props: { index: number; onClick: Function }) => {
+  const removeRule = () => {
+    props.onClick(props.index);
+  };
+  return (
+    <IconButton
+      title="Remove Rule"
+      size="small"
+      style={{ color: "#a50d0d" }}
+      onClick={removeRule}
+    >
+      <BsFillTrashFill />
+    </IconButton>
+  );
+};
+
+const AddRuleButton = (props: { rules: any; onRulesUpdate: Function }) => {
+  const handleAddRule = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    const rule: IConditionalFormattingRule = {
+      color: VisualConstants.defaultTextColor,
+      gtOption: GtConditionOptions.GtEq,
+      ltOption: LtConditionOptions.Lt,
+      gtValue: null,
+      ltValue: null,
+    };
+
+    const _rules = props.rules
+      ? props.rules.slice(0, props.rules.length + 1)
+      : [];
+
+    props.onRulesUpdate(_rules.concat([rule]));
+  };
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={handleAddRule}
+      style={{ marginTop: "2rem" }}
+    >
+      Add Rule
+    </Button>
+  );
+};
 
 export default CFRules;
