@@ -15,10 +15,10 @@ import {
   TablesSettings,
 } from "../../settings";
 import { IVisualData, IVisualTable } from "../../defs/main";
-import { ContentDisplay } from "./../ContentDisplay";
+import { contentDisplay as ContentDisplay } from "./../ContentDisplay";
 import NewTable from "./NewTable";
 import EditTable from "./EditTable";
-import AdvanceEditorData from "../../models/advanceEditor";
+import AdvanceEditorData from "../../models/AdvanceEditorData";
 import Button from "@material-ui/core/Button";
 import AlertDialog from "./AlertDialog";
 import { Grid, Typography } from "@material-ui/core";
@@ -57,7 +57,7 @@ interface IAdvancedEditorState {
 
 // }
 
-export default class AdvanceEditor extends React.Component<
+export default class AdvancedEditor extends React.Component<
   IAdvanceEditorProps,
   IAdvancedEditorState
 > {
@@ -79,7 +79,12 @@ export default class AdvanceEditor extends React.Component<
     this.handleTableMove = this.handleTableMove.bind(this);
     this.handleDuplicationOfTable = this.handleDuplicationOfTable.bind(this);
     this.handleJsonUpdate = this.handleJsonUpdate.bind(this);
+    this.handleDisagree = this.handleDisagree.bind(this);
+    this.togglePreview = this.togglePreview.bind(this);
+    this.toggleJsonEditor = this.toggleJsonEditor.bind(this);
+    this.handleResetVisualClick = this.handleResetVisualClick.bind(this); // this manages the clicking only not the actual reset
   }
+
   render() {
     const {
       host, // advancedEditing,
@@ -100,9 +105,7 @@ export default class AdvanceEditor extends React.Component<
             "Are sure you want to reset the visual tables? This action is permanent and you will loose your changes."
           }
           handleAgree={this.handleResetClick}
-          handleDisagree={() => {
-            this.setState({ dialog: false });
-          }}
+          handleDisagree={this.handleDisagree}
         />
         <div className="editor__header">
           <Grid
@@ -119,20 +122,13 @@ export default class AdvanceEditor extends React.Component<
               <Button
                 color="primary"
                 startIcon={<BsPencilSquare />}
-                onClick={() => {
-                  this.setState({
-                    hidePreview: true,
-                    jsonEditorOpen: !this.state.jsonEditorOpen,
-                  });
-                }}
+                onClick={this.toggleJsonEditor}
               >
                 {`${this.state.jsonEditorOpen ? "Close" : "Open"}`} JSON Editor
               </Button>
               <Button
                 color="default"
-                onClick={(e) => {
-                  this.setState({ hidePreview: !this.state.hidePreview });
-                }}
+                onClick={this.togglePreview}
                 startIcon={this.state.hidePreview ? <BsEye /> : <BsEyeSlash />}
               >
                 {`${this.state.hidePreview ? "Show" : "Hide"}`} Preview
@@ -180,9 +176,7 @@ export default class AdvanceEditor extends React.Component<
               <Button
                 variant="contained"
                 disabled={visualTables.length === 0}
-                onClick={() => {
-                  this.setState({ dialog: true });
-                }}
+                onClick={this.handleResetVisualClick}
                 title="Reset changes to visual"
               >
                 Reset
@@ -219,6 +213,26 @@ export default class AdvanceEditor extends React.Component<
       </div>
     );
   }
+
+  private handleResetVisualClick() {
+    this.setState({ dialog: true });
+  }
+
+  private toggleJsonEditor() {
+    this.setState({
+      hidePreview: true,
+      jsonEditorOpen: !this.state.jsonEditorOpen,
+    });
+  }
+
+  private togglePreview() {
+    this.setState({ hidePreview: !this.state.hidePreview });
+  }
+
+  private handleDisagree() {
+    this.setState({ dialog: false });
+  }
+
   private handleDuplicationOfTable(table: IVisualTable) {
     const visualTables = this.state.visualTables.slice(
       0,

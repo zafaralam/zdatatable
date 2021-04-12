@@ -64,7 +64,7 @@ import {
 } from "./defs/main";
 import { SingleTable as SampleData } from "./models/visualTablesSamples";
 
-import AdvanceEditorData from "./models/advanceEditor";
+import AdvanceEditorData from "./models/AdvanceEditorData";
 import Debugger from "./debug/Debugger";
 /**
  * Main Visual class
@@ -170,7 +170,7 @@ export class Visual implements IVisual {
           _visualTables["tables"].length !== 0
         ) {
           this.advEditorData.updateVisualTables(
-            JSON.parse(_visualTables["tables"]) as IVisualTable[]
+            <IVisualTable[]>JSON.parse(_visualTables["tables"])
           );
         }
 
@@ -205,17 +205,17 @@ export class Visual implements IVisual {
 
         // console.log("State", state);
 
-        VisualMainDisplay.update(state);
+        VisualMainDisplay.UPDATE(state);
       } else {
         Debugger.LOG("options object is not valid");
-        VisualMainDisplay.updateData(processDataView([], [], null));
+        VisualMainDisplay.UPDATE_DATA(processDataView([], [], null));
       }
 
       this.events.renderingFinished(options);
     } catch (error) {
       this.events.renderingFailed(options, error);
       Debugger.LOG(options, error, this.dataColumns);
-      // TODO: Perform other actions
+      // Perform other actions
       // ? How to log this error to user and also gracefully exit.
     }
 

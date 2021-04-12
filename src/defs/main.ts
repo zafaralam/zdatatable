@@ -17,7 +17,7 @@ import {
   GroupingColumnSettings,
   TablesSettings,
 } from "../settings";
-import AdvanceEditorData from "../models/advanceEditor";
+import AdvanceEditorData from "../models/AdvanceEditorData";
 import DataViewMetadataColumn = powerbi.DataViewMetadataColumn;
 // Visual Settings Imports here
 

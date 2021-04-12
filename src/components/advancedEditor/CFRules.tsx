@@ -25,7 +25,8 @@ interface ICFRulesProps {
   onRulesUpdate: Function;
 }
 
-export default function CFRules(props: ICFRulesProps) {
+// export default function CFRules(props: ICFRulesProps) {
+const CFRules = (props: ICFRulesProps) => {
   const { rules, onRulesUpdate } = props;
 
   const handleAddRule = () => {
@@ -88,6 +89,11 @@ export default function CFRules(props: ICFRulesProps) {
     onRulesUpdate(_rules);
   };
 
+  const _displayMessage =
+    props.measureQueryName && props.measureQueryName.length !== 0
+      ? "No rules created. Start by clicking the 'Add Rule' button."
+      : "A measure is not been selected. Please select a measure in the 'Basic' tab before setting up conditional formatting.";
+
   return (
     <div>
       {rules && rules.length !== 0 ? (
@@ -105,23 +111,19 @@ export default function CFRules(props: ICFRulesProps) {
           );
         })
       ) : (
-        <Typography>
-          {props.measureQueryName && props.measureQueryName.length !== 0
-            ? "No rules created. Start by clicking the 'Add Rule' button."
-            : "A measure is not been selected. Please select a measure in the 'Basic' tab before setting up conditional formatting."}
-        </Typography>
+        <Typography>{_displayMessage}</Typography>
       )}
       <Button
         variant="contained"
         color="primary"
-        onClick={() => handleAddRule()}
+        onClick={handleAddRule}
         style={{ marginTop: "2rem" }}
       >
         Add Rule
       </Button>
     </div>
   );
-}
+};
 
 interface ICFRuleProps {
   rule: IConditionalFormattingRule;
@@ -324,3 +326,5 @@ function CFRule(props: ICFRuleProps) {
     </Paper>
   );
 }
+
+export default CFRules;

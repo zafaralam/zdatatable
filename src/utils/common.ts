@@ -1,5 +1,3 @@
-import { csvParse } from "d3";
-import { BsColumns } from "react-icons/bs";
 import {
   IVisualTable,
   IVisualTableColumn,
@@ -15,7 +13,7 @@ import {
 import { VisualConstants } from "./../VisualConstants";
 import powerbi from "powerbi-visuals-api";
 import PrimitiveValue = powerbi.PrimitiveValue;
-import Debugger from "../debug/Debugger";
+// import Debugger from "../debug/Debugger";
 
 export function removeRowsWithNoData(
   visualValues: IVisualValues[],
@@ -30,7 +28,8 @@ export function removeRowsWithNoData(
     const columns = visualTableColumns.filter(
       (col) => col?.queryName && col.queryName.length !== 0
     );
-    const values = visualValues.filter((values) => {
+    // const values =
+    return visualValues.filter((values) => {
       const rowValues = columns.map((col) => values[col.queryName]);
       if (
         rowValues.every((element) => element === undefined || element === null)
@@ -41,7 +40,7 @@ export function removeRowsWithNoData(
     // console.log(columns);
     // console.log(values);
 
-    return values;
+    // return values;
   }
   return [];
 }
@@ -165,28 +164,28 @@ function flattenColumnCount(r: any, a: IVisualTableColumn) {
 export function fontWeightCSSValue(fontWeight: string) {
   switch (fontWeight) {
     case "normal":
-      return "normal" as "normal";
+      return <"normal">"normal";
     case "lighter":
-      return "lighter" as "lighter";
+      return <"lighter">"lighter";
     case "bold":
-      return "bold" as "bold";
+      return <"bold">"bold";
     case "initial":
-      return "initial" as "initial";
+      return <"initial">"initial";
     default:
-      return "normal" as "normal";
+      return <"normal">"normal";
   }
 }
 
 export function textAlignCSSValue(textAlign: string) {
   switch (textAlign) {
     case "center":
-      return "center" as "center";
+      return <"center">"center";
     case "left":
-      return "left" as "left";
+      return <"left">"left";
     case "right":
-      return "right" as "right";
+      return <"right">"right";
     default:
-      return "center" as "center";
+      return <"center">"center";
   }
 }
 
@@ -228,7 +227,6 @@ export function validatePolyline(polyline: string): boolean {
 
 /**
  * Returns a color based on the conditional formatting rules passed.
- * TODO: Need to write tests for this function
  * @param rules
  * @param dataValue
  */

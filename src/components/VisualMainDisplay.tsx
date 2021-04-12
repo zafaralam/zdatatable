@@ -8,8 +8,8 @@ import {
   IVisualValueData,
 } from "./../defs/main";
 import { processDataView } from "./../utils/dataView";
-import AdvanceEditor from "./advancedEditor/AdvancedEditor";
-import { ContentDisplay } from "./ContentDisplay";
+import AdvancedEditor from "./advancedEditor/AdvancedEditor";
+import { contentDisplay as ContentDisplay } from "./ContentDisplay";
 // export interface State {}
 
 const defaultSettings = VisualSettings.getDefault();
@@ -61,13 +61,13 @@ export class VisualMainDisplay extends React.Component<
     VisualMainDisplay.updateDataCallback = null;
   }
 
-  public static update(newState: IVisualMainDisplayState) {
+  public static UPDATE(newState: IVisualMainDisplayState) {
     if (typeof VisualMainDisplay.updateCallback === "function") {
       VisualMainDisplay.updateCallback(newState);
     }
   }
 
-  public static updateData(newData: IVisualValueData) {
+  public static UPDATE_DATA(newData: IVisualValueData) {
     if (typeof VisualMainDisplay.updateDataCallback === "function") {
       VisualMainDisplay.updateDataCallback(newData);
     }
@@ -88,16 +88,16 @@ export class VisualMainDisplay extends React.Component<
       tablesSettings,
       canAdvanceEdit,
     } = this.state;
-
+    const _visualData = data.visualData || { columns: [], values: [] };
     switch (true) {
       case isEditMode: {
         return (
-          <AdvanceEditor
+          <AdvancedEditor
             host={this.props.host}
             localizationManager={this.props.localizationManager}
             advancedEditing={advancedEditing}
             advancedEditingObjectMetadata={objectMetadata?.advancedEditing}
-            visualData={data.visualData || { columns: [], values: [] }}
+            visualData={_visualData}
             advEditorData={this.props.advEditorData}
             tableTitleSettings={tableTitleSettings}
             mainMeasureSettings={mainMeasureSettings}
@@ -116,7 +116,7 @@ export class VisualMainDisplay extends React.Component<
         return (
           <ContentDisplay
             host={this.props.host}
-            visualData={data.visualData || { columns: [], values: [] }}
+            visualData={_visualData}
             visualTables={this.props.advEditorData.visualTables}
             tableTitleSettings={tableTitleSettings}
             mainMeasureSettings={mainMeasureSettings}

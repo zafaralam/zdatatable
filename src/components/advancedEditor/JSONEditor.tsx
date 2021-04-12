@@ -6,7 +6,7 @@ import "ace-builds/src-noconflict/theme-github";
 
 import { IVisualTable } from "./../../defs/main";
 import { Button, Typography, Grid } from "@material-ui/core";
-import AdvanceEditorData from "../../models/advanceEditor";
+// import AdvanceEditorData from "../../models/AdvanceEditorData";
 interface IJSONEditorProps {
   visualTables: IVisualTable[];
   onJsonUpdates: Function;
