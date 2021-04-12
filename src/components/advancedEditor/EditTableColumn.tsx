@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function EditTableColumn(props: IEditTableColumnProps) {
+const EditTableColumn = (props: IEditTableColumnProps) => {
   const classes = useStyles();
   const {
     label,
@@ -953,4 +953,6 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       )}
     </div>
   );
-}
+};
+
+export default EditTableColumn;

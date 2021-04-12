@@ -13,7 +13,7 @@ interface IJSONEditorProps {
   //   advEditorData: AdvanceEditorData;
 }
 
-export default function JSONEditor(props: IJSONEditorProps) {
+const JSONEditor = (props: IJSONEditorProps) => {
   const [jsonText, setJsonText] = React.useState(
     JSON.stringify({ tables: props.visualTables }, null, 2)
   );
@@ -74,4 +74,6 @@ export default function JSONEditor(props: IJSONEditorProps) {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default JSONEditor;

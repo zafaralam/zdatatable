@@ -42,7 +42,7 @@ interface IVisualTableProps {
   selectionManager: powerbi.extensibility.ISelectionManager;
 }
 
-export default function VisualTable(props: IVisualTableProps) {
+const VisualTable = (props: IVisualTableProps) => {
   const {
     visualTable: table,
     visualData,
@@ -396,4 +396,6 @@ export default function VisualTable(props: IVisualTableProps) {
       </table>
     </div>
   );
-}
+};
+
+export default VisualTable;
