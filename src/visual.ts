@@ -62,7 +62,7 @@ import {
   IVisualMainDisplayState,
   IVisualTable,
 } from "./defs/main";
-import { SingleTable as SampleData } from "./models/visualTablesSamples";
+import { SingleTable as SampleData } from "./models/SingleTable";
 
 import AdvanceEditorData from "./models/AdvanceEditorData";
 import Debugger from "./debug/Debugger";

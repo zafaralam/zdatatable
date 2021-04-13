@@ -42,6 +42,7 @@ interface IVisualTableProps {
   selectionManager: powerbi.extensibility.ISelectionManager;
 }
 
+//tslint:disable:max-func-body-length
 const VisualTable = (props: IVisualTableProps) => {
   const {
     visualTable: table,
@@ -200,38 +201,37 @@ const VisualTable = (props: IVisualTableProps) => {
     );
     e.preventDefault();
   };
+
+  const _tableHeaderCellSpan =
+    tableValueColumns.length +
+      (groupingColumnSettings?.showGroupingColumn &&
+      groupingColumn !== undefined
+        ? 1
+        : 0) || 0;
+
+  let _tableHeaderMaxDepthArray = [];
+  for (let i = 0; i < tableHeaderMaxDepth; i++) {
+    _tableHeaderMaxDepthArray.push(undefined);
+  }
+  //Array.from({ length: tableHeaderMaxDepth }); //[...new Array(tableHeaderMaxDepth)];
   return (
     <div key={tableIndex}>
       <table className="display-table" style={tableStyles}>
         <thead>
-          {props.visualTable.showTitle === true ? (
+          {props.visualTable.showTitle === true && (
             <tr>
-              <th
-                colSpan={
-                  tableValueColumns.length +
-                    (groupingColumnSettings?.showGroupingColumn &&
-                    groupingColumn !== undefined
-                      ? 1
-                      : 0) || 0
-                }
-                style={tableTitleStyles}
-              >
+              <th colSpan={_tableHeaderCellSpan} style={tableTitleStyles}>
                 {props.visualTable?.name || "Table name not specified"}
               </th>
             </tr>
-          ) : (
-            ""
           )}
-          {[...Array(tableHeaderMaxDepth)].map((_, i) => {
+          {_tableHeaderMaxDepthArray.map((_, i) => {
+            const _theadRowClassName =
+              getTableHeaderAtLevel(table, i + 1).length === 0
+                ? "empty-header-row"
+                : "header-row";
             return (
-              <tr
-                key={i}
-                className={
-                  getTableHeaderAtLevel(table, i + 1).length === 0
-                    ? "empty-header-row"
-                    : "header-row"
-                }
-              >
+              <tr key={i} className={_theadRowClassName}>
                 {i === 0 &&
                 groupingColumnSettings?.showGroupingColumn &&
                 groupingColumn !== undefined ? (
@@ -257,83 +257,85 @@ const VisualTable = (props: IVisualTableProps) => {
                 )}
                 {getTableHeaderAtLevel(table, i + 1).map((column, idxCol) => {
                   const width = getHeaderColumnWidth(column);
+                  const _theadDataCellClassName =
+                    column.label.length === 0 &&
+                    column.columnType !==
+                      VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY
+                      ? "empty-header-col"
+                      : "";
+                  const _theadDataCellStyles = {
+                    ...{
+                      fontFamily:
+                        column?.labelFontFamily ||
+                        VisualConstants.visualTableColumn.labelFontFamily,
+                      fontWeight: fontWeightCSSValue(
+                        column?.labelFontWeight ||
+                          VisualConstants.visualTableColumn.labelFontWeight
+                      ),
+                      width: `${width}px`,
+                      borderLeft:
+                        column.border?.left ||
+                        VisualConstants.visualTableColumn.border.left,
+                      borderTop:
+                        column.border?.top ||
+                        VisualConstants.visualTableColumn.border.top,
+                      borderRight:
+                        column.border?.right ||
+                        VisualConstants.visualTableColumn.border.right,
+                      borderBottom:
+                        column.border?.bottom ||
+                        VisualConstants.visualTableColumn.border.bottom,
+                      background:
+                        column?.bgColor ||
+                        VisualConstants.visualTableColumn.bgColor,
+                      color:
+                        column?.textColor ||
+                        VisualConstants.visualTableColumn.textColor,
+                      fontSize: `${
+                        column?.labelFontSize ||
+                        VisualConstants.visualTableColumn.labelFontSize
+                      }pt`,
+                      textAlign: textAlignCSSValue(
+                        column?.textAlign ||
+                          VisualConstants.visualTableColumn.textAlign
+                      ),
+                      ...{
+                        paddingLeft: `${
+                          column.padding?.left ||
+                          VisualConstants.visualTableColumn.padding.left
+                        }px`,
+                        paddingTop: `${
+                          column.padding?.top ||
+                          VisualConstants.visualTableColumn.padding.top
+                        }px`,
+                        paddingRight:
+                          `${
+                            column.padding?.right ||
+                            VisualConstants.visualTableColumn.padding.right
+                          }px` || 0,
+                        paddingBottom:
+                          `${
+                            column.padding?.bottom ||
+                            VisualConstants.visualTableColumn.padding.bottom
+                          }px` || 0,
+                      },
+                    },
+                  };
+
+                  const _theadDataCellRowSpan =
+                    (column.columns === undefined ||
+                      column.columns.length === 0) &&
+                    column.level < tableHeaderMaxDepth
+                      ? tableHeaderMaxDepth - column.level + 1
+                      : 1;
 
                   return (
                     <th
                       key={idxCol}
-                      className={
-                        column.label.length === 0 &&
-                        column.columnType !==
-                          VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY
-                          ? "empty-header-col"
-                          : ""
-                      }
-                      style={{
-                        ...{
-                          fontFamily:
-                            column?.labelFontFamily ||
-                            VisualConstants.visualTableColumn.labelFontFamily,
-                          fontWeight: fontWeightCSSValue(
-                            column?.labelFontWeight ||
-                              VisualConstants.visualTableColumn.labelFontWeight
-                          ),
-                          width: `${width}px`,
-                          borderLeft:
-                            column.border?.left ||
-                            VisualConstants.visualTableColumn.border.left,
-                          borderTop:
-                            column.border?.top ||
-                            VisualConstants.visualTableColumn.border.top,
-                          borderRight:
-                            column.border?.right ||
-                            VisualConstants.visualTableColumn.border.right,
-                          borderBottom:
-                            column.border?.bottom ||
-                            VisualConstants.visualTableColumn.border.bottom,
-                          background:
-                            column?.bgColor ||
-                            VisualConstants.visualTableColumn.bgColor,
-                          color:
-                            column?.textColor ||
-                            VisualConstants.visualTableColumn.textColor,
-                          fontSize: `${
-                            column?.labelFontSize ||
-                            VisualConstants.visualTableColumn.labelFontSize
-                          }pt`,
-                          textAlign: textAlignCSSValue(
-                            column?.textAlign ||
-                              VisualConstants.visualTableColumn.textAlign
-                          ),
-                          ...{
-                            paddingLeft: `${
-                              column.padding?.left ||
-                              VisualConstants.visualTableColumn.padding.left
-                            }px`,
-                            paddingTop: `${
-                              column.padding?.top ||
-                              VisualConstants.visualTableColumn.padding.top
-                            }px`,
-                            paddingRight:
-                              `${
-                                column.padding?.right ||
-                                VisualConstants.visualTableColumn.padding.right
-                              }px` || 0,
-                            paddingBottom:
-                              `${
-                                column.padding?.bottom ||
-                                VisualConstants.visualTableColumn.padding.bottom
-                              }px` || 0,
-                          },
-                        },
-                      }}
+                      className={_theadDataCellClassName}
+                      style={_theadDataCellStyles}
                       colSpan={getColumnSpan(column)}
-                      rowSpan={
-                        (column.columns === undefined ||
-                          column.columns.length === 0) &&
-                        column.level < tableHeaderMaxDepth
-                          ? tableHeaderMaxDepth - column.level + 1
-                          : 1
-                      }
+                      rowSpan={_theadDataCellRowSpan}
                     >
                       {/* <div className="display-table__header-cell" style={{}}> */}
                       {column.label}
@@ -354,12 +356,15 @@ const VisualTable = (props: IVisualTableProps) => {
             </tr>
           ) : (
             filteredVisualValues.map((row, rIdx) => {
+              const _onContextMenuClick = (
+                e: React.MouseEvent<HTMLTableRowElement, MouseEvent>
+              ) => {
+                handleDataRowContextClick(e, row, rIdx);
+              };
               return (
                 <tr
                   key={rIdx}
-                  onContextMenu={(e) => {
-                    handleDataRowContextClick(e, row, rIdx);
-                  }}
+                  onContextMenu={_onContextMenuClick}
                   className="data-row"
                 >
                   {groupingColumnSettings?.showGroupingColumn &&

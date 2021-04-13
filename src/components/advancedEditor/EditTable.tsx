@@ -1,5 +1,3 @@
-// TODO: style the component
-
 import * as React from "react";
 import {
   Button,
@@ -64,6 +62,8 @@ export default class EditTable extends React.Component<
     );
     this.handleTableMove = this.handleTableMove.bind(this);
     this.handleDuplicationOfTable = this.handleDuplicationOfTable.bind(this);
+    this.handleTableMoveUp = this.handleTableMoveUp.bind(this);
+    this.handleTableMoveDown = this.handleTableMoveDown.bind(this);
   }
 
   private handleDuplicationOfTable() {
@@ -76,16 +76,23 @@ export default class EditTable extends React.Component<
     this.props.onTableMove(direction, this.props.index);
   }
 
-  private handleTableNameChange(value) {
+  private handleTableNameChange(event: React.ChangeEvent<{ value: unknown }>) {
+    const _valueToSet = event.target.value as string;
     this.props.onEditTableUpdate(
-      { name: value, columns: this.props.table.columns, showTitle: value },
+      {
+        name: _valueToSet,
+        columns: this.props.table.columns,
+        showTitle: this.props.table.showTitle,
+      },
       this.props.index
     );
   }
 
-  private handleShowTableTitleChange(value) {
+  private handleShowTableTitleChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
     this.props.onEditTableUpdate(
-      { ...this.props.table, showTitle: value },
+      { ...this.props.table, showTitle: event.target.checked },
       this.props.index
     );
   }
@@ -142,6 +149,15 @@ export default class EditTable extends React.Component<
     );
   }
 
+  private handleTableMoveUp() {
+    this.handleTableMove(MOVE_DIRECTION.UP);
+  }
+
+  private handleTableMoveDown() {
+    this.handleTableMove(MOVE_DIRECTION.DOWN);
+  }
+
+  //tslint:disable:max-func-body-length
   render() {
     // const { name, columns } = this.state;
 
@@ -160,18 +176,14 @@ export default class EditTable extends React.Component<
                   >
                     <IconButton
                       title="Move table above"
-                      onClick={() => {
-                        this.handleTableMove(MOVE_DIRECTION.UP);
-                      }}
+                      onClick={this.handleTableMoveUp}
                     >
                       <BsChevronUp />
                     </IconButton>
 
                     <IconButton
                       title="Move table down"
-                      onClick={() => {
-                        this.handleTableMove(MOVE_DIRECTION.DOWN);
-                      }}
+                      onClick={this.handleTableMoveDown}
                     >
                       <BsChevronDown />
                     </IconButton>
@@ -182,9 +194,7 @@ export default class EditTable extends React.Component<
                     id={`editTableName-${this.props.index}`}
                     label="Table Name"
                     value={this.props.table.name}
-                    onChange={(e) => {
-                      this.handleTableNameChange(e.target.value);
-                    }}
+                    onChange={this.handleTableNameChange}
                     size="small"
                     fullWidth
                     variant="standard"
@@ -195,9 +205,7 @@ export default class EditTable extends React.Component<
                 <Checkbox
                   color="primary"
                   checked={this.props.table.showTitle}
-                  onChange={(e) => {
-                    this.handleShowTableTitleChange(e.target.checked);
-                  }}
+                  onChange={this.handleShowTableTitleChange}
                   inputProps={{ "aria-label": "primary checkbox" }}
                 />
                 <span> Show Title?</span>

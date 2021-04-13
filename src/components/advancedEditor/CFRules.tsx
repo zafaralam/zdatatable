@@ -114,6 +114,7 @@ interface ICFRuleProps {
   onRuleMove(MOVE_DIRECTION, number): void;
 }
 
+//tslint:disable:max-func-body-length
 const CFRule = (props: ICFRuleProps) => {
   const {
     rule,
