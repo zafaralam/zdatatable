@@ -1,6 +1,6 @@
 {
   "name": "visual",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Power BI visual that displays measure data in a table and with advanced editing",
   "license": "MIT",
   "repository": {},

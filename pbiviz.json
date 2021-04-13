@@ -4,8 +4,8 @@
         "displayName": "zDataTable",
         "guid": "zDataTable7B0B8C6EA334448C99AD145F738F9806",
         "visualClassName": "Visual",
-        "version": "1.0.2",
-        "description": "Data Table",
+        "version": "1.0.3",
+        "description": "Fully customizable Data Table within Power BI",
         "supportUrl": "http://zafalam.com.au",
         "gitHubUrl": ""
     },
