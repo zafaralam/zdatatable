@@ -5,6 +5,7 @@ import {
   MOVE_DIRECTION,
 } from "../../defs/enums";
 import {
+  IColumnPadding,
   IConditionalFormattingRule,
   IDataColumn,
   IVisualTableColumn,
@@ -60,6 +61,7 @@ import {
   FontFamilies,
   FontWeights,
 } from "./../../VisualConstants";
+// import { IconType } from "react-icons";
 // import { lab } from "d3";
 
 interface IEditTableColumnProps {
@@ -83,7 +85,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function EditTableColumn(props: IEditTableColumnProps) {
+//tslint:disable:max-func-body-length
+const EditTableColumn = (props: IEditTableColumnProps) => {
   const classes = useStyles();
   const {
     label,
@@ -279,6 +282,53 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
     }
   };
 
+  const handleColumnMoveLeft = () => {
+    handleColumnMove(MOVE_DIRECTION.LEFT);
+  };
+
+  const handleColumnMoveRight = () => {
+    handleColumnMove(MOVE_DIRECTION.RIGHT);
+  };
+
+  const handleVisualColumnRemoval = () => {
+    props.onVisualColumnRemoval(props.index);
+  };
+
+  const handleEditColumnLabelChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as string;
+    handleColumnPropertyChange("label", _valueToSet);
+  };
+
+  const handleEditColumnBgColorChange = (color: any) => {
+    handleColumnPropertyChange("bgColor", color);
+  };
+
+  const handleEditColumnChkBgColorToValuesChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    handleColumnPropertyChange("applyBgColorToValues", event.target.checked);
+  };
+
+  const handleEditColumnTextColorChange = (color: any) => {
+    handleColumnPropertyChange("textColor", color);
+  };
+
+  const handleEditColumnLabelFontSizeChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as string;
+    handleColumnPropertyChange("labelFontSize", _valueToSet);
+  };
+
+  const handleEditColumnWidthChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as string;
+    handleColumnPropertyChange("width", parseInt(_valueToSet));
+  };
+
   return (
     <div key={props.index} className="edit-table__column">
       <div>
@@ -290,18 +340,14 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
           <IconButton
             size="small"
             title="Move column to left"
-            onClick={() => {
-              handleColumnMove(MOVE_DIRECTION.LEFT);
-            }}
+            onClick={handleColumnMoveLeft}
           >
             <BsChevronLeft />
           </IconButton>
           <IconButton
             size="small"
             title="Move column to right"
-            onClick={() => {
-              handleColumnMove(MOVE_DIRECTION.RIGHT);
-            }}
+            onClick={handleColumnMoveRight}
           >
             <BsChevronRight />
           </IconButton>
@@ -309,14 +355,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       </div>
       <Grid container alignItems="center" justify="space-around">
         <Grid item>
-          <span
-            style={{
-              maxWidth: "180px",
-              display: "inline-block",
-              fontSize: "0.75rem",
-              fontStyle: label.length === 0 ? "italic" : "normal",
-            }}
-          >
+          <span style={editColumnLabelStyle(label)}>
             {label.length === 0
               ? columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY
                 ? "Column"
@@ -336,9 +375,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
         style={{ color: "#a50d0d", fontSize: "1rem" }}
         aria-label="edit"
         title="Remove Column"
-        onClick={() => {
-          props.onVisualColumnRemoval(props.index);
-        }}
+        onClick={handleVisualColumnRemoval}
       >
         <BsFillTrashFill />
       </IconButton>
@@ -378,11 +415,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
 
             <Tab
               label="Conditional Formatting"
-              disabled={
-                columnType !== VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN &&
-                columnType !==
-                  VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY
-              }
+              disabled={conditionalFormattingTabDisabled(columnType)}
             />
           </Tabs>
           <TabPanel value={tabValue} index={0}>
@@ -394,9 +427,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   fullWidth
                   label="Column Name (Label to display)"
                   value={label}
-                  onChange={(e) => {
-                    handleColumnPropertyChange("label", e.target.value);
-                  }}
+                  onChange={handleEditColumnLabelChange}
                 />
               </FormControl>
             </div>
@@ -446,7 +477,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                 </Grid>
               </FormControl>
             </div>
-            {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+            {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY && (
               <div>
                 <FormControl className={classes.formControl} fullWidth>
                   <InputLabel id="select-measure-label">
@@ -473,8 +504,6 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   </Select>
                 </FormControl>
               </div>
-            ) : (
-              ""
             )}
 
             <div>
@@ -485,14 +514,8 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   </Grid>
                   <Grid item xs={1}>
                     <ColorPicker
-                      color={
-                        props.column.bgColor != undefined
-                          ? props.column.bgColor
-                          : VisualConstants.visualTableColumn.bgColor
-                      }
-                      onColorChange={(color) => {
-                        handleColumnPropertyChange("bgColor", color);
-                      }}
+                      color={editColumnBgColor(props)}
+                      onColorChange={handleEditColumnBgColorChange}
                     />
                   </Grid>
                   {columnType !== VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
@@ -506,17 +529,8 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                     >
                       <Grid item xs={1}>
                         <Checkbox
-                          checked={
-                            props.column.applyBgColorToValues === undefined
-                              ? false
-                              : props.column.applyBgColorToValues
-                          }
-                          onChange={(e) => {
-                            handleColumnPropertyChange(
-                              "applyBgColorToValues",
-                              e.target.checked
-                            );
-                          }}
+                          checked={editColumnChkBgColorToValues(props)}
+                          onChange={handleEditColumnChkBgColorToValuesChange}
                           color="primary"
                         />
                       </Grid>
@@ -548,14 +562,8 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                     </Grid>
                     <Grid item xs={1}>
                       <ColorPicker
-                        color={
-                          props.column.textColor === undefined
-                            ? VisualConstants.visualTableColumn.textColor
-                            : props.column.textColor
-                        }
-                        onColorChange={(color) => {
-                          handleColumnPropertyChange("textColor", color);
-                        }}
+                        color={editColumnTextColor(props)}
+                        onColorChange={handleEditColumnTextColorChange}
                       />
                     </Grid>
                   </Grid>
@@ -589,10 +597,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                         </InputLabel>
                         <Select
                           labelId="select-measure-label"
-                          value={
-                            labelFontFamily ||
-                            VisualConstants.visualTableColumn.labelFontFamily
-                          }
+                          value={editColumnLabelFontFamily(labelFontFamily)}
                           onChange={handleLabelFontFamilyChange}
                           fullWidth
                         >
@@ -613,10 +618,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                         </InputLabel>
                         <Select
                           labelId="select-measure-label"
-                          value={
-                            labelFontWeight ||
-                            VisualConstants.visualTableColumn.labelFontWeight
-                          }
+                          value={editColumnLabelFontWeight(labelFontWeight)}
                           onChange={handleLabelFontWeightChange}
                           fullWidth
                         >
@@ -637,11 +639,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                           margin="dense"
                           label="Label Font Size"
                           type="number"
-                          value={
-                            labelFontSize === undefined
-                              ? VisualConstants.visualTableColumn.labelFontSize
-                              : labelFontSize
-                          }
+                          value={editColumnLabelFontSize(labelFontSize)}
                           InputProps={{
                             endAdornment: (
                               <InputAdornment position="start">
@@ -649,12 +647,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                               </InputAdornment>
                             ),
                           }}
-                          onChange={(e) => {
-                            handleColumnPropertyChange(
-                              "labelFontSize",
-                              e.target.value
-                            );
-                          }}
+                          onChange={handleEditColumnLabelFontSizeChange}
                         />
                       </FormControl>
                     </Grid>
@@ -671,25 +664,13 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                         margin="dense"
                         label="Cell Width"
                         type="number"
-                        value={
-                          props.column.width === undefined
-                            ? columnType ===
-                              VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
-                              ? VisualConstants.mainMeasureCellWidth
-                              : VisualConstants.secondaryMeasureCellWidth
-                            : props.column.width
-                        }
+                        value={editColumnWidth(props, columnType)}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="start">px</InputAdornment>
                           ),
                         }}
-                        onChange={(e) => {
-                          handleColumnPropertyChange(
-                            "width",
-                            parseInt(e.target.value)
-                          );
-                        }}
+                        onChange={handleEditColumnWidthChange}
                       />
                     </FormControl>
                   </Grid>
@@ -698,54 +679,11 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                 )}
               </Grid>
             </div>
-            <div style={{ marginTop: "8px" }}>
-              <FormControl className={classes.formControl} fullWidth>
-                <Grid container direction="row" alignItems="center">
-                  <Grid item xs={2}>
-                    <Typography variant="body1">Text Align</Typography>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Button
-                      variant={
-                        textAlign !== undefined && textAlign === "left"
-                          ? "contained"
-                          : "text"
-                      }
-                      onClick={() => {
-                        handleColumnPropertyChange("textAlign", "left");
-                      }}
-                      startIcon={<BsTextLeft />}
-                    ></Button>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Button
-                      variant={
-                        textAlign === undefined || textAlign === "center"
-                          ? "contained"
-                          : "text"
-                      }
-                      onClick={() => {
-                        handleColumnPropertyChange("textAlign", "center");
-                      }}
-                      startIcon={<BsTextCenter />}
-                    ></Button>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <Button
-                      variant={
-                        textAlign !== undefined && textAlign === "right"
-                          ? "contained"
-                          : "text"
-                      }
-                      onClick={() => {
-                        handleColumnPropertyChange("textAlign", "right");
-                      }}
-                      endIcon={<BsTextRight />}
-                    ></Button>
-                  </Grid>
-                </Grid>
-              </FormControl>
-            </div>
+            {columnTextAlignment(
+              classes,
+              textAlign,
+              handleColumnPropertyChange
+            )}
             <div style={{ marginTop: "8px" }}>
               <FormControl className={classes.formControl} fullWidth>
                 <Grid container direction="row" alignItems="center" spacing={1}>
@@ -754,85 +692,43 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   </Grid>
                   <Grid container item spacing={2} xs={8}>
                     <Grid item xs={2}>
-                      <TextField
-                        margin="dense"
-                        size="small"
-                        label="All"
-                        type="number"
-                        value={
-                          padding?.left !== padding?.bottom &&
+                      {cellPadding(
+                        "all",
+                        padding?.left !== padding?.bottom &&
                           padding?.left !== padding?.right &&
                           padding?.left !== padding?.top
-                            ? null
-                            : padding?.left
-                        }
-                        onChange={(e) => {
-                          handlePaddingChange(
-                            "all",
-                            parseInt(e.target.value) || 0
-                          );
-                        }}
-                      ></TextField>
+                          ? null
+                          : padding?.left,
+                        handlePaddingChange
+                      )}
                     </Grid>
                     <Grid item xs={2}>
-                      <TextField
-                        margin="dense"
-                        size="small"
-                        label="Left"
-                        type="number"
-                        value={padding?.left || 0}
-                        onChange={(e) => {
-                          handlePaddingChange(
-                            "left",
-                            parseInt(e.target.value) || 0
-                          );
-                        }}
-                      ></TextField>
+                      {cellPadding(
+                        "left",
+                        padding?.left || 0,
+                        handlePaddingChange
+                      )}
                     </Grid>
                     <Grid item xs={2}>
-                      <TextField
-                        margin="dense"
-                        size="small"
-                        label="Top"
-                        type="number"
-                        value={padding?.top || 0}
-                        onChange={(e) => {
-                          handlePaddingChange(
-                            "top",
-                            parseInt(e.target.value) || 0
-                          );
-                        }}
-                      ></TextField>
+                      {cellPadding(
+                        "top",
+                        padding?.top || 0,
+                        handlePaddingChange
+                      )}
                     </Grid>
                     <Grid item xs={2}>
-                      <TextField
-                        margin="dense"
-                        size="small"
-                        label="Right"
-                        type="number"
-                        value={padding?.right || 0}
-                        onChange={(e) => {
-                          handlePaddingChange(
-                            "right",
-                            parseInt(e.target.value) || 0
-                          );
-                        }}
-                      ></TextField>
+                      {cellPadding(
+                        "right",
+                        padding?.right || 0,
+                        handlePaddingChange
+                      )}
                     </Grid>
                     <Grid item xs={2}>
-                      <TextField
-                        margin="dense"
-                        size="small"
-                        label="Bottom"
-                        type="number"
-                        value={padding?.bottom || 0}
-                        onChange={(e) => {
-                          handlePaddingChange(
-                            "bottom",
-                            parseInt(e.target.value) || 0
-                          );
-                        }}
-                      ></TextField>
+                      {cellPadding(
+                        "bottom",
+                        padding?.bottom || 0,
+                        handlePaddingChange
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -889,7 +785,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
               </Paper>
             </div>
 
-            {columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY ? (
+            {columnType === VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY && (
               <Grid
                 container
                 alignItems="baseline"
@@ -901,7 +797,7 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                   Sub columns: {columns && columns.length}
                 </Typography>
               </Grid> */}
-                {level < 3 ? (
+                {level < 3 && (
                   <Grid item>
                     <Button
                       variant="contained"
@@ -911,12 +807,8 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
                       Add Sub Column
                     </Button>
                   </Grid>
-                ) : (
-                  ""
                 )}
               </Grid>
-            ) : (
-              ""
             )}
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
@@ -953,4 +845,150 @@ export default function EditTableColumn(props: IEditTableColumnProps) {
       )}
     </div>
   );
+};
+
+function editColumnWidth(
+  props: IEditTableColumnProps,
+  columnType: VISUAL_DISPLAY_COLUMN_TYPE
+): unknown {
+  return props.column.width === undefined
+    ? columnType === VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
+      ? VisualConstants.mainMeasureCellWidth
+      : VisualConstants.secondaryMeasureCellWidth
+    : props.column.width;
 }
+
+function editColumnLabelFontSize(labelFontSize: number): unknown {
+  return labelFontSize === undefined
+    ? VisualConstants.visualTableColumn.labelFontSize
+    : labelFontSize;
+}
+
+function editColumnLabelFontWeight(labelFontWeight: string): unknown {
+  return labelFontWeight || VisualConstants.visualTableColumn.labelFontWeight;
+}
+
+function editColumnLabelFontFamily(labelFontFamily: string): unknown {
+  return labelFontFamily || VisualConstants.visualTableColumn.labelFontFamily;
+}
+
+function editColumnTextColor(props: IEditTableColumnProps): string {
+  return props.column.textColor === undefined
+    ? VisualConstants.visualTableColumn.textColor
+    : props.column.textColor;
+}
+
+function editColumnChkBgColorToValues(props: IEditTableColumnProps): boolean {
+  return props.column.applyBgColorToValues === undefined
+    ? false
+    : props.column.applyBgColorToValues;
+}
+
+function editColumnBgColor(props: IEditTableColumnProps): string {
+  return props.column.bgColor != undefined
+    ? props.column.bgColor
+    : VisualConstants.visualTableColumn.bgColor;
+}
+
+function conditionalFormattingTabDisabled(
+  columnType: VISUAL_DISPLAY_COLUMN_TYPE
+): boolean {
+  return (
+    columnType !== VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN &&
+    columnType !== VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_SECONDARY
+  );
+}
+
+function editColumnLabelStyle(label: string): React.CSSProperties {
+  return {
+    maxWidth: "180px",
+    display: "inline-block",
+    fontSize: "0.75rem",
+    fontStyle: label.length === 0 ? "italic" : "normal",
+  };
+}
+
+function cellPadding(
+  side: string,
+  padding: number,
+  handlePaddingChange: (side: string, value: number) => void
+) {
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const _valueToSet = event.target.value as string;
+    handlePaddingChange(side, parseInt(_valueToSet) || 0);
+  };
+  return (
+    <TextField
+      margin="dense"
+      size="small"
+      label={side}
+      type="number"
+      value={padding}
+      onChange={handleChange}
+    ></TextField>
+  );
+}
+
+function columnTextAlignment(
+  classes,
+  textAlign: string,
+  handleColumnPropertyChange: (property: string, value: any) => void
+) {
+  return (
+    <div style={{ marginTop: "8px" }}>
+      <FormControl className={classes.formControl} fullWidth>
+        <Grid container direction="row" alignItems="center">
+          <Grid item xs={2}>
+            <Typography variant="body1">Text Align</Typography>
+          </Grid>
+          <Grid item xs={1}>
+            {textAlignmentButton(
+              textAlign !== undefined && textAlign === "left"
+                ? "contained"
+                : "text",
+              "left",
+              <BsTextLeft />,
+              handleColumnPropertyChange
+            )}
+          </Grid>
+          <Grid item xs={1}>
+            {textAlignmentButton(
+              textAlign === undefined || textAlign === "center"
+                ? "contained"
+                : "text",
+              "center",
+              <BsTextCenter />,
+              handleColumnPropertyChange
+            )}
+          </Grid>
+          <Grid item xs={1}>
+            {textAlignmentButton(
+              textAlign !== undefined && textAlign === "right"
+                ? "contained"
+                : "text",
+              "right",
+              <BsTextRight />,
+              handleColumnPropertyChange
+            )}
+          </Grid>
+        </Grid>
+      </FormControl>
+    </div>
+  );
+}
+
+function textAlignmentButton(
+  variant: any,
+  textAlign: string,
+  icon: React.ReactNode,
+  handleColumnPropertyChange: (property: string, value: any) => void
+) {
+  const handleClick = () => {
+    handleColumnPropertyChange("textAlign", textAlign);
+  };
+  return (
+    <Button variant={variant} onClick={handleClick} startIcon={icon}></Button>
+  );
+}
+
+export default EditTableColumn;

@@ -13,7 +13,7 @@ interface IAlertDialogProps {
   handleAgree: Function;
 }
 
-export default function AlertDialog(props: IAlertDialogProps) {
+export default function alertDialog(props: IAlertDialogProps) {
   //     const [open, setOpen] = React.useState(false);
 
   //     if(prop)

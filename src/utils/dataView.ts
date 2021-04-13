@@ -95,7 +95,6 @@ function getVisualDataValues(
  * Identifies the columns passed in the dataView and then then checks if the columns already exists.
  * Updates existing columns information, removes columns not present in dataView
  * and inserts new columns
- * // TODO: Create test for function
  *
  * @param dataView
  * @param dataColumns
@@ -114,7 +113,8 @@ export function parseDataModelColumns(
     (item, index) => {
       // let defaultColour: powerbi.Fill = getDefaultFillColour(item, host);
       host.colorPalette["colorIndex"] = index + 1;
-      const _column = {
+      //const _column =
+      return {
         index: item.index,
         displayName: item.displayName,
         queryName: item.queryName,
@@ -133,7 +133,7 @@ export function parseDataModelColumns(
         metadata: item,
       };
 
-      return _column;
+      // return _column;
     }
   );
 

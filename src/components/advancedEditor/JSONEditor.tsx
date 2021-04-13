@@ -6,14 +6,14 @@ import "ace-builds/src-noconflict/theme-github";
 
 import { IVisualTable } from "./../../defs/main";
 import { Button, Typography, Grid } from "@material-ui/core";
-import AdvanceEditorData from "../../models/advanceEditor";
+// import AdvanceEditorData from "../../models/AdvanceEditorData";
 interface IJSONEditorProps {
   visualTables: IVisualTable[];
   onJsonUpdates: Function;
   //   advEditorData: AdvanceEditorData;
 }
 
-export default function JSONEditor(props: IJSONEditorProps) {
+const JSONEditor = (props: IJSONEditorProps) => {
   const [jsonText, setJsonText] = React.useState(
     JSON.stringify({ tables: props.visualTables }, null, 2)
   );
@@ -74,4 +74,6 @@ export default function JSONEditor(props: IJSONEditorProps) {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default JSONEditor;

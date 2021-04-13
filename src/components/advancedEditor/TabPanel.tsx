@@ -8,7 +8,7 @@ interface TabPanelProps {
   value: any;
 }
 
-export default function TabPanel(props: TabPanelProps) {
+const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props;
 
   return (
@@ -22,4 +22,6 @@ export default function TabPanel(props: TabPanelProps) {
       {value === index && <Box p={3}>{children}</Box>}
     </div>
   );
-}
+};
+
+export default TabPanel;

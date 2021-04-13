@@ -33,7 +33,7 @@ interface IContentDisplayProps {
   selectionManager: powerbi.extensibility.ISelectionManager;
 }
 
-export function ContentDisplay(props: IContentDisplayProps) {
+export function contentDisplay(props: IContentDisplayProps) {
   //   const scrollbars = { autoUpdate: true };
   // console.log(props.visualTables, props.visualData);
 

@@ -1,6 +1,6 @@
 /**
  * ! These samples are for testing only and will not be used in production
- * // TODO: Remove from prod
+ * // Remove from prod
  */
 import { VISUAL_DISPLAY_COLUMN_TYPE } from "../defs/enums";
 import { IVisualTable } from "../defs/main";

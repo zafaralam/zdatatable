@@ -26,67 +26,13 @@ interface ICellValueDisplayProps {
   trendLineSettings: TrendLineSettings;
 }
 
-export default function CellValueDisplay(props: ICellValueDisplayProps) {
-  const {
-    visualTableColumn,
-    dataColumns,
-    rowValue,
-    mainMeasureSettings,
-    secondaryMeasureSettings,
-    trendLineSettings,
-  } = props;
-  // console.log(
-  //   mainMeasureSettings?.fontFamily,
-  //   fontFamilyCSSValue(
-  //     mainMeasureSettings?.fontFamily || VisualConstants.dinReplacementFont
-  //   )
-  // );
-  const dataColumn = dataColumns.find(
-    (c) => c.queryName === visualTableColumn.queryName
-  );
+function tableDataCellStyles(
+  visualTableColumn: IVisualTableColumn,
+  trendLineSettings: TrendLineSettings
+): React.CSSProperties {
+  // const { visualTableColumn, trendLineSettings } = props;
 
-  // if (visualTableColumn?.conditionalFormattingRules)
-  //   Debugger.LOG(
-  //     visualTableColumn.queryName,
-  //     visualTableColumn?.conditionalFormattingRules
-  //   );
-  const measureStyles: React.CSSProperties = {
-    // display: "inline-block",
-    // width: "100%", // * DO NOT REMOVE THIS FORM CELL.
-    // textAlign: "center",
-    color: getConditionalFormattingColor(
-      visualTableColumn?.conditionalFormattingRules,
-      rowValue[visualTableColumn.queryName]
-    ),
-    ...(visualTableColumn.columnType ===
-    VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
-      ? {
-          fontFamily: fontFamilyCSSValue(
-            mainMeasureSettings?.fontFamily ||
-              VisualConstants.dinReplacementFont
-          ),
-          fontSize: `${mainMeasureSettings?.fontSize}pt`,
-          fontWeight: fontWeightCSSValue(
-            mainMeasureSettings?.fontWeight ||
-              VisualConstants.mainMeasureSettings.fontWeight
-          ),
-          // color: mainMeasureSettings?.fontColor,
-        }
-      : {
-          fontFamily: fontFamilyCSSValue(
-            secondaryMeasureSettings?.fontFamily ||
-              VisualConstants.dinReplacementFont
-          ),
-          fontSize: `${secondaryMeasureSettings?.fontSize}pt`,
-          fontWeight: fontWeightCSSValue(
-            secondaryMeasureSettings?.fontWeight ||
-              VisualConstants.mainMeasureSettings.fontWeight
-          ),
-          // color: secondaryMeasureSettings?.fontColor,
-        }),
-  };
-
-  let tdStyles: React.CSSProperties = {
+  return {
     background:
       visualTableColumn.columnType !==
         VISUAL_DISPLAY_COLUMN_TYPE.DISPLAY_ONLY &&
@@ -147,6 +93,70 @@ export default function CellValueDisplay(props: ICellValueDisplayProps) {
       }px`,
     },
   };
+}
+
+function getMeasureStyles(
+  visualTableColumn: IVisualTableColumn,
+  rowValue: any,
+  mainMeasureSettings: MainMeasureSettings,
+  secondaryMeasureSettings: SecondaryMeasureSettings
+): React.CSSProperties {
+  return {
+    color: getConditionalFormattingColor(
+      visualTableColumn?.conditionalFormattingRules,
+      rowValue[visualTableColumn.queryName]
+    ),
+    ...(visualTableColumn.columnType ===
+    VISUAL_DISPLAY_COLUMN_TYPE.MEASURE_VALUE_MAIN
+      ? {
+          fontFamily: fontFamilyCSSValue(
+            mainMeasureSettings?.fontFamily ||
+              VisualConstants.dinReplacementFont
+          ),
+          fontSize: `${mainMeasureSettings?.fontSize}pt`,
+          fontWeight: fontWeightCSSValue(
+            mainMeasureSettings?.fontWeight ||
+              VisualConstants.mainMeasureSettings.fontWeight
+          ),
+          // color: mainMeasureSettings?.fontColor,
+        }
+      : {
+          fontFamily: fontFamilyCSSValue(
+            secondaryMeasureSettings?.fontFamily ||
+              VisualConstants.dinReplacementFont
+          ),
+          fontSize: `${secondaryMeasureSettings?.fontSize}pt`,
+          fontWeight: fontWeightCSSValue(
+            secondaryMeasureSettings?.fontWeight ||
+              VisualConstants.mainMeasureSettings.fontWeight
+          ),
+        }),
+  };
+}
+
+const CellValueDisplay = (props: ICellValueDisplayProps) => {
+  const {
+    visualTableColumn,
+    dataColumns,
+    rowValue,
+    mainMeasureSettings,
+    secondaryMeasureSettings,
+    trendLineSettings,
+  } = props;
+  const dataColumn = dataColumns.find(
+    (c) => c.queryName === visualTableColumn.queryName
+  );
+  const measureStyles: React.CSSProperties = getMeasureStyles(
+    visualTableColumn,
+    rowValue,
+    mainMeasureSettings,
+    secondaryMeasureSettings
+  );
+
+  let tdStyles: React.CSSProperties = tableDataCellStyles(
+    visualTableColumn,
+    trendLineSettings
+  );
 
   // Original
   // const points =
@@ -156,7 +166,7 @@ export default function CellValueDisplay(props: ICellValueDisplayProps) {
   const points = rowValue[visualTableColumn.queryName];
   //"-26,0 -13,18 0,18 11,0 24,18 37,18 112,18 124,0 137,18 150,18 162,18";
 
-  const cellDisplay = (
+  return (
     <td style={tdStyles}>
       {visualTableColumn.columnType ===
       VISUAL_DISPLAY_COLUMN_TYPE.TREND_CHART ? (
@@ -197,5 +207,7 @@ export default function CellValueDisplay(props: ICellValueDisplayProps) {
       )}
     </td>
   );
-  return cellDisplay;
-}
+  // return cellDisplay;
+};
+
+export default CellValueDisplay;

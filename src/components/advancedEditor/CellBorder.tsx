@@ -31,7 +31,7 @@ interface ICellBorderProps {
   onBorderUpdate: Function;
 }
 
-export default function CellBorder(props: ICellBorderProps) {
+const CellBorder = (props: ICellBorderProps) => {
   const classes = useStyles();
   const { side, border } = props;
   let borderComponents;
@@ -69,6 +69,11 @@ export default function CellBorder(props: ICellBorderProps) {
     props.onBorderUpdate(side, `${width}px ${style} ${borderColor}`);
   };
 
+  const handleWidthChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const _valueToSet = event.target.value as string;
+    handleBorderWidthChange(parseInt(_valueToSet) || 0);
+  };
+
   return (
     <Grid
       container
@@ -91,36 +96,52 @@ export default function CellBorder(props: ICellBorderProps) {
           label="Width (px)"
           type="number"
           value={width}
-          onChange={(e) => {
-            handleBorderWidthChange(parseInt(e.target.value) || 0);
-          }}
+          onChange={handleWidthChange}
         ></TextField>
       </Grid>
-      <Grid item xs={3}>
-        <InputLabel id={`select-border-style-${side}`}></InputLabel>
-        <Select
-          label="Style"
-          labelId={`select-border-style-${side}`}
-          value={style}
-          onChange={handleBorderStyleChange}
-          fullWidth
-        >
-          <MenuItem value="none">None</MenuItem>
-          <MenuItem value="solid">Solid</MenuItem>
-          <MenuItem value="double">Double</MenuItem>
-          <MenuItem value="dashed">Dashed</MenuItem>
-          <MenuItem value="dotted">Dotted</MenuItem>
-          <MenuItem value="groove">Groove</MenuItem>
-        </Select>
-      </Grid>
+
+      <CellBorderStyle
+        side={side}
+        style={style}
+        handleBorderStyleChange={handleBorderStyleChange}
+      />
       <Grid item xs={2}>
-        <ColorPicker
-          color={color}
-          onColorChange={(bColor) => {
-            handleBorderColorChange(bColor);
-          }}
-        />
+        <ColorPicker color={color} onColorChange={handleBorderColorChange} />
       </Grid>
     </Grid>
   );
-}
+};
+
+const CellBorderStyle = (props: {
+  side: string;
+  style: any;
+  handleBorderStyleChange: Function;
+}) => {
+  const handleBorderStyleChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const _valueToSet = event.target.value as string;
+    props.handleBorderStyleChange(event);
+  };
+  return (
+    <Grid item xs={3}>
+      <InputLabel id={`select-border-style-${props.side}`}></InputLabel>
+      <Select
+        label="Style"
+        labelId={`select-border-style-${props.side}`}
+        value={props.style}
+        onChange={handleBorderStyleChange}
+        fullWidth
+      >
+        <MenuItem value="none">None</MenuItem>
+        <MenuItem value="solid">Solid</MenuItem>
+        <MenuItem value="double">Double</MenuItem>
+        <MenuItem value="dashed">Dashed</MenuItem>
+        <MenuItem value="dotted">Dotted</MenuItem>
+        <MenuItem value="groove">Groove</MenuItem>
+      </Select>
+    </Grid>
+  );
+};
+
+export default CellBorder;

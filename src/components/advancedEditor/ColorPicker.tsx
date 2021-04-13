@@ -8,7 +8,7 @@ interface IColorPickerProps {
   onColorChange: Function;
 }
 
-export default function ColorPicker(props: IColorPickerProps) {
+const ColorPicker = (props: IColorPickerProps) => {
   const colorStyles: React.CSSProperties = {
       width: "36px",
       height: "14px",
@@ -50,11 +50,24 @@ export default function ColorPicker(props: IColorPickerProps) {
     props.onColorChange(color.hex);
   };
 
+  const handleTextColorChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const color = event.target.value as any;
+    props.onColorChange(
+      color && color.length !== 0 && color[0] === "#" ? color : `#${color}`
+    );
+  };
+
   return (
     <div>
       <Grid container direction="row">
         <Grid item>
-          <div style={swatchStyles} onClick={handleOpenColorPicker}>
+          <div
+            role="dialog"
+            style={swatchStyles}
+            onClick={handleOpenColorPicker}
+          >
             <div style={colorStyles} />
           </div>
         </Grid>
@@ -62,26 +75,25 @@ export default function ColorPicker(props: IColorPickerProps) {
           <TextField
             size="small"
             value={props.color}
-            onChange={(e) => {
-              const color = e.target.value;
-              props.onColorChange(
-                color && color.length !== 0 && color[0] === "#"
-                  ? color
-                  : `#${color}`
-              );
-            }}
+            onChange={handleTextColorChange}
           ></TextField>
         </Grid>
       </Grid>
-      {openColorPicker ? (
+      {openColorPicker && (
         <div style={popoverStyles}>
-          <div style={coverStyles} onClick={handleCloseColorPicker} />
+          <div
+            role="dialog"
+            style={coverStyles}
+            onClick={handleCloseColorPicker}
+          />
           <SketchPicker
             color={props.color}
             onChange={handleColorPickerChange}
           />
         </div>
-      ) : null}
+      )}
     </div>
   );
-}
+};
+
+export default ColorPicker;

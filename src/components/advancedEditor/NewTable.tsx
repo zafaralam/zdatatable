@@ -1,5 +1,3 @@
-// TODO: style the component
-
 import { Button, TextField, Grid } from "@material-ui/core";
 import * as React from "react";
 
@@ -21,8 +19,10 @@ export default class NewTable extends React.Component<
     };
 
     this.handleAddTable = this.handleAddTable.bind(this);
+    this.handleNewTableNameChange = this.handleNewTableNameChange.bind(this);
   }
   render() {
+    const addTableButtonDisabled = this.state.newTableName.length === 0;
     return (
       <div className="editor__new-table">
         <Grid container direction="row" alignItems="flex-end" spacing={1}>
@@ -32,9 +32,7 @@ export default class NewTable extends React.Component<
               label="New Table Name"
               id="newTableName"
               value={this.state.newTableName}
-              onChange={(e) => {
-                this.setState({ newTableName: e.target.value });
-              }}
+              onChange={this.handleNewTableNameChange}
               size="small"
               fullWidth
               variant="standard"
@@ -44,7 +42,7 @@ export default class NewTable extends React.Component<
             <Button
               variant="contained"
               color="secondary"
-              disabled={this.state.newTableName.length === 0}
+              disabled={addTableButtonDisabled}
               onClick={this.handleAddTable}
             >
               Add New Table
@@ -53,6 +51,13 @@ export default class NewTable extends React.Component<
         </Grid>
       </div>
     );
+  }
+
+  private handleNewTableNameChange(
+    event: React.ChangeEvent<{ value: unknown }>
+  ) {
+    const _valueToSet = event.target.value as string;
+    this.setState({ newTableName: _valueToSet });
   }
 
   private handleAddTable(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
